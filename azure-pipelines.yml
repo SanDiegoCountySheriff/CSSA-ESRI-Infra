@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: 'On-Premises'
 
 steps:
 - script: echo Hello, world!
