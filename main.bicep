@@ -7,7 +7,7 @@ resource virtualNetwork1 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   properties: {
     addressSpace: {
       addressPrefixes: [
-        '172.16.0.0/16'
+        '172.16.0.0/21'
       ]
     }
     subnets: [
@@ -27,7 +27,7 @@ resource virtualNetwork2 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   properties: {
     addressSpace: {
       addressPrefixes: [
-        '172.17.0.0/16'
+        '172.17.0.0/21'
       ]
     }
     subnets: [
