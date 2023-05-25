@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connections_cosm_connection_on_prem_name": {
+            "value": null
+        },
+        "virtualNetworkGateways_cosm_gis_virtual_gateway_externalid": {
+            "value": null
+        },
+        "localNetworkGateways_cosm_local_network_gateway_externalid": {
+            "value": null
+        }
+    }
+}
