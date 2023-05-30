@@ -17,7 +17,7 @@ resource connections_cosm_connection_on_prem_name_resource 'Microsoft.Network/co
     connectionType: 'IPsec'
     connectionProtocol: 'IKEv2'
     routingWeight: 0
-    sharedKey: '8xJgRJhJZUrjM37Z6G4B'
+    sharedKey: '$(NETWORKCONNECTIONSHAREDKEY)'
     enableBgp: false
     useLocalAzureIpAddress: false
     usePolicyBasedTrafficSelectors: false
