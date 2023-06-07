@@ -1,7 +1,7 @@
 
 
 @description('Load variables for all resources.') 
-var sharedVariables = loadJsonContent('./shared-variables.json')
+var sharedVariables = loadYamlContent('./shared-variables.yaml')
 
 @description('Location for all resources.') 
 param location string = resourceGroup().location
