@@ -2,7 +2,18 @@ param virtualNetworkGateways_cosm_gis_virtual_gateway_name string = 'cosm-gis-vi
 param publicIPAddresses_cosm_virtual_gateway_externalid string = '/subscriptions/66d233df-ad0c-45a4-a6bc-d77919e18237/resourceGroups/gis-azure-vnet-dev/providers/Microsoft.Network/publicIPAddresses/cosm-virtual-gateway'
 param virtualNetworks_cosm_gis_vlan_externalid string = '/subscriptions/66d233df-ad0c-45a4-a6bc-d77919e18237/resourceGroups/gis-azure-vnet-dev/providers/Microsoft.Network/virtualNetworks/cosm-gis-vlan'
 
-resource virtualNetworkGateways_cosm_gis_virtual_gateway_name_resource 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
+param localNetworkGateways_cosm_virtual_gateway_name string = 'cosm-virtual-gateway'
+
+resource localNetworkGateways_cosm_virtual_gateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
+  name: localNetworkGateways_cosm_virtual_gateway_name
+}
+
+param virtualNetworks_cosm_pub_vlan_name string = 'cosm-pub-vlan'
+resource virtualNetworks_cosm_pub_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
+  name: virtualNetworks_cosm_pub_vlan_name
+}
+
+resource virtualNetworkGateways_cosm_gis_virtual_gateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
   name: virtualNetworkGateways_cosm_gis_virtual_gateway_name
   location: 'westus'
   properties: {
@@ -10,14 +21,14 @@ resource virtualNetworkGateways_cosm_gis_virtual_gateway_name_resource 'Microsof
     ipConfigurations: [
       {
         name: 'default'
-        id: '${virtualNetworkGateways_cosm_gis_virtual_gateway_name_resource.id}/ipConfigurations/default'
+        id: '${localNetworkGateways_cosm_virtual_gateway.id}/ipConfigurations/default'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
-            id: publicIPAddresses_cosm_virtual_gateway_externalid
+            id: localNetworkGateways_cosm_virtual_gateway.properties.gatewayIpAddress
           }
           subnet: {
-            id: '${virtualNetworks_cosm_gis_vlan_externalid}/subnets/GatewaySubnet'
+            id: '${virtualNetworks_cosm_pub_vlan.id}/subnets/GatewaySubnet'
           }
         }
       }
@@ -40,7 +51,7 @@ resource virtualNetworkGateways_cosm_gis_virtual_gateway_name_resource 'Microsof
       peerWeight: 0
       bgpPeeringAddresses: [
         {
-          ipconfigurationId: '${virtualNetworkGateways_cosm_gis_virtual_gateway_name_resource.id}/ipConfigurations/default'
+          ipconfigurationId: '${virtualNetworkGateways_cosm_gis_virtual_gateway.id}/ipConfigurations/default'
           customBgpIpAddresses: []
         }
       ]
