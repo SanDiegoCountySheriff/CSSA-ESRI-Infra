@@ -2,16 +2,22 @@
 param location string = resourceGroup().location
 
 module cosmHubVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
-  name: 'deploy-hub001-vlan'
+  name: 'deploy-cosm-hub-vlan'
   params: {
-    virtualNetworkName: 'hub001'
+    virtualNetworkName: 'cosm-hub'
     virtualNetworkLocation: location
     virtualNetworkAddressPrefixes: [
       '172.16.0.0/21'
     ]
-    virtualNetworkLocationSubnets: [
-      
-    ]
+  }
+}
+
+module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-sn.bicep' = {
+  name: 'deploy-cosm-hub-sn'
+  params: {
+    virtualNetworkName: cosmHubVirtualNetwork.outputs.name
+    virtualNetworkGwSubnetAddressPrefix: '172.16.0.0/24'
+    virtualNetworkFwSubnetAddressPrefix: '172.16.0.1/24'
   }
 }
 
@@ -23,9 +29,13 @@ module gisVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
     virtualNetworkAddressPrefixes: [
       '172.16.1.0/21'
     ]
-    virtualNetworkLocationSubnets: [
-      
-    ]
+  }
+}
+
+module gisVirtualNetworkSubnets './modules/gis/gis-sn.bicep' = {
+  name: 'deploy-gis-sn'
+  params: {
+    virtualNetworkName: cosmHubVirtualNetwork.outputs.name
   }
 }
 
@@ -57,7 +67,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     virtualNetworkGatewayName: 'gis001'
     virtualNetworkGatewayType: 'Vpn'
     virtualNetworkGatewayLocation: location
-    publicIpAddressId: virtualGatewayPublicIp.outputs.id
+    virtualNetworkGatewayIpAddressId: virtualGatewayPublicIp.outputs.id
     virtualNetworkId: gisVirtualNetwork.outputs.id
     localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'

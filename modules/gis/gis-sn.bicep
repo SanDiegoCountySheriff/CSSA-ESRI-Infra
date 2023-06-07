@@ -1,23 +1,16 @@
 
-param globalAgencyName string = 'cosm'
-param globalApplicationName string = 'gis'
-param globalPrefix string = '${globalAgencyName}-${globalApplicationName}'
+param namePrefix string = 'cosm'
+param nameSuffix string = 'sn'
 
-param subnets_cosm_gis_pub_vlan_AzureFirewall_sn_name string = 'AzureFirewallManagementSubnet'
-param subnets_cosm_gis_int_vlan_cosm_gis_app_sn_name string = '${globalPrefix}-app-sn'
-param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = '${globalPrefix}-web-sn'
-param subnets_cosm_gis_int_vlan_cosm_gis_ws_sn_name string = '${globalPrefix}-ws-sn'
-param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = '${globalPrefix}-data-sn'
+param subnets_cosm_gis_int_vlan_cosm_gis_app_sn_name string = '${namePrefix}-app-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = '${namePrefix}-web-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_ws_sn_name string = '${namePrefix}-ws-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = '${namePrefix}-data-${nameSuffix}'
 
-param virtualNetworks_cosm_pub_vlan_name string = '${globalAgencyName}-pub-vlan'
-param virtualNetworks_cosm_gis_int_vlan_name string = '${globalPrefix}-vlan'
+param virtualNetworkName string
 
 resource virtualNetworks_cosm_gis_int_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
-  name: virtualNetworks_cosm_gis_int_vlan_name
-}
-
-resource virtualNetworks_cosm_pub_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
-  name: virtualNetworks_cosm_pub_vlan_name
+  name: virtualNetworkName
 }
 
 resource subnets_cosm_gis_int_vlan_cosm_gis_app_sn 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
@@ -64,26 +57,3 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_ws_sn 'Microsoft.Network/virtualNetw
   }
 }
 
-resource subnets_cosm_gis_pub_vlan_AzureFirewall_sn 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
-  parent: virtualNetworks_cosm_pub_vlan
-  name: subnets_cosm_gis_pub_vlan_AzureFirewall_sn_name
-  properties: {
-    addressPrefix: '172.16.5.0/24'
-    serviceEndpoints: []
-    delegations: []
-    privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
-  }
-}
-
-resource virtualNetworks_cosm_gis_pub_vlan_name_GatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
-  parent: virtualNetworks_cosm_pub_vlan
-  name: 'GatewaySubnet'
-  properties: {
-    addressPrefix: '172.16.0.0/24'
-    serviceEndpoints: []
-    delegations: []
-    privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
-  }
-}
