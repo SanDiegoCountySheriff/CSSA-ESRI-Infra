@@ -1,7 +1,19 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# azure-pipelines.yml | San Marcos GIS on Azure
+#
+# Copyright (C) 2023 City of San Marcos CA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 trigger:
 - main
@@ -12,11 +24,20 @@ pool:
 #pool:
 #  name: 'On-Premises'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  ServiceConnectionName: 'GISTestServiceConnection'
+  EnvironmentType: 'Test'
+  ResourceGroupName: 'rg-cosm-gis-env-test'
+  DeploymentDefaultLocation: 'westus'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo $(NETWORKCONNECTIONSHAREDKEY)
-  displayName: 'Run a multi-line script'
+jobs:
+  - job:
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        connectedServiceName: $(ServiceConnectionName)
+        location: $(DeploymentDefaultLocation)
+        resourceGroupName: $(ResourceGroupName)
+        csmFile: main.bicep
+        overrideParameters: >
+          -environmentType $(EnvironmentType)
