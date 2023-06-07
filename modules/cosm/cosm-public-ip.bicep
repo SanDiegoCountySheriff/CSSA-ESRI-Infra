@@ -6,8 +6,13 @@ param resourceEnv string
 param resourceLocation string
 param resourceNumber string = '001'
 
+<<<<<<< HEAD
 param namePrefix string = '${resourceType}-${resourceAgency}'
 param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+=======
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceEnv}'
+param nameSuffix string = resourceNumber
+>>>>>>> 1bd9096 (cleaned up param declarations)
 
 param publicIpAddress string
 
