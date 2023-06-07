@@ -1,6 +1,6 @@
 param publicIPAddresses_cosm_virtual_gateway_name string = 'cosm-virtual-gateway'
 
-resource publicIPAddresses_cosm_virtual_gateway_name_resource 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
+resource publicIPAddresses_cosm_virtual_gateway 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
   name: publicIPAddresses_cosm_virtual_gateway_name
   location: 'westus'
   sku: {
