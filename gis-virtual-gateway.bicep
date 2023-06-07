@@ -1,39 +1,41 @@
-param globalAgencyName string = 'cosm'
+param location string
+param gatewayType string
+param vpnType string
+param sku object
 
-param virtualNetworkGateways_cosm_gis_virtual_gateway_name string = 'cosm-gis-virtual-gateway'
-
-param localNetworkGatewayName string = 'local-network-gateway'
+param localNetworkGatewayName string
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
   name: localNetworkGatewayName
 }
-
-param publicIPAddresses_cosm_virtual_gateway_name string = 'cosm-virtual-gateway'
+param publicIpAddressName string
 resource publicIPAddresses_cosm_virtual_gateway 'Microsoft.Network/publicIPAddresses@2022-11-01' existing = {
-  name: publicIPAddresses_cosm_virtual_gateway_name
+  name: publicIpAddressName
 }
 
-param virtualNetworks_cosm_pub_vlan_name string = '${globalAgencyName}-pub-vlan'
+param virtualNetworkName string
 
-resource virtualNetworks_cosm_pub_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
-  name: virtualNetworks_cosm_pub_vlan_name
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
+  name: virtualNetworkName
 }
 
-resource virtualNetworkGateways_cosm_gis_virtual_gateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
-  name: virtualNetworkGateways_cosm_gis_virtual_gateway_name
-  location: 'westus'
+param virtualNetworkGatewayName string
+
+resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
+  name: virtualNetworkGatewayName
+  location: location
   properties: {
     enablePrivateIpAddress: false
     ipConfigurations: [
       {
         name: 'default'
-        id: '${localNetworkGateways_cosm_virtual_gateway.id}/ipConfigurations/default'
+        id: '${virtualNetwork.id}/ipConfigurations/default'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
             id: publicIPAddresses_cosm_virtual_gateway.id
           }
           subnet: {
-            id: '${virtualNetworks_cosm_pub_vlan.id}/subnets/GatewaySubnet'
+            id: '${virtualNetwork.id}/subnets/GatewaySubnet'
           }
         }
       }
@@ -42,27 +44,21 @@ resource virtualNetworkGateways_cosm_gis_virtual_gateway 'Microsoft.Network/virt
     virtualNetworkGatewayPolicyGroups: []
     enableBgpRouteTranslationForNat: false
     disableIPSecReplayProtection: false
-    sku: {
-      name: 'VpnGw2'
-      tier: 'VpnGw2'
-    }
-    gatewayType: 'Vpn'
-    vpnType: 'RouteBased'
+    sku: sku
+    gatewayType: gatewayType
+    vpnType: vpnType
     enableBgp: false
     activeActive: false
     bgpSettings: {
       asn: 65515
-      bgpPeeringAddress: '172.16.0.254'
       peerWeight: 0
-      bgpPeeringAddresses: [
-        {
-          ipconfigurationId: '${publicIPAddresses_cosm_virtual_gateway.id}/ipConfigurations/default'
-          customBgpIpAddresses: []
-        }
-      ]
+      bgpPeeringAddresse: localNetworkGateway.properties.bgpSettings.bgpPeeringAddress
     }
     vpnGatewayGeneration: 'Generation2'
     allowRemoteVnetTraffic: false
     allowVirtualWanTraffic: false
   }
 }
+
+output id string = virtualNetworkGateway.id
+output name string = virtualNetworkGateway.name
