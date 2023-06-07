@@ -7,10 +7,7 @@ param localNetworkGatewayName string
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
   name: localNetworkGatewayName
 }
-param publicIpAddressName string
-resource publicIPAddresses_cosm_virtual_gateway 'Microsoft.Network/publicIPAddresses@2022-11-01' existing = {
-  name: publicIpAddressName
-}
+param publicIpAddressId string
 
 param virtualNetworkName string
 
@@ -32,7 +29,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
-            id: publicIPAddresses_cosm_virtual_gateway.id
+            id: publicIpAddressId
           }
           subnet: {
             id: '${virtualNetwork.id}/subnets/GatewaySubnet'

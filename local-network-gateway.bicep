@@ -16,3 +16,4 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
 
 output name string = localNetworkGatewayName
 output id string = localNetworkGateway.id
+output gatewayIpAddress string = localNetworkGatewayIpAddress
