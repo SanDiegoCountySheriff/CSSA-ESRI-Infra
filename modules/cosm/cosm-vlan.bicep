@@ -1,7 +1,6 @@
 
 param namePrefix string = 'cosm'
 param virtualNetworkName string
-param virtualNetworkLocationSubnets array
 param virtualNetworkLocation string
 param virtualNetworkAddressPrefixes array
 
@@ -12,7 +11,6 @@ resource virtualNetwork_cosm 'Microsoft.Network/virtualNetworks@2022-11-01' = {
     addressSpace: {
       addressPrefixes: virtualNetworkAddressPrefixes
     }
-    subnets: virtualNetworkLocationSubnets
     virtualNetworkPeerings: []
     enableDdosProtection: false
   }
