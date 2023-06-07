@@ -9,12 +9,12 @@ param localNetworkGatewayIpAddress string = '209.76.14.250'
  
 
 resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2022-11-01' = {
-  name: localNetworkGatewayName
-  location: localNetworkGatewayLocation
-  properties: {
-    localNetworkAddressSpace: {
-      addressPrefixes: localNetworkGatewayAddressPrefixes
-    }
-    gatewayIpAddress: localNetworkGatewayIpAddress
-  }
+  name: localNetworkGatewayName
+  location: localNetworkGatewayLocation
+  properties: {
+    localNetworkAddressSpace: {
+      addressPrefixes: localNetworkGatewayAddressPrefixes
+  }
+  gatewayIpAddress: localNetworkGatewayIpAddress
+  }
 }
