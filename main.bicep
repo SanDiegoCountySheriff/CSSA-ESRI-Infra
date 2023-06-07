@@ -2,6 +2,16 @@
 param location string = resourceGroup().location
 
 
+module virtualGatewayPublicIp './public-ip.bicep' = {
+  name: 'cosm-gw-pip-001'
+  params: {
+    publicIpAddressLocation: location
+    publicIpAddressName: 'cosm-gw-pip-001'
+    publicIpAddress: '20.237.174.76'
+  }
+}
+
+
 module localNetworkGateway './local-network-gateway.bicep' = {
   name: 'LocalNetworkGateway'
   params: {
@@ -15,12 +25,12 @@ module localNetworkGateway './local-network-gateway.bicep' = {
   }
 }
 
-module virtualNetworkGateway './gis-virtual-gateway.bicep' = {
+module virtualNetworkGateway './cosm-virtual-gateway.bicep' = {
   name: 'VirtualNetworkGateway'
   params: {
     gatewayType: 'Vpn'
     location: location
-    publicIpAddressName: 'pip-cosm-gis-vng'
+    publicIpAddressId: virtualGatewayPublicIp.outputs.id
     sku: {
       name: 'VpnGw2'
       tier: 'VpnGw2'
