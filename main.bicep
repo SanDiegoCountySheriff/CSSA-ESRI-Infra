@@ -1,7 +1,8 @@
 @description('Location for all resources.') 
 param location string = resourceGroup().location
 
-module cosmHubVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
+@description('Deploy the shared hub VLan for cosm.') 
+module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vlan.bicep' = {
   name: 'deploy-cosm-hub-vlan'
   params: {
     virtualNetworkName: 'cosm-hub'
@@ -12,6 +13,7 @@ module cosmHubVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
   }
 }
 
+@description('Deploy the shared hub subnets.') 
 module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-sn.bicep' = {
   name: 'deploy-cosm-hub-sn'
   params: {
@@ -21,9 +23,11 @@ module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-sn.bicep' = {
   }
 }
 
-module gisVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
+@description('Deploy the gis spoke vlan.') 
+module gisVirtualNetwork './modules/cosm/cosm-spoke-vlan.bicep' = {
   name: 'deploy-gis-vlan'
   params: {
+    virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
     virtualNetworkName: 'gis-test'
     virtualNetworkLocation: location
     virtualNetworkAddressPrefixes: [
