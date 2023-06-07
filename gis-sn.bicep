@@ -11,15 +11,15 @@ param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = '${globalPrefix}-w
 param subnets_cosm_gis_int_vlan_cosm_gis_ws_sn_name string = '${globalPrefix}-ws-sn'
 param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = '${globalPrefix}-data-sn'
 
-param virtualNetworks_cosm_gis_int_vlan_name string = '${globalPrefix}-int-vlan'
-param virtualNetworks_cosm_gis_pub_vlan_name string = '${globalPrefix}-pub-vlan'
+param virtualNetworks_cosm_pub_vlan_name string = '${globalAgencyName}-pub-vlan'
+param virtualNetworks_cosm_gis_int_vlan_name string = '${globalPrefix}-vlan'
 
 resource virtualNetworks_cosm_gis_int_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
   name: virtualNetworks_cosm_gis_int_vlan_name
 }
 
-resource virtualNetworks_cosm_gis_pub_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
-  name: virtualNetworks_cosm_gis_pub_vlan_name
+resource virtualNetworks_cosm_pub_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
+  name: virtualNetworks_cosm_pub_vlan_name
 }
 
 resource subnets_cosm_gis_int_vlan_cosm_gis_app_sn 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
@@ -66,9 +66,8 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_ws_sn 'Microsoft.Network/virtualNetw
   }
 }
 
-
 resource subnets_cosm_gis_pub_vlan_AzureFirewall_sn 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
-  parent: virtualNetworks_cosm_gis_pub_vlan
+  parent: virtualNetworks_cosm_pub_vlan
   name: subnets_cosm_gis_pub_vlan_AzureFirewall_sn_name
   properties: {
     addressPrefix: '172.16.5.0/24'
@@ -80,7 +79,7 @@ resource subnets_cosm_gis_pub_vlan_AzureFirewall_sn 'Microsoft.Network/virtualNe
 }
 
 resource virtualNetworks_cosm_gis_pub_vlan_name_GatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
-  parent: virtualNetworks_cosm_gis_pub_vlan
+  parent: virtualNetworks_cosm_pub_vlan
   name: 'GatewaySubnet'
   properties: {
     addressPrefix: '172.16.0.0/24'
