@@ -19,7 +19,10 @@ trigger:
 - main
 
 pool:
-  name: 'On-Premises'
+  vmImage: ubuntu-latest
+
+#pool:
+#  name: 'On-Premises'
 
 variables:
   ServiceConnectionName: 'GISTestServiceConnection'
