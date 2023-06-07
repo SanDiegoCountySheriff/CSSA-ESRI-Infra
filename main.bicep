@@ -3,9 +3,9 @@ param location string = resourceGroup().location
 
 param environment string = 'test'
 
-@description('Deploy the shared hub vlan for cosm.') 
+@description('Deploy vnet-cosm-shared-test-001') 
 module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
-  name: 'deploy-cosm-shared-vnet'
+  name: 'deploy_vnet-cosm-shared-test-001'
   params: {
     resourceScope: 'shared'
     resourceLocation: location
@@ -16,9 +16,9 @@ module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
   }
 }
 
-@description('Deploy the shared hub subnets.') 
+@description('Deploy snet-cosm-shared-test-001') 
 module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-snet.bicep' = {
-  name: 'deploy-cosm-shared-snet'
+  name: 'deploy_snet-cosm-shared-test-001'
   params: {
     virtualNetworkName: cosmHubVirtualNetwork.outputs.name
     virtualNetworkGwSubnetAddressPrefix: '172.16.0.0/24'
@@ -26,9 +26,9 @@ module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-snet.bicep' = {
   }
 }
 
-@description('Deploy the gis spoke vlan.') 
+@description('Deploy vnet-cosm-gis-test-001') 
 module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
-  name: 'deploy-gis-vnet'
+  name: 'deploy_vnet-cosm-gis-test-001'
   params: {
     resourceScope: 'gis'
     resourceLocation: location
@@ -40,18 +40,18 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
   }
 }
 
-@description('Deploy the gis spoke subnets.') 
+@description('Deploy snet-cosm-gis-test-001') 
 module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
-  name: 'deploy-gis-snet'
+  name: 'deploy_snet-cosm-gis-test-001'
   params: {
     resourceEnv: environment
     virtualNetworkName: cosmHubVirtualNetwork.outputs.name
   }
 }
 
-@description('Deploy the cosm gw public ip.') 
+@description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
-  name: 'deploy-gw-pip'
+  name: 'deploy_pip-cosm-shared-test-001'
   params: {
     resourceScope: 'shared'
     resourceLocation: location
@@ -60,9 +60,9 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   }
 }
 
-@description('Deploy the local gateway to cosm lan.') 
+@description('Deploy lgw-cosm-shared-test-001') 
 module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
-  name: 'deploy-cosm-lng'
+  name: 'deploy_lgw-cosm-shared-test-001'
   params: {
     resourceScope: 'shared'
     resourceLocation: location
@@ -75,9 +75,9 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
-@description('Deploy the virtual gateway to azure.') 
+@description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
-  name: 'deploy-cosm-vng'
+  name: 'deploy_vgw-cosm-gis-test-001'
   params: {
     resourceScope: 'gis'
     resourceLocation: location
@@ -91,9 +91,9 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
 }
 
 
-@description('Deploy the connection between cosm lan and azure.') 
+@description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
-  name: 'deploy-connection'
+  name: 'deploy_con-cosm-shared-test-001'
   params: {
     resourceScope: 'shared'
     resourceLocation: location

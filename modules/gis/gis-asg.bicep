@@ -5,8 +5,8 @@ param resourceEnv string
 param resourceLocation string
 param resourceNumber string = '001'
 
-param namePrefix string = '${resourceType}-${resourceAgency}-${resourceEnv}'
-param nameSuffix string = resourceNumber
+param namePrefix string = '${resourceType}-${resourceAgency}'
+param nameSuffix string = '${resourceEnv}-${resourceNumber}'
 
 resource applicationSecurityGroup_ws 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
   name: '${namePrefix}-${resourceScope}-${nameSuffix}-001'
