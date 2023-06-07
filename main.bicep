@@ -1,19 +1,45 @@
 @description('Location for all resources.') 
 param location string = resourceGroup().location
 
+module cosmHubVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
+  name: 'deploy-hub001-vlan'
+  params: {
+    virtualNetworkName: 'hub001'
+    virtualNetworkLocation: location
+    virtualNetworkAddressPrefixes: [
+      '172.16.0.0/21'
+    ]
+    virtualNetworkLocationSubnets: [
+      
+    ]
+  }
+}
 
-module virtualGatewayPublicIp './public-ip.bicep' = {
-  name: 'cosm-gw-pip-001'
+module gisVirtualNetwork './modules/cosm/cosm-vlan.bicep' = {
+  name: 'deploy-gis-vlan'
+  params: {
+    virtualNetworkName: 'gis-test'
+    virtualNetworkLocation: location
+    virtualNetworkAddressPrefixes: [
+      '172.16.1.0/21'
+    ]
+    virtualNetworkLocationSubnets: [
+      
+    ]
+  }
+}
+
+module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
+  name: 'deploy-gw-pip-001'
   params: {
     publicIpAddressLocation: location
-    publicIpAddressName: 'cosm-gw-pip-001'
+    publicIpAddressName: 'gw-pip-001'
     publicIpAddress: '20.237.174.76'
   }
 }
 
-
-module localNetworkGateway './local-network-gateway.bicep' = {
-  name: 'LocalNetworkGateway'
+module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
+  name: 'deploy-cosm-lng'
   params: {
     localNetworkGatewayLocation: location
     localNetworkGatewayAddressPrefixes: [
@@ -21,29 +47,25 @@ module localNetworkGateway './local-network-gateway.bicep' = {
       '172.31.253.0/24'
     ]
     localNetworkGatewayIpAddress: '209.76.14.250'
-    localNetworkGatewayName: 'cosm-sharedservices-001'
+    localNetworkGatewayName: 'local-001'
   }
 }
 
-module virtualNetworkGateway './cosm-virtual-gateway.bicep' = {
-  name: 'VirtualNetworkGateway'
+module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
+  name: 'deploy-cosm-vng'
   params: {
-    gatewayType: 'Vpn'
-    location: location
+    virtualNetworkGatewayName: 'gis001'
+    virtualNetworkGatewayType: 'Vpn'
+    virtualNetworkGatewayLocation: location
     publicIpAddressId: virtualGatewayPublicIp.outputs.id
-    sku: {
-      name: 'VpnGw2'
-      tier: 'VpnGw2'
-    }
-    virtualNetworkGatewayName: 'cosm-gis-vng'
-    virtualNetworkName: 'cosm-pub-vlan'
+    virtualNetworkId: gisVirtualNetwork.outputs.id
     localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
   }
 }
 
-module connection './connection-on-prem.bicep' = {
-  name: 'connection'
+module connection './modules/cosm/cosm-connection.bicep' = {
+  name: 'deploy-connection'
   params: {
     connectionName: 'sharedservices-001'
     connectionType: 'IPSec'

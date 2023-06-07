@@ -1,7 +1,14 @@
-param location string
-param gatewayType string
+param prefixName string = 'cosm'
+param suffixName string = 'vng'
+
+param virtualNetworkGatewayName string
+param virtualNetworkGatewayLocation string
+param virtualNetworkGatewayAddressPrefixes array
+param virtualNetworkGatewayIpAddress string
+param virtualNetworkId string
+
+param virtualNetworkGatewayType string
 param vpnType string
-param sku object
 
 param localNetworkGatewayName string
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
@@ -9,30 +16,22 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
 }
 param publicIpAddressId string
 
-param virtualNetworkName string
-
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
-  name: virtualNetworkName
-}
-
-param virtualNetworkGatewayName string
-
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
-  name: virtualNetworkGatewayName
-  location: location
+  name: '${prefixName}-${virtualNetworkGatewayName}-${suffixName}'
+  location: virtualNetworkGatewayLocation
   properties: {
     enablePrivateIpAddress: false
     ipConfigurations: [
       {
         name: 'default'
-        id: '${virtualNetwork.id}/ipConfigurations/default'
+        id: '${virtualNetworkId}/ipConfigurations/default'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
             id: publicIpAddressId
           }
           subnet: {
-            id: '${virtualNetwork.id}/subnets/GatewaySubnet'
+            id: '${virtualNetworkId}/subnets/GatewaySubnet'
           }
         }
       }
@@ -41,8 +40,11 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
     virtualNetworkGatewayPolicyGroups: []
     enableBgpRouteTranslationForNat: false
     disableIPSecReplayProtection: false
-    sku: sku
-    gatewayType: gatewayType
+    sku: {
+      name: 'VpnGw2'
+      tier: 'VpnGw2'
+    }
+    gatewayType: virtualNetworkGatewayType
     vpnType: vpnType
     enableBgp: false
     activeActive: false
