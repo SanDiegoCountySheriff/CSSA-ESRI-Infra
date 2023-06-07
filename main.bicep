@@ -1,7 +1,7 @@
 @description('Location for all resources.') 
 param location string = resourceGroup().location
 
-@description('Deploy the shared hub VLan for cosm.') 
+@description('Deploy the shared hub vlan for cosm.') 
 module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vlan.bicep' = {
   name: 'deploy-cosm-hub-vlan'
   params: {
@@ -36,6 +36,7 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vlan.bicep' = {
   }
 }
 
+@description('Deploy the gis spoke subnets.') 
 module gisVirtualNetworkSubnets './modules/gis/gis-sn.bicep' = {
   name: 'deploy-gis-sn'
   params: {
@@ -43,6 +44,7 @@ module gisVirtualNetworkSubnets './modules/gis/gis-sn.bicep' = {
   }
 }
 
+@description('Deploy the gis spoke vlan.') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy-gw-pip-001'
   params: {
@@ -52,6 +54,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   }
 }
 
+@description('Deploy the local gateway to cosm lan.') 
 module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   name: 'deploy-cosm-lng'
   params: {
@@ -65,6 +68,8 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
+
+@description('Deploy the virtual gateway to azure.') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   name: 'deploy-cosm-vng'
   params: {
@@ -78,6 +83,8 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   }
 }
 
+
+@description('Deploy the connection between cosm lan and azure.') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy-connection'
   params: {
