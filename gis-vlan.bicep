@@ -5,7 +5,7 @@ param globalAgencyName string = 'cosm'
 param globalApplicationName string = 'gis'
 param globalPrefix string = '${globalAgencyName}-${globalApplicationName}'
 
-param virtualNetworks_cosm_gis_pub_vlan_name string = '${globalPrefix}-pub-vlan'
+param virtualNetworks_cosm_gis_pub_vlan_name string = '${globalAgencyName}-pub-vlan'
 param virtualNetworks_cosm_gis_int_vlan_name string = '${globalPrefix}-vlan'
 
 param subnets_cosm_gis_pub_vlan_AzureFirewall_sn_name string = 'AzureFirewallManagementSubnet'

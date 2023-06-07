@@ -1,14 +1,19 @@
+param globalAgencyName string = 'cosm'
+
 param virtualNetworkGateways_cosm_gis_virtual_gateway_name string = 'cosm-gis-virtual-gateway'
-param publicIPAddresses_cosm_virtual_gateway_externalid string = '/subscriptions/66d233df-ad0c-45a4-a6bc-d77919e18237/resourceGroups/gis-azure-vnet-dev/providers/Microsoft.Network/publicIPAddresses/cosm-virtual-gateway'
-param virtualNetworks_cosm_gis_vlan_externalid string = '/subscriptions/66d233df-ad0c-45a4-a6bc-d77919e18237/resourceGroups/gis-azure-vnet-dev/providers/Microsoft.Network/virtualNetworks/cosm-gis-vlan'
 
-param localNetworkGateways_cosm_virtual_gateway_name string = 'cosm-virtual-gateway'
-
-resource localNetworkGateways_cosm_virtual_gateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
-  name: localNetworkGateways_cosm_virtual_gateway_name
+param localNetworkGatewayName string = 'local-network-gateway'
+resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
+  name: localNetworkGatewayName
 }
 
-param virtualNetworks_cosm_pub_vlan_name string = 'cosm-pub-vlan'
+param publicIPAddresses_cosm_virtual_gateway_name string = 'cosm-virtual-gateway'
+resource publicIPAddresses_cosm_virtual_gateway 'Microsoft.Network/publicIPAddresses@2022-11-01' existing = {
+  name: publicIPAddresses_cosm_virtual_gateway_name
+}
+
+param virtualNetworks_cosm_pub_vlan_name string = '${globalAgencyName}-pub-vlan'
+
 resource virtualNetworks_cosm_pub_vlan 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
   name: virtualNetworks_cosm_pub_vlan_name
 }
@@ -25,7 +30,7 @@ resource virtualNetworkGateways_cosm_gis_virtual_gateway 'Microsoft.Network/virt
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
-            id: localNetworkGateways_cosm_virtual_gateway.properties.gatewayIpAddress
+            id: publicIPAddresses_cosm_virtual_gateway.id
           }
           subnet: {
             id: '${virtualNetworks_cosm_pub_vlan.id}/subnets/GatewaySubnet'
@@ -51,7 +56,7 @@ resource virtualNetworkGateways_cosm_gis_virtual_gateway 'Microsoft.Network/virt
       peerWeight: 0
       bgpPeeringAddresses: [
         {
-          ipconfigurationId: '${virtualNetworkGateways_cosm_gis_virtual_gateway.id}/ipConfigurations/default'
+          ipconfigurationId: '${publicIPAddresses_cosm_virtual_gateway.id}/ipConfigurations/default'
           customBgpIpAddresses: []
         }
       ]
