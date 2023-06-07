@@ -1,5 +1,3 @@
-//@description('Load variables for all resources.') 
-//var globals = loadYamlContent('./shared-variables.yaml')
 
 param globalAgencyName string = 'cosm'
 param globalApplicationName string = 'gis'

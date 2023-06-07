@@ -1,10 +1,11 @@
 
+param namePrefix string = 'cosm'
 param publicIpAddressName string
 param publicIpAddressLocation string
 param publicIpAddress string
 
 resource publicIPAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
-  name: publicIpAddressName
+  name: '${namePrefix}-${publicIpAddressName}'
   location: publicIpAddressLocation
   sku: {
     name: 'Standard'
@@ -20,3 +21,4 @@ resource publicIPAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
 }
 
 output id string = publicIPAddresses.id
+output name string = publicIPAddresses.name
