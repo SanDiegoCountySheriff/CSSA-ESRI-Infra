@@ -3,8 +3,7 @@ param suffixName string = 'vng'
 
 param virtualNetworkGatewayName string
 param virtualNetworkGatewayLocation string
-param virtualNetworkGatewayAddressPrefixes array
-param virtualNetworkGatewayIpAddress string
+param virtualNetworkGatewayIpAddressId string
 param virtualNetworkId string
 
 param virtualNetworkGatewayType string
@@ -14,7 +13,6 @@ param localNetworkGatewayName string
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
   name: localNetworkGatewayName
 }
-param publicIpAddressId string
 
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
   name: '${prefixName}-${virtualNetworkGatewayName}-${suffixName}'
@@ -28,7 +26,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
-            id: publicIpAddressId
+            id: virtualNetworkGatewayIpAddressId
           }
           subnet: {
             id: '${virtualNetworkId}/subnets/GatewaySubnet'
