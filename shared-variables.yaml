@@ -1,4 +1,4 @@
-tags:
+prefix:
   agency: cosm
   app: gis
   tiers:
@@ -11,9 +11,3 @@ tags:
     public: pub
     internal: int
   env: test
-resources:
-  vlan1:
-    name: cosm-gis-vlan
-    subnets:
-        - cosm-gis-app-sn
-        - cosm-gis-data-sn
