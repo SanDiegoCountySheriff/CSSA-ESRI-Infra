@@ -1,6 +1,13 @@
 
-param namePrefix string = 'cosm'
-param nameSuffix string = 'sn'
+param resourceAgency string = 'cosm'
+param resourceType string = 'snet'
+//param resourceName string
+param resourceEnv string
+//param resourceLocation string
+param resourceNumber string = '001'
+
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceEnv}'
+param nameSuffix string = resourceNumber
 
 param subnets_cosm_gis_int_vlan_cosm_gis_app_sn_name string = '${namePrefix}-app-${nameSuffix}'
 param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = '${namePrefix}-web-${nameSuffix}'

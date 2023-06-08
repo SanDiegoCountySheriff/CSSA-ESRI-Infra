@@ -1,8 +1,14 @@
-param prefixName string = 'cosm'
-param suffixName string = 'vng'
 
-param virtualNetworkGatewayName string
-param virtualNetworkGatewayLocation string
+param resourceAgency string = 'cosm'
+param resourceType string = 'vgw'
+param resourceScope string
+param resourceEnv string
+param resourceLocation string
+param resourceNumber string = '001'
+
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceEnv}'
+param nameSuffix string = resourceNumber
+
 param virtualNetworkGatewayIpAddressId string
 param virtualNetworkId string
 
@@ -15,8 +21,8 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
 }
 
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
-  name: '${prefixName}-${virtualNetworkGatewayName}-${suffixName}'
-  location: virtualNetworkGatewayLocation
+  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
+  location: resourceLocation
   properties: {
     enablePrivateIpAddress: false
     ipConfigurations: [

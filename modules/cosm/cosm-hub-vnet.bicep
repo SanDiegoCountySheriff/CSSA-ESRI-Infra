@@ -1,12 +1,19 @@
 
-param namePrefix string = 'cosm'
-param virtualNetworkName string
-param virtualNetworkLocation string
+param resourceAgency string = 'cosm'
+param resourceType string = 'vnet'
+param resourceScope string
+param resourceEnv string
+param resourceLocation string
+param resourceNumber string = '001'
+
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceEnv}'
+param nameSuffix string = resourceNumber
+
 param virtualNetworkAddressPrefixes array
 
 resource virtualNetworkHub 'Microsoft.Network/virtualNetworks@2022-11-01' = {
-  name: '${namePrefix}-${virtualNetworkName}-shared-vlan'
-  location: virtualNetworkLocation
+  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
+  location: resourceLocation
   properties: {
     addressSpace: {
       addressPrefixes: virtualNetworkAddressPrefixes

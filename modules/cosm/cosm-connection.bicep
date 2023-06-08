@@ -1,9 +1,17 @@
-param connections_cosm_connection_on_prem_name string = 'cosm-connection-on-prem'
+
+param resourceAgency string = 'cosm'
+param resourceType string = 'con'
+param resourceScope string
+param resourceEnv string
+param resourceLocation string
+param resourceNumber string = '001'
+
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceEnv}'
+param nameSuffix string = resourceNumber
 
 param localNetworkGatewayName string
 param virtualNetworkGatewayName string
 param sharedKey string
-param location string
 
 
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
@@ -15,8 +23,8 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
 }
 
 resource connections_cosm_connection_on_prem 'Microsoft.Network/connections@2022-11-01' = {
-  name: connections_cosm_connection_on_prem_name
-  location: location
+  name: '${namePrefix}${resourceScope}${nameSuffix}'
+  location: resourceLocation
   properties: {
     virtualNetworkGateway1: localNetworkGateway
     localNetworkGateway2: virtualNetworkGateway
