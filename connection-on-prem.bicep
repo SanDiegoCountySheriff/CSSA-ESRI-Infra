@@ -2,7 +2,7 @@ param connections_cosm_connection_on_prem_name string = 'cosm-connection-on-prem
 param virtualNetworkGateways_cosm_gis_virtual_gateway_externalid string = '/subscriptions/66d233df-ad0c-45a4-a6bc-d77919e18237/resourceGroups/gis-azure-vnet-dev/providers/Microsoft.Network/virtualNetworkGateways/cosm-gis-virtual-gateway'
 param localNetworkGateways_cosm_local_network_gateway_externalid string = '/subscriptions/66d233df-ad0c-45a4-a6bc-d77919e18237/resourceGroups/gis-azure-vnet-dev/providers/Microsoft.Network/localNetworkGateways/cosm-local-network-gateway'
 
-resource connections_cosm_connection_on_prem_name_resource 'Microsoft.Network/connections@2022-11-01' = {
+resource connections_cosm_connection_on_prem 'Microsoft.Network/connections@2022-11-01' = {
   name: connections_cosm_connection_on_prem_name
   location: 'westus'
   properties: {
