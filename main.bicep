@@ -25,6 +25,7 @@ param location string = resourceGroup().location
 ])
 
 param environmentType string
+param localNetworkGatewayIpAddress string = '209.76.14.250'
 param networkConnectionSharedKey string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
@@ -61,7 +62,6 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
     resourceScope: 'gis'
     resourceLocation: location
     resourceEnv: environmentType
-    virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
     virtualNetworkAddressPrefixes: [
       '172.16.1.0/24'
     ]
@@ -78,34 +78,6 @@ module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   }
 }
 
-/*
-
-resource peerToSpoke 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2022-11-01' = {
-  parent: virtualNetworkHub
-  name: 'to_${virtualNetworkSpoke.name}'
-  properties: {
-    allowVirtualNetworkAccess: true
-    allowForwardedTraffic: true
-    allowGatewayTransit: false
-    useRemoteGateways: false
-    remoteVirtualNetwork: {
-      id: virtualNetworkSpoke.id
-    }
-  }
-}
-
-@description('Deploy pip-cosm-shared-test-001') 
-module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
-  name: 'deploy_pip-cosm-shared-test-001'
-  params: {
-    resourceScope: 'shared'
-    resourceLocation: location
-    resourceEnv: environmentType
-    publicIpAddress: '20.237.174.76'
-  }
-}
-
-
 @description('Deploy lgw-cosm-shared-test-001') 
 module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   name: 'deploy_lgw-cosm-shared-test-001'
@@ -117,7 +89,20 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
       '10.0.0.0/8'
       '172.31.253.0/24'
     ]
-    localNetworkGatewayIpAddress: '209.76.14.250'
+    localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
+  }
+}
+
+/*
+
+@description('Deploy pip-cosm-shared-test-001') 
+module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
+  name: 'deploy_pip-cosm-shared-test-001'
+  params: {
+    resourceScope: 'shared'
+    resourceLocation: location
+    resourceEnv: environmentType
+    publicIpAddress: '20.237.174.76'
   }
 }
 
