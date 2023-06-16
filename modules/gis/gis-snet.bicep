@@ -7,9 +7,9 @@ param resourceEnv string
 param nameSuffix string = resourceEnv
 
 param subnets_cosm_gis_int_vlan_cosm_gis_app_sn_name string = 'app-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = 'data-${nameSuffix}'
 //param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = 'web-${nameSuffix}'
 //param subnets_cosm_gis_int_vlan_cosm_gis_ws_sn_name string = 'ws-${nameSuffix}'
-param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = 'data-${nameSuffix}'
 
 param virtualNetworkName string
 
