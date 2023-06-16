@@ -23,14 +23,12 @@ param location string = resourceGroup().location
   'nonprod'
   'prod'
 ])
+
 param environmentType string
-param connectedServiceName string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
-
-param resourceGroupName string
 
 @description('Deploy vnet-cosm-shared-test-001') 
 module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
