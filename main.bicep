@@ -88,6 +88,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   }
 }
 
+/*
 @description('Deploy lgw-cosm-shared-test-001') 
 module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   name: 'deploy_lgw-cosm-shared-test-001'
@@ -131,3 +132,4 @@ module connection './modules/cosm/cosm-connection.bicep' = {
   }
 }
 
+*/
