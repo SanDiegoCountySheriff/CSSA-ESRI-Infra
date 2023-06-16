@@ -42,26 +42,28 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
         }
       }
     ]
-    natRules: []
-    virtualNetworkGatewayPolicyGroups: []
-    enableBgpRouteTranslationForNat: false
-    disableIPSecReplayProtection: false
+    //natRules: []
+    //virtualNetworkGatewayPolicyGroups: []
+    //enableBgpRouteTranslationForNat: false
+    //disableIPSecReplayProtection: false
+    /*
     sku: {
       name: sku
       tier: sku
     }
+    */
     vpnType: vpnType
     enableBgp: false
-    activeActive: false
+    //activeActive: false
     /*
     bgpSettings: {
       asn: 65515
       peerWeight: 0
       bgpPeeringAddress: localNetworkGateway.properties.bgpSettings.bgpPeeringAddress
     }*/
-    vpnGatewayGeneration: 'Generation2'
-    allowRemoteVnetTraffic: allowRemoteVnetTraffic
-    allowVirtualWanTraffic: allowVirtualWanTraffic
+    //vpnGatewayGeneration: 'Generation2'
+    //allowRemoteVnetTraffic: allowRemoteVnetTraffic
+    //allowVirtualWanTraffic: allowVirtualWanTraffic
   }
 }
 
