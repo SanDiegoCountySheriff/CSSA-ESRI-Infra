@@ -121,7 +121,6 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   }
 }
 
-
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
@@ -134,4 +133,5 @@ module connection './modules/cosm/cosm-connection.bicep' = {
     sharedKey: networkConnectionSharedKey
   }
 }
+
 */
