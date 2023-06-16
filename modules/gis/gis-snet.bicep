@@ -4,13 +4,12 @@ param resourceType string = 'snet'
 //param resourceName string
 param resourceEnv string
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
 param nameSuffix string = resourceEnv
 
-param subnets_cosm_gis_int_vlan_cosm_gis_app_sn_name string = '${namePrefix}-app-${nameSuffix}'
-param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = '${namePrefix}-web-${nameSuffix}'
-param subnets_cosm_gis_int_vlan_cosm_gis_ws_sn_name string = '${namePrefix}-ws-${nameSuffix}'
-param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = '${namePrefix}-data-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_app_sn_name string = '$app-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_web_sn_name string = '$web-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_ws_sn_name string = 'ws-${nameSuffix}'
+param subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name string = 'data-${nameSuffix}'
 
 param virtualNetworkName string
 
@@ -25,7 +24,7 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_app_sn 'Microsoft.Network/virtualNet
     addressPrefix: '172.16.1.0/26'
     delegations: []
     privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
   }
 }
 
@@ -36,7 +35,7 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_data_sn 'Microsoft.Network/virtualNe
     addressPrefix: '172.16.1.64/26'
     delegations: []
     privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
   }
 }
 
@@ -47,7 +46,7 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_web_sn 'Microsoft.Network/virtualNet
     addressPrefix: '172.16.1.128/26'
     delegations: []
     privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
   }
 }
 
@@ -58,7 +57,7 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_ws_sn 'Microsoft.Network/virtualNetw
     addressPrefix: '172.16.1.192/26'
     delegations: []
     privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
   }
 }
 
