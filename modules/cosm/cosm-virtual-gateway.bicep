@@ -23,22 +23,32 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
   name: localNetworkGatewayName
 }
 
+resource virtualNetworkGwSn 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+  name: '${virtualNetworkName}/GatewaySubnet'
+}
+
+resource virtualNetworkGatewayIp 'Microsoft.Network/publicIPAddresses@2022-11-01' existing = {
+  name: virtualNetworkGatewayIpAddressName
+}
+
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
   name: '${namePrefix}-${resourceScope}-${nameSuffix}'
   location: resourceLocation
+  dependsOn: [
+    virtualNetworkGatewayIp
+    virtualNetworkGwSn
+    localNetworkGateway
+  ]
   properties: {
     gatewayType: virtualNetworkGatewayType
+    enablePrivateIpAddress: false
     ipConfigurations: [
       {
         name: 'default'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: {
-            id: resourceId('Microsoft.Network/publicIPAddresses', virtualNetworkGatewayIpAddressName)
-          }
-          subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets/', virtualNetworkName, 'GatewaySubnet')
-          }
+          publicIPAddress: virtualNetworkGatewayIp
+          subnet: virtualNetworkGwSn
         }
       }
     ]
