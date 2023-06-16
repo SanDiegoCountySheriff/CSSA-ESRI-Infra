@@ -91,7 +91,7 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
     localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
 }
-
+/*
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   name: 'deploy_vgw-cosm-gis-test-001'
@@ -110,7 +110,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   }
 }
 
-/*
+
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
