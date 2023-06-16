@@ -58,9 +58,9 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
       peerWeight: 0
       bgpPeeringAddress: localNetworkGateway.properties.bgpSettings.bgpPeeringAddress
     }
-    //vpnGatewayGeneration: 'Generation2'
-    allowRemoteVnetTraffic: allowRemoteVnetTraffic
-    allowVirtualWanTraffic: allowVirtualWanTraffic
+    vpnGatewayGeneration: 'Generation2'
+    //allowRemoteVnetTraffic: allowRemoteVnetTraffic
+    //allowVirtualWanTraffic: allowVirtualWanTraffic
   }
 }
 
