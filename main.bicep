@@ -92,6 +92,19 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
+/*
+@description('Deploy pip-cosm-shared-test-001') 
+module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
+  name: 'deploy_pip-cosm-shared-test-001'
+  params: {
+    resourceScope: 'shared'
+    resourceLocation: location
+    resourceEnv: environmentType
+    publicIpAddress: '20.237.174.76'
+  }
+}
+*/
+
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   name: 'deploy_vgw-cosm-gis-test-001'
@@ -105,8 +118,8 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     //localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
     sku: 'VpnGw2'
-    allowRemoteVnetTraffic: false
-    allowVirtualWanTraffic: false
+    allowRemoteVnetTraffic: true
+    allowVirtualWanTraffic: true
   }
 }
 

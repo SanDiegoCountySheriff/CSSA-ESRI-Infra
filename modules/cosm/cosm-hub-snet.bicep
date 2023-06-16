@@ -17,7 +17,7 @@ resource cosmGatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01
     serviceEndpoints: []
     delegations: []
     //privateEndpointNetworkPolicies: 'Enabled'
-    //privateLinkServiceNetworkPolicies: 'Enabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
   }
 }
 
