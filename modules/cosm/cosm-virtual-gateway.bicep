@@ -31,7 +31,7 @@ resource virtualNetworkGatewayIp 'Microsoft.Network/publicIPAddresses@2022-11-01
   name: virtualNetworkGatewayIpAddressName
 }
 
-resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
+resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2020-11-01' = {
   name: '${namePrefix}-${resourceScope}-${nameSuffix}'
   location: resourceLocation
   dependsOn: [
@@ -62,7 +62,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
     }
     vpnType: vpnType
     enableBgp: false
-    //activeActive: false
+    activeActive: false
     /*
     bgpSettings: {
       asn: 65515
