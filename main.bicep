@@ -86,7 +86,7 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
     resourceEnv: environmentType
     localNetworkGatewayAddressPrefixes: [
       '10.0.0.0/8'
-      '172.31.253.0/24'
+      //'172.31.253.0/24'
     ]
     localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
@@ -120,6 +120,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     //allowVirtualWanTraffic: true
   }
 }
+
 /*
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
