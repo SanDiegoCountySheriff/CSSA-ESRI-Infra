@@ -29,7 +29,6 @@ variables:
   EnvironmentType: 'nonprod'
   ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
-  ResourceNameSuffix: $(System.JobId) # Assuming that JobId is used as a unique suffix
   
 jobs:
   - job:
@@ -43,5 +42,4 @@ jobs:
           overrideParameters: >
             -location "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
-            -resourceNameSuffix "$(ResourceNameSuffix)"
             -networkConnectionSharedKey '$(networkConnectionSharedKey)'
