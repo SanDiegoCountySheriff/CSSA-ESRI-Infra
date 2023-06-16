@@ -23,8 +23,6 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
   name: localNetworkGatewayName
 }
 
-
-
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
   name: '${namePrefix}-${resourceScope}-${nameSuffix}'
   location: resourceLocation

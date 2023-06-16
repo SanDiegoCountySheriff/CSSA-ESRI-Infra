@@ -113,14 +113,14 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     virtualNetworkGatewayType: 'Vpn'
     virtualNetworkGatewayIpAddressName: virtualGatewayPublicIp.outputs.name
     virtualNetworkName: cosmHubVirtualNetwork.outputs.name
-    //localNetworkGatewayName: localNetworkGateway.outputs.name
+    localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
     sku: 'VpnGw2'
-    allowRemoteVnetTraffic: true
-    allowVirtualWanTraffic: true
+    //allowRemoteVnetTraffic: true
+    //allowVirtualWanTraffic: true
   }
 }
-
+/*
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
@@ -133,3 +133,4 @@ module connection './modules/cosm/cosm-connection.bicep' = {
     sharedKey: networkConnectionSharedKey
   }
 }
+*/
