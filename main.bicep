@@ -68,7 +68,6 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
   }
 }
 
-
 @description('Deploy snet-cosm-gis-test-001') 
 module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   name: 'deploy_snet-cosm-gis-test-001'
@@ -93,8 +92,6 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
-/*
-
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
@@ -105,7 +102,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
     publicIpAddress: '20.237.174.76'
   }
 }
-
+/*
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   name: 'deploy_vgw-cosm-gis-test-001'
