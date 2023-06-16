@@ -44,7 +44,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: publicIPAddress
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, 'GatewaySubnet')
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets/', virtualNetworkName, 'GatewaySubnet')
           }
         }
       }
