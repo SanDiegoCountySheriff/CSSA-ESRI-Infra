@@ -9,7 +9,7 @@ param resourceNumber string = '001'
 param namePrefix string = '${resourceType}-${resourceAgency}'
 param nameSuffix string = '${resourceEnv}-${resourceNumber}'
 
-//param virtualNetworkGatewayIpAddressName string
+param virtualNetworkGatewayIpAddressName string
 param virtualNetworkName string
 
 param virtualNetworkGatewayType string
@@ -24,13 +24,6 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
 }
 */
 
-resource publicIPAddress 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
-  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
-  location: resourceLocation
-  properties: {
-    publicIPAllocationMethod: 'Dynamic'
-  }
-}
 
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
   name: '${namePrefix}-${resourceScope}-${nameSuffix}'
@@ -42,7 +35,9 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
         name: 'default'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: publicIPAddress
+          publicIPAddress: {
+            id: resourceId('Microsoft.Network/publicIPAddresses', virtualNetworkGatewayIpAddressName)
+          }
           subnet: {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets/', virtualNetworkName, 'GatewaySubnet')
           }
@@ -76,4 +71,3 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
 
 output id string = virtualNetworkGateway.id
 output name string = virtualNetworkGateway.name
-output pipName string = publicIPAddress.name
