@@ -24,12 +24,13 @@ param location string = resourceGroup().location
   'prod'
 ])
 param environmentType string
+param connectedServiceName string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
-param environment string = 'test'
+param resourceGroupName string
 
 @description('Deploy vnet-cosm-shared-test-001') 
 module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
@@ -37,7 +38,7 @@ module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
   params: {
     resourceScope: 'shared'
     resourceLocation: location
-    resourceEnv: environment
+    resourceEnv: environmentType
     virtualNetworkAddressPrefixes: [
       '172.16.0.0/21'
     ]
@@ -60,7 +61,7 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
   params: {
     resourceScope: 'gis'
     resourceLocation: location
-    resourceEnv: environment
+    resourceEnv: environmentType
     virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
     virtualNetworkAddressPrefixes: [
       '172.16.1.0/24'
@@ -72,7 +73,7 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
 module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   name: 'deploy_snet-cosm-gis-test-001'
   params: {
-    resourceEnv: environment
+    resourceEnv: environmentType
     virtualNetworkName: gisVirtualNetwork.outputs.name
   }
 }
@@ -83,7 +84,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   params: {
     resourceScope: 'shared'
     resourceLocation: location
-    resourceEnv: environment
+    resourceEnv: environmentType
     publicIpAddress: '20.237.174.76'
   }
 }
@@ -94,7 +95,7 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   params: {
     resourceScope: 'shared'
     resourceLocation: location
-    resourceEnv: environment
+    resourceEnv: environmentType
     localNetworkGatewayAddressPrefixes: [
       '10.0.0.0/8'
       '172.31.253.0/24'
@@ -109,7 +110,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   params: {
     resourceScope: 'gis'
     resourceLocation: location
-    resourceEnv: environment
+    resourceEnv: environmentType
     virtualNetworkGatewayType: 'Vpn'
     virtualNetworkGatewayIpAddressId: virtualGatewayPublicIp.outputs.id
     virtualNetworkId: gisVirtualNetwork.outputs.id
@@ -125,10 +126,10 @@ module connection './modules/cosm/cosm-connection.bicep' = {
   params: {
     resourceScope: 'shared'
     resourceLocation: location
-    resourceEnv: environment
+    resourceEnv: environmentType
     localNetworkGatewayName: localNetworkGateway.outputs.name
     virtualNetworkGatewayName: virtualNetworkGateway.outputs.name
-    sharedKey: '$(NETWORKCONNECTIONSHAREDKEY)'
+    sharedKey: '$(networkConnectionSharedKey)'
   }
 }
 

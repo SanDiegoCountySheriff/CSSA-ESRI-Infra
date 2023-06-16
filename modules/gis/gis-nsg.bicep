@@ -24,7 +24,6 @@ resource networkSecurityGroups_cosm_gis_ws_nsg 'Microsoft.Network/networkSecurit
   tags: {
     app: globalApplicationName
     tier: 'network'
-    env: sharedVariables.prefix.env
     resource: 'nsg'
   }
   properties: {
