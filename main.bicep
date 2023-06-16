@@ -54,6 +54,7 @@ module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-snet.bicep' = {
   }
 }
 
+/*
 @description('Deploy vnet-cosm-gis-test-001') 
 module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
   name: 'deploy_vnet-cosm-gis-test-001'
@@ -77,7 +78,7 @@ module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   }
 }
 
-/*
+
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
