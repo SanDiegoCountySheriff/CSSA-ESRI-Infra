@@ -16,28 +16,33 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 trigger:
-- main
-
+  - main
+  
 pool:
-  vmImage: ubuntu-latest
-
-#pool:
-#  name: 'On-Premises'
-
+    vmImage: ubuntu-latest
+  
+  #pool:
+  #  name: 'On-Premises'
+  
 variables:
   ServiceConnectionName: 'GISTestServiceConnection'
   EnvironmentType: 'nonprod'
   ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
-
+  ResourceNameSuffix: $(System.JobId) # Assuming that JobId is used as a unique suffix
+  NetworkConnectionSharedKey: '$(networkConnectionSharedKey)'
+  
 jobs:
   - job:
     steps:
-    - task: AzureResourceManagerTemplateDeployment@3
-      inputs:
-        connectedServiceName: $(ServiceConnectionName)
-        location: $(DeploymentDefaultLocation)
-        resourceGroupName: $(ResourceGroupName)
-        csmFile: main.bicep
-        overrideParameters: >
-          -environmentType $(EnvironmentType)
+      - task: AzureResourceManagerTemplateDeployment@3
+        inputs:
+          connectedServiceName: $(ServiceConnectionName)
+          location: $(DeploymentDefaultLocation)
+          resourceGroupName: $(ResourceGroupName)
+          csmFile: main.bicep
+          overrideParameters: >
+            -location "$(DeploymentDefaultLocation)" 
+            -environmentType "$(EnvironmentType)" 
+            -resourceNameSuffix "$(ResourceNameSuffix)"
+            -networkConnectionSharedKey '$(NetworkConnectionSharedKey)'

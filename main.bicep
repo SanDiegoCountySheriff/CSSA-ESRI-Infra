@@ -25,6 +25,7 @@ param location string = resourceGroup().location
 ])
 
 param environmentType string
+param networkConnectionSharedKey string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
@@ -117,7 +118,6 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   }
 }
 
-
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
@@ -127,7 +127,7 @@ module connection './modules/cosm/cosm-connection.bicep' = {
     resourceEnv: environmentType
     localNetworkGatewayName: localNetworkGateway.outputs.name
     virtualNetworkGatewayName: virtualNetworkGateway.outputs.name
-    sharedKey: '$(networkConnectionSharedKey)'
+    sharedKey: networkConnectionSharedKey
   }
 }
 
