@@ -91,6 +91,7 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
     localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
 }
+
 /*
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
