@@ -49,8 +49,8 @@ module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-snet.bicep' = {
   name: 'deploy_snet-cosm-shared-test-001'
   params: {
     virtualNetworkName: cosmHubVirtualNetwork.outputs.name
-    virtualNetworkGwSubnetAddressPrefix: '172.16.0.0/24'
-    virtualNetworkFwSubnetAddressPrefix: '172.16.0.1/24'
+    virtualNetworkGwSubnetAddressPrefix: '172.16.0.0/25'
+    virtualNetworkFwSubnetAddressPrefix: '172.16.0.128/25'
   }
 }
 
@@ -63,7 +63,7 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
     resourceEnv: environment
     virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
     virtualNetworkAddressPrefixes: [
-      '172.16.1.0/21'
+      '172.16.1.0/24'
     ]
   }
 }
@@ -73,7 +73,7 @@ module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   name: 'deploy_snet-cosm-gis-test-001'
   params: {
     resourceEnv: environment
-    virtualNetworkName: cosmHubVirtualNetwork.outputs.name
+    virtualNetworkName: gisVirtualNetwork.outputs.name
   }
 }
 

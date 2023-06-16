@@ -2,8 +2,8 @@
 //param nameSuffix string = 'sn'
 
 param virtualNetworkName string
-param virtualNetworkGwSubnetAddressPrefix string = '172.16.0.0/24'
-param virtualNetworkFwSubnetAddressPrefix string = '172.16.0.1/24'
+param virtualNetworkGwSubnetAddressPrefix string
+param virtualNetworkFwSubnetAddressPrefix string
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
   name: virtualNetworkName
