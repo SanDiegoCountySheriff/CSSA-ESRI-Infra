@@ -68,7 +68,6 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
   }
 }
 
-/*
 @description('Deploy snet-cosm-gis-test-001') 
 module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   name: 'deploy_snet-cosm-gis-test-001'
@@ -78,6 +77,21 @@ module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   }
 }
 
+/*
+
+resource peerToSpoke 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2022-11-01' = {
+  parent: virtualNetworkHub
+  name: 'to_${virtualNetworkSpoke.name}'
+  properties: {
+    allowVirtualNetworkAccess: true
+    allowForwardedTraffic: true
+    allowGatewayTransit: false
+    useRemoteGateways: false
+    remoteVirtualNetwork: {
+      id: virtualNetworkSpoke.id
+    }
+  }
+}
 
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
