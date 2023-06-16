@@ -92,7 +92,7 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
-/*
+
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
@@ -121,7 +121,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     //allowVirtualWanTraffic: true
   }
 }
-
+/*
 
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {

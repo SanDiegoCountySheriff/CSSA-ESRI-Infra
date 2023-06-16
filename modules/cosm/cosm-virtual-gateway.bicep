@@ -63,15 +63,18 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
     vpnType: vpnType
     enableBgp: false
     //activeActive: false
+    /*
     bgpSettings: {
       asn: 65515
       peerWeight: 0
       bgpPeeringAddress: localNetworkGateway.properties.bgpSettings.bgpPeeringAddress
     }
+    */
     vpnGatewayGeneration: 'Generation2'
     //allowRemoteVnetTraffic: allowRemoteVnetTraffic
     //allowVirtualWanTraffic: allowVirtualWanTraffic
   }
+
 }
 
 output id string = virtualNetworkGateway.id
