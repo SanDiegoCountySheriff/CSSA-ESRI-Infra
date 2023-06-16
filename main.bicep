@@ -92,19 +92,6 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
-@description('Deploy con-cosm-shared-test-001') 
-module connection './modules/cosm/cosm-connection.bicep' = {
-  name: 'deploy_con-cosm-shared-test-001'
-  params: {
-    resourceScope: 'shared'
-    resourceLocation: location
-    resourceEnv: environmentType
-    localNetworkGatewayName: localNetworkGateway.outputs.name
-    virtualNetworkGatewayName: virtualNetworkGateway.outputs.name
-    sharedKey: networkConnectionSharedKey
-  }
-}
-
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
@@ -115,7 +102,6 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
     publicIpAddress: '20.237.174.76'
   }
 }
-
 
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
@@ -135,6 +121,15 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   }
 }
 
-/*
-
-*/
+@description('Deploy con-cosm-shared-test-001') 
+module connection './modules/cosm/cosm-connection.bicep' = {
+  name: 'deploy_con-cosm-shared-test-001'
+  params: {
+    resourceScope: 'shared'
+    resourceLocation: location
+    resourceEnv: environmentType
+    localNetworkGatewayName: localNetworkGateway.outputs.name
+    virtualNetworkGatewayName: virtualNetworkGateway.outputs.name
+    sharedKey: networkConnectionSharedKey
+  }
+}
