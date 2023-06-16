@@ -31,10 +31,10 @@ resource peerSpokeToHub 'Microsoft.Network/virtualNetworks/virtualNetworkPeering
   parent: virtualNetworkSpoke
   name: 'to_${virtualNetworkHub.name}'
   properties: {
-    allowForwardedTraffic: true
+    allowForwardedTraffic: false
     allowGatewayTransit: false
-    allowVirtualNetworkAccess: true
-    useRemoteGateways: true
+    allowVirtualNetworkAccess: false
+    useRemoteGateways: false
     remoteVirtualNetwork: {
       id: virtualNetworkHub.id
     }
