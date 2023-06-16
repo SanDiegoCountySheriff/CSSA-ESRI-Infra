@@ -91,7 +91,7 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
     localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
 }
-
+/*
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
@@ -102,6 +102,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
     publicIpAddress: '20.237.174.76'
   }
 }
+*/
 
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
@@ -111,7 +112,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     virtualNetworkGatewayType: 'Vpn'
-    virtualNetworkGatewayIpAddressName: virtualGatewayPublicIp.outputs.name
+    //virtualNetworkGatewayIpAddressName: virtualGatewayPublicIp.outputs.name
     virtualNetworkName: gisVirtualNetwork.outputs.name
     //localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
