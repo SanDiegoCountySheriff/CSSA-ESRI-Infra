@@ -34,7 +34,7 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_data_sn 'Microsoft.Network/virtualNe
   parent: virtualNetworks_cosm_gis_int_vlan
   name: subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name
   properties: {
-    addressPrefix: '172.16.2.64/26'
+    addressPrefix: '172.16.1.128/25'
     serviceEndpoints: []
     delegations: []
     privateEndpointNetworkPolicies: 'Disabled'
