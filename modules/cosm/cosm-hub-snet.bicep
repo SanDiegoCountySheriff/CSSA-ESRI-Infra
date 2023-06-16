@@ -16,7 +16,7 @@ resource cosmGatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01
     addressPrefix: virtualNetworkGwSubnetAddressPrefix
     serviceEndpoints: []
     delegations: []
-    privateEndpointNetworkPolicies: 'Disabled'
+    privateEndpointNetworkPolicies: 'Enabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
   }
 }
@@ -28,7 +28,7 @@ resource cosmFirewallSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-0
     addressPrefix: virtualNetworkFwSubnetAddressPrefix
     serviceEndpoints: []
     delegations: []
-    privateEndpointNetworkPolicies: 'Disabled'
+    privateEndpointNetworkPolicies: 'Enabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
   }
 }
