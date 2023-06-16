@@ -30,7 +30,6 @@ variables:
   ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
   ResourceNameSuffix: $(System.JobId) # Assuming that JobId is used as a unique suffix
-  NetworkConnectionSharedKey: '$(networkConnectionSharedKey)'
   
 jobs:
   - job:
@@ -45,4 +44,4 @@ jobs:
             -location "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -resourceNameSuffix "$(ResourceNameSuffix)"
-            -networkConnectionSharedKey '$(NetworkConnectionSharedKey)'
+            -networkConnectionSharedKey '$(networkConnectionSharedKey)'
