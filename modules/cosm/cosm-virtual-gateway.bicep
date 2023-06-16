@@ -17,12 +17,12 @@ param vpnType string
 param sku string
 param allowRemoteVnetTraffic bool = false
 param allowVirtualWanTraffic bool = false
-/*
+
 param localNetworkGatewayName string
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' existing = {
   name: localNetworkGatewayName
 }
-*/
+
 
 
 resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11-01' = {
@@ -48,21 +48,18 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
     //virtualNetworkGatewayPolicyGroups: []
     //enableBgpRouteTranslationForNat: false
     //disableIPSecReplayProtection: false
-    /*
     sku: {
       name: sku
       tier: sku
     }
-    */
     vpnType: vpnType
     enableBgp: false
     //activeActive: false
-    /*
     bgpSettings: {
       asn: 65515
       peerWeight: 0
       bgpPeeringAddress: localNetworkGateway.properties.bgpSettings.bgpPeeringAddress
-    }*/
+    }
     //vpnGatewayGeneration: 'Generation2'
     allowRemoteVnetTraffic: allowRemoteVnetTraffic
     allowVirtualWanTraffic: allowVirtualWanTraffic
