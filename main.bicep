@@ -102,7 +102,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
     publicIpAddress: '20.237.174.76'
   }
 }
-
+/*
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   name: 'deploy_vgw-cosm-gis-test-001'
@@ -120,7 +120,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     //allowVirtualWanTraffic: true
   }
 }
-/*
+
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
