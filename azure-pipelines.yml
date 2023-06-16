@@ -23,12 +23,13 @@ pool:
   
   #pool:
   #  name: 'On-Premises'
-  
+
 variables:
   ServiceConnectionName: 'GISTestServiceConnection'
   EnvironmentType: 'nonprod'
   ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
+  System.Debug: true
   
 jobs:
   - job:
