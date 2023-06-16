@@ -86,12 +86,12 @@ module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
     resourceEnv: environmentType
     localNetworkGatewayAddressPrefixes: [
       '10.0.0.0/8'
-      //'172.31.253.0/24'
+      '172.31.253.0/24'
     ]
     localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
 }
-
+/*
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
@@ -121,7 +121,7 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   }
 }
 
-/*
+
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
