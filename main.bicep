@@ -38,7 +38,7 @@ module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     virtualNetworkAddressPrefixes: [
-      '172.16.0.0/21'
+      '172.16.0.0/24'
     ]
   }
 }
