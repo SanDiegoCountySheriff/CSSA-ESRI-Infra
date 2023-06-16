@@ -40,7 +40,7 @@ resource peerSpokeToHub 'Microsoft.Network/virtualNetworks/virtualNetworkPeering
     }
   }
 }
-
+/*
 resource peerHubToSpoke 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2022-11-01' = {
   parent: virtualNetworkHub
   name: 'to_${virtualNetworkSpoke.name}'
@@ -54,7 +54,7 @@ resource peerHubToSpoke 'Microsoft.Network/virtualNetworks/virtualNetworkPeering
     }
   }
 }
-
+*/
 output name string = virtualNetworkSpoke.name
 output addressSpace object = virtualNetworkSpoke.properties.addressSpace
 output id string = virtualNetworkSpoke.id
