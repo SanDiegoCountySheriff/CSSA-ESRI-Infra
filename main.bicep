@@ -77,21 +77,6 @@ module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   }
 }
 
-@description('Deploy lgw-cosm-shared-test-001') 
-module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
-  name: 'deploy_lgw-cosm-shared-test-001'
-  params: {
-    resourceScope: 'shared'
-    resourceLocation: location
-    resourceEnv: environmentType
-    localNetworkGatewayAddressPrefixes: [
-      '10.0.0.0/8'
-      '172.31.253.0/24'
-    ]
-    localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
-  }
-}
-
 @description('Deploy pip-cosm-shared-test-001') 
 module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_pip-cosm-shared-test-001'
@@ -111,13 +96,29 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     virtualNetworkGatewayType: 'Vpn'
-    virtualNetworkGatewayIpAddressId: virtualGatewayPublicIp.outputs.id
+    virtualNetworkGatewayIpAddressName: virtualGatewayPublicIp.outputs.name
     virtualNetworkName: gisVirtualNetwork.outputs.name
-    localNetworkGatewayName: localNetworkGateway.outputs.name
+    //localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
     sku: 'VpnGw2'
-    allowRemoteVnetTraffic: true
-    allowVirtualWanTraffic: true
+    allowRemoteVnetTraffic: false
+    allowVirtualWanTraffic: false
+  }
+}
+
+
+@description('Deploy lgw-cosm-shared-test-001') 
+module localNetworkGateway './modules/cosm/cosm-local-gateway.bicep' = {
+  name: 'deploy_lgw-cosm-shared-test-001'
+  params: {
+    resourceScope: 'shared'
+    resourceLocation: location
+    resourceEnv: environmentType
+    localNetworkGatewayAddressPrefixes: [
+      '10.0.0.0/8'
+      '172.31.253.0/24'
+    ]
+    localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
 }
 
