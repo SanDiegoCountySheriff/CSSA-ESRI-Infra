@@ -37,10 +37,10 @@ jobs:
       - task: AzurePowerShell@5
         displayName: 'Resource cleanup task'
         inputs:
-          azureSubscription: '${{ parameters.ServiceConn }}'
+          azureSubscription: '$(SubscriptionId)'
           ScriptType: 'FilePath'
           ScriptPath: './scripts/cleanup-rg.ps1'
-          ScriptArguments: '-rg $(ResourceGroupName) -subscriptionId $(ServiceConnectionName)'
+          ScriptArguments: '-rg $(ResourceGroupName) -subscriptionId $(SubscriptionId)'
           azurePowerShellVersion: 'LatestVersion'
           pwsh: true
       - task: AzureResourceManagerTemplateDeployment@3
