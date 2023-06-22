@@ -34,11 +34,15 @@ variables:
 jobs:
   - job:
     steps:
-      - bash: az group list -o tsv  --query "[?contains(@.name, 'rg-cosm-gis-env-test')==\`true\`].name"
-               for rg in $(az group list -o tsv --query "[?contains(@.name, 'rg-cosm-gis-env-test')==\`true\`].name");
-               do
-                  az group delete --name $rg -y --no-wait;
-               done
+      - task: AzurePowerShell@5
+        displayName: 'Resource cleanup task'
+        inputs:
+          azureSubscription: '${{ parameters.ServiceConn }}'
+          ScriptType: 'FilePath'
+          ScriptPath: './scripts/cleanup-rg.ps1'
+          ScriptArguments: '-rg $(ResourceGroupName) -subscriptionId $(ServiceConnectionName)'
+          azurePowerShellVersion: 'LatestVersion'
+          pwsh: true
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
           connectedServiceName: $(ServiceConnectionName)
