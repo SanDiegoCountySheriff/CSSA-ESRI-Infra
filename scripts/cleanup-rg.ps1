@@ -3,12 +3,8 @@
  param (
     [Parameter(Mandatory=$true)]
     [string]$rg = ""
-    #[Parameter(Mandatory=$true)]
-    #[string]$subscriptionId = ""
  )
 
-# List all resource groups that will be removed.
-#Get-AzResourceGroup | ? ResourceGroupName -match $rg | Select-Object ResourceGroupName
 Get-AzResourceGroup -Name $rg -ErrorVariable notPresent -ErrorAction SilentlyContinue
 if ($notPresent) {
     exit(0)
