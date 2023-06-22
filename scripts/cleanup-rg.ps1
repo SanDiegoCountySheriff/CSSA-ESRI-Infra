@@ -16,6 +16,6 @@ $rg_resource_location = ($rg_resource).Location
 
 Remove-AzResourceGroup -Name $rg_resource_name -AsJob -Force
 
-New-AzResourceGroup -Name ResourceGroupName -Location $rg_resource_location
+#New-AzResourceGroup -Name ResourceGroupName -Location $rg_resource_location
 
 # Remove the resource groups shown in the preceding command.
