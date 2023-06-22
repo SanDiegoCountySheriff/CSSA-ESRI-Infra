@@ -10,11 +10,13 @@
 # List all resource groups that will be removed.
 #Get-AzResourceGroup | ? ResourceGroupName -match $rg | Select-Object ResourceGroupName
 $rg_resource = Get-AzResourceGroup -Name $rg
+if ($null -ne $rg_resource) {
+    $rg_resource_name = ($rg_resource).ResourceGroupName 
+    $rg_resource_location = ($rg_resource).Location
 
-$rg_resource_name = ($rg_resource).ResourceGroupName 
-$rg_resource_location = ($rg_resource).Location
-
-Remove-AzResourceGroup -Name $rg_resource_name -AsJob -Force
+    Start-Job -Name removeRg -ScriptBlock { Remove-AzResourceGroup -Name $rg_resource_name -AsJob -Force }
+    Wait-Job -Name removeRg
+}
 
 #New-AzResourceGroup -Name ResourceGroupName -Location $rg_resource_location
 
