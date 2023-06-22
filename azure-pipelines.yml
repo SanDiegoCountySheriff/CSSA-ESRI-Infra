@@ -32,7 +32,7 @@ variables:
   System.Debug: true
   
 jobs:
-  - job:
+  - job: Prep
     steps:
       - task: AzurePowerShell@5
         displayName: 'Resource cleanup task'
@@ -43,6 +43,8 @@ jobs:
           ScriptArguments: '-rg $(ResourceGroupName)'
           azurePowerShellVersion: 'LatestVersion'
           pwsh: true
+  - job: Deploy
+    steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
           connectedServiceName: $(ServiceConnectionName)
@@ -53,3 +55,9 @@ jobs:
             -location "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -networkConnectionSharedKey '$(networkConnectionSharedKey)'
+stages:
+   - stage: Prep
+     jobs: Prep
+   - stage: Deploy
+     dependsOn: Prep
+     jobs: Deploy
