@@ -41,7 +41,7 @@ stages:
             inputs:
               azureSubscription: $(ServiceConnectionName)
               ScriptType: 'FilePath'
-              ScriptPath: '$(Pipeline.Workspace)/scripts/cleanup-rg.ps1'
+              ScriptPath: './scripts/cleanup-rg.ps1'
               ScriptArguments: '-rg $(ResourceGroupName)'
               azurePowerShellVersion: 'LatestVersion'
               pwsh: true
