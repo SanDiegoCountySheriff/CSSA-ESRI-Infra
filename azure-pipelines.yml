@@ -32,21 +32,22 @@ variables:
   System.Debug: true
 
 stages:
-  - stage: prepStage
-    jobs:
-      - job: Prep
-        steps:
-          - task: AzurePowerShell@5
-            displayName: 'Resource cleanup task'
-            inputs:
-              azureSubscription: $(ServiceConnectionName)
-              ScriptType: 'FilePath'
-              ScriptPath: './scripts/cleanup-rg.ps1'
-              ScriptArguments: '-rg $(ResourceGroupName)'
-              azurePowerShellVersion: 'LatestVersion'
-              pwsh: true
+  
+  # - stage: prepStage
+  #   jobs:
+  #     - job: Prep
+  #       steps:
+  #         - task: AzurePowerShell@5
+  #           displayName: 'Resource cleanup task'
+  #           inputs:
+  #             azureSubscription: $(ServiceConnectionName)
+  #             ScriptType: 'FilePath'
+  #             ScriptPath: './scripts/cleanup-rg.ps1'
+  #             ScriptArguments: '-rg $(ResourceGroupName)'
+  #             azurePowerShellVersion: 'LatestVersion'
+  #             pwsh: true
   - stage: deployStage
-    dependsOn: prepStage
+    # dependsOn: prepStage
     jobs:
       - job: Deploy
         steps:
