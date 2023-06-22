@@ -37,16 +37,25 @@ stages:
     jobs:
       - job: Prep
         steps:
-          - pwsh: './scripts/cleanup-rg.ps1 -rg $(ResourceGroupName)'
-      # - job: Prep2
-      #   steps:
-      #     - task: AzureResourceGroupDeployment@2
-      #       inputs:
-      #         # Azure Details
-      #         azureSubscription: $(ServiceConnectionName)
-      #         location: $(DeploymentDefaultLocation)
-      #         action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
-      #         resourceGroupName: $(ResourceGroupName)
+          - task: AzurePowerShell@5
+            displayName: 'Resource cleanup task'
+            inputs:
+              azureSubscription: $(ServiceConnectionName)
+              location: $(DeploymentDefaultLocation)
+              ScriptType: 'FilePath'
+              ScriptPath: './scripts/cleanup-rg.ps1'
+              ScriptArguments: '-rg $(ResourceGroupName)'
+              azurePowerShellVersion: 'LatestVersion'
+              pwsh: true
+      - job: Prep2
+        steps:
+          - task: AzureResourceGroupDeployment@2
+            inputs:
+              # Azure Details
+              azureSubscription: $(ServiceConnectionName)
+              location: $(DeploymentDefaultLocation)
+              action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
+              resourceGroupName: $(ResourceGroupName)
 
   - stage: deployStage
     dependsOn: prepStage
