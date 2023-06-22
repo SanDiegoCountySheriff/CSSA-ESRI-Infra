@@ -80,10 +80,9 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
     }
     */
     vpnGatewayGeneration: 'Generation2'
-    //allowRemoteVnetTraffic: allowRemoteVnetTraffic
-    //allowVirtualWanTraffic: allowVirtualWanTraffic
+    allowRemoteVnetTraffic: allowRemoteVnetTraffic
+    allowVirtualWanTraffic: allowVirtualWanTraffic
   }
-
 }
 
 output id string = virtualNetworkGateway.id

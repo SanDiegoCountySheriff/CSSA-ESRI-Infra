@@ -151,3 +151,30 @@ module connection './modules/cosm/cosm-connection.bicep' = {
     sharedKey: networkConnectionSharedKey
   }
 }
+
+
+@description('Enable Vnet Peering between Hub and Spoke') 
+module virtualNetworkPeering './modules/cosm/cosm-peering.bicep' = {
+  name: 'deploy_vnp-cosm-gis-test-001'
+  dependsOn: [
+    gisVirtualNetwork
+    gisVirtualNetworkSubnets
+    cosmHubVirtualNetwork
+    cosmHubVirtualNetworkSubnets
+    localNetworkGateway
+    virtualNetworkGateway
+    connection
+  ]
+  params: {
+    virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
+    virtualNetworkSpokeName: gisVirtualNetwork.outputs.name
+    spokeAllowForwardedTraffic: true
+    spokeAllowVirtualNetworkAccess: true
+    spokeUseRemoteGateways: true
+    spokeAllowGatewayTransit: false
+    hubAllowForwardedTraffic: false
+    hubAllowVirtualNetworkAccess: true
+    hubUseRemoteGateways: false
+    hubAllowGatewayTransit: true
+  }
+}
