@@ -34,6 +34,11 @@ variables:
 jobs:
   - job:
     steps:
+      - bash: az group list -o tsv  --query "[?contains(@.name, 'rg-cosm-gis-env-test')==\`true\`].name"
+               for rg in $(az group list -o tsv --query "[?contains(@.name, 'rg-cosm-gis-env-test')==\`true\`].name");
+               do
+                  az group delete --name $rg -y --no-wait;
+               done
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
           connectedServiceName: $(ServiceConnectionName)

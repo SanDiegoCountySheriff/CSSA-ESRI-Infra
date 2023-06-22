@@ -32,24 +32,6 @@ param networkConnectionSharedKey string
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
-
-resource exampleScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: 'cleanup-script'
-  location: location
-  kind: 'AzurePowerShell'
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '/subscriptions/{sub-id}/resourcegroups/{rg-name}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{id-name}': {}
-    }
-  }
-  properties: {
-    azPowerShellVersion: '8.3'
-    scriptContent: loadTextContent('./scripts/cleanup-rg.ps1')
-    retentionInterval: 'P1D'
-  }
-}
-
 @description('Deploy vnet-cosm-shared-test-001') 
 module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
   name: 'deploy_vnet-cosm-shared-test-001'
