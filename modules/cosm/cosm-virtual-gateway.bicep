@@ -23,11 +23,14 @@ resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01'
   name: localNetworkGatewayName
 }
 
-resource virtualNetworkGwSn 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
+resource virtualNetworkHubVnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
   name: virtualNetworkName
 }
 
-var virtualNetworkGwSnId = filter(virtualNetworkGwSn.properties.subnets, s => s.name == 'GatewaySubnet')[0].id
+resource virtualNetworkGwSn 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+  name : 'GatewaySubnet'
+  parent: virtualNetworkHubVnet
+}
 
 resource virtualNetworkGatewayIp 'Microsoft.Network/publicIPAddresses@2022-11-01' existing = {
   name: virtualNetworkGatewayIpAddressName
@@ -50,9 +53,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2020-11
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: virtualNetworkGatewayIp
-          subnet: {
-            id: virtualNetworkGwSnId
-          }
+          subnet: virtualNetworkGwSn
         }
       }
     ]
