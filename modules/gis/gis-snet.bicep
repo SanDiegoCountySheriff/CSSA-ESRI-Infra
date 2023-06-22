@@ -30,7 +30,6 @@ resource subnets_cosm_gis_int_vlan_cosm_gis_app_sn 'Microsoft.Network/virtualNet
   }
 }
 
-
 resource subnets_cosm_gis_int_vlan_cosm_gis_data_sn 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   parent: virtualNetworks_cosm_gis_int_vlan
   name: subnets_cosm_gis_int_vlan_cosm_gis_data_sn_name

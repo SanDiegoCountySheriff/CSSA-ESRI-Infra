@@ -53,7 +53,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress:  {
-            id: virtualNetworkGwSn.id
+            id: virtualNetworkGatewayIp.id
           }
           subnet: {
             id: virtualNetworkGwSn.id
