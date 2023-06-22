@@ -46,7 +46,7 @@ stages:
               ScriptPath: './scripts/cleanup-rg.ps1'
               ScriptArguments: '-rg $(ResourceGroupName)'
               azurePowerShellVersion: 'LatestVersion'
-              pwsh: true
+              #pwsh: true
       - job: Prep2
         steps:
           - task: AzureResourceGroupDeployment@2
