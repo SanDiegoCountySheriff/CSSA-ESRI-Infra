@@ -40,7 +40,7 @@ module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     virtualNetworkAddressPrefixes: [
-      '172.16.0.0/24'
+      '172.18.0.0/23'
     ]
   }
 }
@@ -50,8 +50,9 @@ module cosmHubVirtualNetworkSubnets './modules/cosm/cosm-hub-snet.bicep' = {
   name: 'deploy_snet-cosm-shared-test-001'
   params: {
     virtualNetworkName: cosmHubVirtualNetwork.outputs.name
-    virtualNetworkGwSubnetAddressPrefix: '172.16.0.0/25'
-    virtualNetworkFwSubnetAddressPrefix: '172.16.0.128/25'
+    virtualNetworkGwSubnetAddressPrefix: '172.18.0.0/25'
+    virtualNetworkFwSubnetAddressPrefix: '172.18.0.128/25'
+    virtualNetworkAppGwSubnetAddressPrefix: '172.18.1.0/25'
   }
 }
 
@@ -63,7 +64,7 @@ module gisVirtualNetwork './modules/cosm/cosm-spoke-vnet.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     virtualNetworkAddressPrefixes: [
-      '172.16.1.0/24'
+      '172.18.2.0/24'
     ]
   }
 }
@@ -74,6 +75,8 @@ module gisVirtualNetworkSubnets './modules/gis/gis-snet.bicep' = {
   params: {
     resourceEnv: environmentType
     virtualNetworkName: gisVirtualNetwork.outputs.name
+    subnets_cosm_gis_int_vlan_cosm_gis_app_sn_addresses: '172.18.2.0/25'
+    subnets_cosm_gis_int_vlan_cosm_gis_data_sn_addresses: '172.18.2.128/25'
   }
 }
 
@@ -102,7 +105,7 @@ module virtualGatewayPublicIp './modules/cosm/cosm-public-ip.bicep' = {
     publicIpAddress: '20.237.174.76'
   }
 }
-/*
+
 @description('Deploy vgw-cosm-gis-test-001') 
 module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
   name: 'deploy_vgw-cosm-gis-test-001'
@@ -116,8 +119,8 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
     sku: 'VpnGw2'
-    //allowRemoteVnetTraffic: true
-    //allowVirtualWanTraffic: true
+    allowRemoteVnetTraffic: true
+    allowVirtualWanTraffic: true
   }
 }
 
@@ -133,5 +136,3 @@ module connection './modules/cosm/cosm-connection.bicep' = {
     sharedKey: networkConnectionSharedKey
   }
 }
-
-*/
