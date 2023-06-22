@@ -44,6 +44,7 @@ stages:
               ScriptPath: '$(Pipeline.Workspace)/scripts/cleanup-rg.ps1'
               ScriptArguments: '-rg $(ResourceGroupName)'
               azurePowerShellVersion: 'LatestVersion'
+              pwsh: true
   - stage: deployStage
     dependsOn: prepStage
     jobs:
