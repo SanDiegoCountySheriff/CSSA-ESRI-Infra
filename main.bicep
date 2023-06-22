@@ -152,7 +152,6 @@ module connection './modules/cosm/cosm-connection.bicep' = {
   }
 }
 
-
 @description('Enable Vnet Peering between Hub and Spoke') 
 module virtualNetworkPeering './modules/cosm/cosm-peering.bicep' = {
   name: 'deploy_vnp-cosm-gis-test-001'
