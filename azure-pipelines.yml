@@ -44,7 +44,7 @@ stages:
               resourceGroupName: $(ResourceGroupName)
               location: $(DeploymentDefaultLocation)
               templateLocation: 'Linked artifact' # 'Linked artifact' | 'URL of the file'. Required. Template location. Default: Linked artifact.
-              deploymentMode: 'Incremental' # 'Incremental' | 'Complete' | 'Validation'. Required. Deployment mode. Default: Incremental.
+              deploymentMode: 'Validation' # 'Incremental' | 'Complete' | 'Validation'. Required. Deployment mode. Default: Incremental.
               overrideParameters: >
                 -subscriptionId: $(SubscriptionId)
 
