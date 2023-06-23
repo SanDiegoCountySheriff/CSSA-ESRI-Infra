@@ -40,7 +40,7 @@ stages:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               #deploymentScope: 'Subscription'
-              subscriptionId: $(SubscriptionId)
+              #subscriptionId: $(SubscriptionId)
               connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
