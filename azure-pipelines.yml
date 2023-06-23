@@ -49,7 +49,7 @@ stages:
       #         pwsh: true
       - job: Prep2
         steps:
-          - task: AzureResourceGroupDeployment@2
+          - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               # Azure Details
               azureSubscription: $(ServiceConnectionName)
@@ -57,7 +57,7 @@ stages:
               action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
               resourceGroupName: $(ResourceGroupName)
               templateLocation: 'Linked artifact'
-              #csmFile: prep.bicep
+              csmFile: prep.bicep
               deploymentMode: 'Complete'
 
   - stage: deployStage
