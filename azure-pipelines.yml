@@ -25,12 +25,12 @@ pool:
   #  name: 'On-Premises'
 
 variables:
-  ServiceConnectionName: 'GISTestServiceConnection2'
-  EnvironmentType: 'nonprod'
-  ResourceGroupName: 'rg-cosm-gis-env-test'
+  #ServiceConnectionName: 'GISTestServiceConnection2'
+  #EnvironmentType: 'nonprod'
+  #ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
   System.Debug: true
-  SubscriptionId: '66d233df-ad0c-45a4-a6bc-d77919e18237'
+  #SubscriptionId: '66d233df-ad0c-45a4-a6bc-d77919e18237'
 
 stages:
   - stage: deployStage
