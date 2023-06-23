@@ -39,23 +39,14 @@ stages:
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
-              deploymentScope: 'Subscription' # 'Management Group' | 'Subscription' | 'Resource Group'. Required. Deployment scope. Default: Resource Group.
-              azureResourceManagerConnection: $(ServiceConnectionName)
-              subscriptionId: $(SubscriptionId) # string. Alias: subscriptionName. Required when deploymentScope != Management Group. Subscription. 
-              action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'DeleteRG'. Required when deploymentScope = Resource Group. Action. Default: Create Or Update Resource Group.
-              resourceGroupName: $(ResourceGroupName)
-              location: $(DeploymentDefaultLocation) # string. Required when action = Create Or Update Resource Group || deploymentScope != Resource Group. Location. 
-              templateLocation: 'Linked artifact' # 'Linked artifact' | 'URL of the file'. Required. Template location. Default: Linked artifact.
-              deploymentMode: 'Incremental' # 'Incremental' | 'Complete' | 'Validation'. Required. Deployment mode. Default: Incremental.
-
-          - task: AzureResourceManagerTemplateDeployment@3
-            inputs:
+              deploymentScope: 'Subscription'
               subscriptionId: $(SubscriptionId)
               connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
+              action: 'Create Or Update Resource Group'
               csmFile: main.bicep
-              deploymentMode: 'Complete'
+              deploymentMode: 'Incremental'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
