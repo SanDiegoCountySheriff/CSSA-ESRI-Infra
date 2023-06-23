@@ -37,6 +37,15 @@ stages:
     jobs:
       - job: Deploy
         steps:
+          - task: AzureResourceGroupDeployment@2
+            inputs:
+              azureSubscription: $(SubscriptionId)
+              action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
+              resourceGroupName: $(ResourceGroupName)
+              location: $(DeploymentDefaultLocation)
+              templateLocation: 'Linked artifact' # 'Linked artifact' | 'URL of the file'. Required. Template location. Default: Linked artifact.
+              deploymentMode: 'Incremental' # 'Incremental' | 'Complete' | 'Validation'. Required. Deployment mode. Default: Incremental.
+
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               subscriptionId: $(SubscriptionId)
