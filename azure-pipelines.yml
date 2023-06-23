@@ -30,6 +30,7 @@ variables:
   ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
   System.Debug: true
+  SubscriptionId: '66d233df-ad0c-45a4-a6bc-d77919e18237'
 
 stages:
   - stage: deployStage
@@ -42,7 +43,7 @@ stages:
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
               csmFile: main.bicep
-              #deploymentMode: 'Complete'
+              deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
