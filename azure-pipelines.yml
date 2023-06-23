@@ -27,7 +27,7 @@ pool:
 variables:
   ServiceConnectionName: 'GISTestServiceConnection'
   EnvironmentType: 'nonprod'
-  ResourceGroupName: 'gis-azure-vnet-dev'
+  ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
   System.Debug: true
 
