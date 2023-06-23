@@ -27,43 +27,43 @@ pool:
 variables:
   ServiceConnectionName: 'GISTestServiceConnection'
   EnvironmentType: 'nonprod'
-  ResourceGroupName: 'rg-cosm-gis-env-test'
+  ResourceGroupName: 'gis-azure-vnet-dev'
   DeploymentDefaultLocation: 'westus'
   System.Debug: true
 
-stages:
+ stages:
   
-  - stage: prepStage
-    jobs:
-      # - job: Prep
-      #   steps:
-      #     - task: AzurePowerShell@5
-      #       displayName: 'Resource cleanup task'
-      #       inputs:
-      #         azureSubscription: $(ServiceConnectionName)
-      #         location: $(DeploymentDefaultLocation)
-      #         ScriptType: 'FilePath'
-      #         ScriptPath: './scripts/cleanup-rg.ps1'
-      #         ScriptArguments: '-rg $(ResourceGroupName)'
-      #         azurePowerShellVersion: 'LatestVersion'
-      #         pwsh: true
-      - job: Prep2
-        steps:
-          - task: AzureResourceManagerTemplateDeployment@3
-            inputs:
-              # Azure Details
-              connectedServiceName: $(ServiceConnectionName)
-              location: $(DeploymentDefaultLocation)
-              #aSction: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
-              resourceGroupName: $(ResourceGroupName)
-              csmFile: prep.bicep
-              deploymentMode: 'Complete'
-              overrideParameters: >
-                -location "$(DeploymentDefaultLocation)" 
-                -resourceGroupName '$(ResourceGroupName)'
+#   - stage: prepStage
+#     jobs:
+#       # - job: Prep
+#       #   steps:
+#       #     - task: AzurePowerShell@5
+#       #       displayName: 'Resource cleanup task'
+#       #       inputs:
+#       #         azureSubscription: $(ServiceConnectionName)
+#       #         location: $(DeploymentDefaultLocation)
+#       #         ScriptType: 'FilePath'
+#       #         ScriptPath: './scripts/cleanup-rg.ps1'
+#       #         ScriptArguments: '-rg $(ResourceGroupName)'
+#       #         azurePowerShellVersion: 'LatestVersion'
+#       #         pwsh: true
+#       - job: Prep2
+#         steps:
+#           - task: AzureResourceManagerTemplateDeployment@3
+#             inputs:
+#               # Azure Details
+#               connectedServiceName: $(ServiceConnectionName)
+#               location: $(DeploymentDefaultLocation)
+#               #aSction: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
+#               resourceGroupName: $(ResourceGroupName)
+#               csmFile: prep.bicep
+#               deploymentMode: 'Complete'
+#               overrideParameters: >
+#                 -location "$(DeploymentDefaultLocation)" 
+#                 -resourceGroupName '$(ResourceGroupName)'
 
   - stage: deployStage
-    dependsOn: prepStage
+    #dependsOn: prepStage
     jobs:
       - job: Deploy
         steps:
