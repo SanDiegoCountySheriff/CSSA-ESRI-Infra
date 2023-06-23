@@ -39,7 +39,7 @@ stages:
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
-              deploymentScope: 'Resource Group' # 'Management Group' | 'Subscription' | 'Resource Group'. Required. Deployment scope. Default: Resource Group.
+              deploymentScope: 'Subscription' # 'Management Group' | 'Subscription' | 'Resource Group'. Required. Deployment scope. Default: Resource Group.
               azureResourceManagerConnection: $(ServiceConnectionName)
               subscriptionId: $(SubscriptionId) # string. Alias: subscriptionName. Required when deploymentScope != Management Group. Subscription. 
               action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'DeleteRG'. Required when deploymentScope = Resource Group. Action. Default: Create Or Update Resource Group.
