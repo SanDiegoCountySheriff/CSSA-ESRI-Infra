@@ -25,7 +25,7 @@ pool:
   #  name: 'On-Premises'
 
 variables:
-  ServiceConnectionName: 'GISTestServiceConnection'
+  ServiceConnectionName: 'GISTestServiceConnection2'
   EnvironmentType: 'nonprod'
   ResourceGroupName: 'rg-cosm-gis-env-test'
   DeploymentDefaultLocation: 'westus'
