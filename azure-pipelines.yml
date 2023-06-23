@@ -52,13 +52,15 @@ stages:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               # Azure Details
-              azureSubscription: $(ServiceConnectionName)
+              connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
-              action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
+              #aSction: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
               resourceGroupName: $(ResourceGroupName)
-              templateLocation: 'Linked artifact'
               csmFile: prep.bicep
               deploymentMode: 'Complete'
+              overrideParameters: >
+                -location "$(DeploymentDefaultLocation)" 
+                -resourceGroupName '$(ResourceGroupName)'
 
   - stage: deployStage
     dependsOn: prepStage
@@ -71,6 +73,7 @@ stages:
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
               csmFile: main.bicep
+              deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
