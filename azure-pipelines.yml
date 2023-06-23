@@ -39,7 +39,7 @@ stages:
         steps:
           - task: AzureResourceGroupDeployment@2
             inputs:
-              azureSubscription: $(ServiceConnectionName)
+              azureSubscription: $(SubscriptionId)
               action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
               resourceGroupName: $(ResourceGroupName)
               location: $(DeploymentDefaultLocation)
