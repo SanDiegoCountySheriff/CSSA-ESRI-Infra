@@ -35,18 +35,18 @@ stages:
   
   - stage: prepStage
     jobs:
-      - job: Prep
-        steps:
-          - task: AzurePowerShell@5
-            displayName: 'Resource cleanup task'
-            inputs:
-              azureSubscription: $(ServiceConnectionName)
-              location: $(DeploymentDefaultLocation)
-              ScriptType: 'FilePath'
-              ScriptPath: './scripts/cleanup-rg.ps1'
-              ScriptArguments: '-rg $(ResourceGroupName)'
-              azurePowerShellVersion: 'LatestVersion'
-              pwsh: true
+      # - job: Prep
+      #   steps:
+      #     - task: AzurePowerShell@5
+      #       displayName: 'Resource cleanup task'
+      #       inputs:
+      #         azureSubscription: $(ServiceConnectionName)
+      #         location: $(DeploymentDefaultLocation)
+      #         ScriptType: 'FilePath'
+      #         ScriptPath: './scripts/cleanup-rg.ps1'
+      #         ScriptArguments: '-rg $(ResourceGroupName)'
+      #         azurePowerShellVersion: 'LatestVersion'
+      #         pwsh: true
       - job: Prep2
         steps:
           - task: AzureResourceGroupDeployment@2
@@ -56,6 +56,11 @@ stages:
               location: $(DeploymentDefaultLocation)
               action: 'Create Or Update Resource Group' # 'Create Or Update Resource Group' | 'Select Resource Group' | 'Start' | 'Stop' | 'StopWithDeallocate' | 'Restart' | 'Delete' | 'DeleteRG'. Required. Action. Default: Create Or Update Resource Group.
               resourceGroupName: $(ResourceGroupName)
+              templateLocation: 'Linked artifact'
+              csmFile: prep.bicep
+              overrideParameters: >
+                -location "$(DeploymentDefaultLocation)" 
+                -resourceGroupName '$(ResourceGroupName)'
 
   - stage: deployStage
     dependsOn: prepStage
