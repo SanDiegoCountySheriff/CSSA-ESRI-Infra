@@ -3,7 +3,7 @@
 ## To contribute to this repo:
 
 Pipeline is organized as a multistaged deployment with nested folder structure matching the name of each Stage. 
-
+```
 root
 ├─ modules/
 │  ├─ cosm/
@@ -24,7 +24,7 @@ root
 │  ├─ package.json
 │  ├─ README.md
 ├─ azurepipelines.yaml
-
+```
 ### Clone the repo
 
 1. Browse to: https://dev.azure.com/sanmarcosgov/GIS/_git/cosm-gis-azure
