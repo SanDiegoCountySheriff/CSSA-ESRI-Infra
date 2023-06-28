@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 trigger:
-  - main
+  - development/nsg-refactor-steps
   
 pool:
     vmImage: ubuntu-latest
@@ -41,8 +41,24 @@ stages:
               connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
-              #action: 'Create Or Update Resource Group'
-              csmFile: main.bicep
+              csmFile: ./stages/vnet/main.bicep
+              #deploymentMode: 'Complete'
+              overrideParameters: >
+                -location "$(DeploymentDefaultLocation)" 
+                -environmentType "$(EnvironmentType)" 
+                -networkConnectionSharedKey '$(networkConnectionSharedKey)'
+  - stage: Nsg
+    jobs:
+      - job: DeployNsg
+        steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              #deploymentScope: 'Subscription'
+              subscriptionId: $(SubscriptionId)
+              connectedServiceName: $(ServiceConnectionName)
+              location: $(DeploymentDefaultLocation)
+              resourceGroupName: $(ResourceGroupName)
+              csmFile: ./stages/nsg/main.bicep
               #deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 

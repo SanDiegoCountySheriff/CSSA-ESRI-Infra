@@ -2,6 +2,29 @@
 
 ## To contribute to this repo:
 
+Pipeline is organized as a multistaged deployment with nested folder structure matching the name of each Stage. 
+
+root
+├─ modules/
+│  ├─ cosm/
+│  ├─ gis/
+├─ stages/
+│  ├─ db/
+│  │  ├─ main.bicep
+│  │  ├─ parameters.json
+│  ├─ nsg/
+│  │  ├─ main.bicep
+│  │  ├─ parameters.json
+│  ├─ vm/
+│  │  ├─ main.bicep
+│  │  ├─ parameters.json
+│  ├─ vnet/
+│  │  ├─ main.bicep
+│  │  ├─ parameters.json
+│  ├─ package.json
+│  ├─ README.md
+├─ azurepipelines.yaml
+
 ### Clone the repo
 
 1. Browse to: https://dev.azure.com/sanmarcosgov/GIS/_git/cosm-gis-azure
