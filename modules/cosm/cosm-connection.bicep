@@ -25,6 +25,10 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
 resource connections_cosm_connection_on_prem 'Microsoft.Network/connections@2022-11-01' = {
   name: '${namePrefix}${resourceScope}${nameSuffix}'
   location: resourceLocation
+  dependsOn: [
+    localNetworkGateway
+    virtualNetworkGateway
+  ]
   properties: {
     virtualNetworkGateway1: virtualNetworkGateway
     localNetworkGateway2: localNetworkGateway
