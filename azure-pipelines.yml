@@ -27,6 +27,7 @@ pool:
 variables:
   DeploymentDefaultLocation: 'westus'
   System.Debug: true
+  ResourceGroupName: 'rg-cosm-gis-devtest'
 
 stages:
   - stage: Vnet
@@ -40,9 +41,9 @@ stages:
               connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
-              action: 'Create Or Update Resource Group'
+              #action: 'Create Or Update Resource Group'
               csmFile: main.bicep
-              #deploymentMode: 'Complete'
+              deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
