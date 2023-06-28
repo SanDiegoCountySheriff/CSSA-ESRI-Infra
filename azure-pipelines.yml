@@ -43,7 +43,7 @@ stages:
               resourceGroupName: $(ResourceGroupName)
               #action: 'Create Or Update Resource Group'
               csmFile: main.bicep
-              deploymentMode: 'Complete'
+              #deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
