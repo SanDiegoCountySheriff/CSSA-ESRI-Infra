@@ -26,12 +26,8 @@ resource connections_cosm_connection_on_prem 'Microsoft.Network/connections@2022
   name: '${namePrefix}${resourceScope}${nameSuffix}'
   location: resourceLocation
   properties: {
-    virtualNetworkGateway1: {
-      id: resourceId('Microsoft.Network/virtualNetworkGateways', resourceGroup().name, virtualNetworkGatewayName)
-    }
-    localNetworkGateway2:{
-      id: resourceId('Microsoft.Network/localNetworkGateways', resourceGroup().name, localNetworkGatewayName)
-    }
+    virtualNetworkGateway1: virtualNetworkGateway
+    localNetworkGateway2: localNetworkGateway
     connectionType: 'IPsec'
     connectionProtocol: 'IKEv2'
     routingWeight: 0
