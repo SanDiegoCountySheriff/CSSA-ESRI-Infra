@@ -32,6 +32,7 @@ param networkConnectionSharedKey string
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
+/*
 @description('Deploy vnet-cosm-shared-test-001') 
 module cosmHubVirtualNetwork './modules/cosm/cosm-hub-vnet.bicep' = {
   name: 'deploy_vnet-cosm-shared-test-001'
@@ -134,24 +135,23 @@ module virtualNetworkGateway './modules/cosm/cosm-virtual-gateway.bicep' = {
     allowVirtualWanTraffic: true
   }
 }
-
+*/
 @description('Deploy con-cosm-shared-test-001') 
 module connection './modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
   dependsOn: [
-    localNetworkGateway
-    virtualNetworkGateway
+    //localNetworkGateway
+    //virtualNetworkGateway
   ]
   params: {
     resourceScope: 'shared'
     resourceLocation: location
     resourceEnv: environmentType
-    localNetworkGatewayName: localNetworkGateway.outputs.name
-    virtualNetworkGatewayName: virtualNetworkGateway.outputs.name
+    localNetworkGatewayName: 'lgw-cosm-shared-nonprod-001'
+    virtualNetworkGatewayName: 'vgw-cosm-gis-nonprod-001'
     sharedKey: networkConnectionSharedKey
   }
 }
-
 
 @description('Enable Vnet Peering between Hub and Spoke') 
 module virtualNetworkPeering './modules/cosm/cosm-peering.bicep' = {
