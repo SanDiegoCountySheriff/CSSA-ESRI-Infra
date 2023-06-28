@@ -8,6 +8,7 @@ param resourceNumber string = '001'
 
 param namePrefix string = '${resourceType}-${resourceAgency}'
 param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+param subnets array
 
 param virtualNetworkAddressPrefixes array
 
@@ -19,6 +20,7 @@ resource virtualNetworkHub 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       addressPrefixes: virtualNetworkAddressPrefixes
     }
     enableDdosProtection: false
+    subnets: subnets
   }
 }
 
