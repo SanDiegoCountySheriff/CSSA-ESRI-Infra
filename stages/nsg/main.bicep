@@ -1,48 +1,59 @@
 
-param resourceAgency string = 'cosm'
-param resourceType string = 'nsg'
-param resourceScope string
-param resourceEnv string
-param resourceNumber string = '001'
+// main.bicep | San Marcos GIS on Azure
+//
+// Copyright (C) 2023 City of San Marcos CA
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
-param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+@description('Location for all resources.')
+param location string = resourceGroup().location
 
-param resourceLocation string = resourceGroup().location
+@description('The type of environment. This must be nonprod or prod.')
+@allowed([
+  'nonprod'
+  'prod'
+])
 
-resource nsg 'Microsoft.Network/networkSecurityGroups@2021-05-01' = {
-  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
-  location: resourceLocation
-  properties: {
-    securityRules: [
-      {
-        name: 'SSH-rule'
-        properties: {
-          description: 'allow SSH'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          destinationPortRange: '22'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 500
-          direction: 'Inbound'
-        }
-      }
-      {
-        name: 'RDP-rule'
-        properties: {
-          description: 'allow RDP'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          destinationPortRange: '3389'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 600
-          direction: 'Inbound'
-        }
-      }
-    ]
+param environmentType string
+
+param spokeVnetName string
+param spokeVnetSubnets array
+
+@description('A unique suffix to add to resource names that need to be globally unique.')
+@maxLength(13)
+param resourceNameSuffix string = uniqueString(resourceGroup().id)
+
+@description('Deploy cosm-ssh-rdp-in-nsg')
+module nsg '../../modules/cosm/cosm-ssh-rdp-in-nsg.bicep' = {
+  name: 'deploy_cosm-ssh-rdp-in-nsg.bicep'
+  params: {
+    resourceScope: 'shared'
+    resourceLocation: location
+    resourceEnv: environmentType
   }
 }
+
+@batchSize(1)
+module attachSshNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index) in spokeVnetSubnets: {
+  name: 'update-vnet-subnet-${sn})}'
+  params: {
+    vnetName: spokeVnetName
+    subnetName: sn.name
+    properties: union(sn.properties, {
+      networkSecurityGroup: {
+        id: nsg.outputs.id
+      }
+    })
+  }
+}]
