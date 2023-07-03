@@ -12,20 +12,21 @@ param subnetName string
 param virtualNetworkName string
 param virtualMachineName string
 param osDiskType string
-param osDiskDeleteOption string
+param osDiskDeleteOption string = 'Detach'
 param dataDisks array
 param dataDiskResources array
 param virtualMachineSize string
-param nicDeleteOption string
+param nicDeleteOption string = 'Detach'
 param adminUsername string
 
 @secure()
 param adminPassword string
 param securityType string
 param secureBoot bool = true
-param vTPM bool
+param vTPM bool = true
+
 param availabilitySetName string
-param proximityPlacementGroupName string;
+param proximityPlacementGroupName string
 
 var vnetName = virtualNetworkName
 var vnetId = resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', virtualNetworkName)

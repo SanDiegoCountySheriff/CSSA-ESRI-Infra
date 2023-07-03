@@ -87,7 +87,7 @@ module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
     ]
     subnets: [
       {
-        name: 'cosm-gis-app-sn'
+        name: 'cosm-gis-iz-sn'
         properties: {
           addressPrefix: '172.18.2.0/25'
           privateEndpointNetworkPolicies: 'Disabled'
