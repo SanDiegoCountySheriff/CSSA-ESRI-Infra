@@ -26,7 +26,6 @@ param location string = resourceGroup().location
 ])
 
 param environmentType string
-
 param spokeVnetName string
 param spokeVnetSubnets array
 
@@ -51,9 +50,9 @@ module attachSshNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index)
     vnetName: spokeVnetName
     subnetName: sn.name
     properties: union(sn.properties, {
-      networkSecurityGroup: {
+      networkSecurityGroups: [{
         id: nsg.outputs.id
-      }
+      }]
     })
   }
 }]

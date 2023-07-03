@@ -50,6 +50,26 @@ resource networkSecurityGroups_cosm_gis_ws_nsg 'Microsoft.Network/networkSecurit
         type: 'string'
       }
       {
+        name: 'AllowSSHInboundToWsASG'
+        properties: {
+          access: 'Allow'
+          description: 'Allow RDP from CoSM LAN'
+          destinationApplicationSecurityGroups: [
+            applicationSecurityGroups_cosm_gis_ws_asg
+          ]
+          destinationPortRange: '22'
+          direction: 'Inbound'
+          priority: 100
+          protocol: 'Tcp'
+          sourceAddressPrefix: 'string'
+          sourceAddressPrefixes: [
+            'VirtualNetwork'
+          ]
+          sourcePortRange: '*'
+        }
+        type: 'string'
+      }
+      {
         name: 'AllowBackupInboundToWsASG'
         properties: {
           access: 'Allow'

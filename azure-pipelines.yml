@@ -63,4 +63,3 @@ stages:
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
-                -networkConnectionSharedKey '$(networkConnectionSharedKey)'
