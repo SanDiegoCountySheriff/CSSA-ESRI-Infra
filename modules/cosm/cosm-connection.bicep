@@ -10,6 +10,8 @@ param nameSuffix string = uniqueString(resourceGroup().id)
 
 param localNetworkGatewayName string
 param virtualNetworkGatewayName string
+
+@secure()
 param sharedKey string
 
 

@@ -8,7 +8,7 @@ param resourceLocation string
 param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
 param nameSuffix string = uniqueString(resourceGroup().id)
 
-resource symbolicname 'Microsoft.Compute/proximityPlacementGroups@2022-11-01' = {
+resource proximityPlacementGroup_resource 'Microsoft.Compute/proximityPlacementGroups@2022-11-01' = {
   name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   tags: {
@@ -17,3 +17,5 @@ resource symbolicname 'Microsoft.Compute/proximityPlacementGroups@2022-11-01' = 
     env: resourceEnv
   }
 }
+
+output id string = proximityPlacementGroup_resource.id

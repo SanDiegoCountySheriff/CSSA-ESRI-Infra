@@ -24,20 +24,21 @@ param location string = resourceGroup().location
   'nonprod'
   'prod'
 ])
-
 param environmentType string
-param spokeVnetName string
-param spokeVnetSubnets string
-param spokeVnetSubnetArray array = array(spokeVnetSubnets)
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
+param spokeVnetName string
+param spokeVnetSubnets string
+param spokeVnetSubnetArray array = array(spokeVnetSubnets)
+
 @description('Deploy cosm-ssh-rdp-in-nsg')
 module nsg '../../modules/cosm/cosm-ssh-rdp-in-nsg.bicep' = {
   name: 'deploy_cosm-ssh-rdp-in-nsg.bicep'
   params: {
+    nameSuffix: resourceNameSuffix
     resourceScope: 'shared'
     resourceLocation: location
     resourceEnv: environmentType

@@ -1,6 +1,12 @@
-param location string
-param networkInterfaceName string
-param enableAcceleratedNetworking bool
+param resourceAgency string = 'cosm'
+param resourceScope string
+param resourceEnv string
+param resourceLocation string
+
+param namePrefix string = '${resourceAgency}-${resourceScope}-${resourceEnv}'
+param nameSuffix string = uniqueString(resourceGroup().id)
+
+param enableAcceleratedNetworking bool = true
 param networkSecurityGroupName string
 param networkSecurityGroupRules array
 param subnetName string
@@ -18,7 +24,7 @@ param adminUsername string
 @secure()
 param adminPassword string
 param securityType string
-param secureBoot bool
+param secureBoot bool = true
 param vTPM bool
 param proximityPlacementGroupId string
 param availabilitySetName string
@@ -29,9 +35,10 @@ var vnetId = resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks
 var subnetRef = '${vnetId}/subnets/${subnetName}'
 var aadLoginExtensionName = 'AADSSHLoginForLinux'
 
+
 resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
-  name: networkInterfaceName
-  location: location
+  name: 'nic-${namePrefix}-${nameSuffix}'
+  location: resourceLocation
   properties: {
     ipConfigurations: [
       {
@@ -56,8 +63,8 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
 }
 
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2019-02-01' = {
-  name: networkSecurityGroupName
-  location: location
+  name: 'nsg-${namePrefix}-${nameSuffix}'
+  location: resourceLocation
   properties: {
     securityRules: networkSecurityGroupRules
   }
@@ -69,7 +76,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-01-01' existing 
 
 resource dataDiskResources_name 'Microsoft.Compute/disks@2022-03-02' = [for item in dataDiskResources: {
   name: item.name
-  location: location
+  location: resourceLocation
   sku: {
     name: item.sku
   }
@@ -78,7 +85,7 @@ resource dataDiskResources_name 'Microsoft.Compute/disks@2022-03-02' = [for item
 
 resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
   name: virtualMachineName
-  location: location
+  location: resourceLocation
   identity: {
     type: 'SystemAssigned'
   }
@@ -176,7 +183,7 @@ module microsoft_linux_aadsshlogin '../../extensions/microsoft/linux-aadsshlogin
 resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = {
   parent: virtualMachine
   name: 'microsoft.linux-aadsshlogin'
-  location: location
+  location: resourceLocation
   properties: {
     publisher: 'Microsoft.Azure.ActiveDirectory'
     type: aadLoginExtensionName
