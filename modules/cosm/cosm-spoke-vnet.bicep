@@ -28,3 +28,4 @@ resource virtualNetworkSpoke 'Microsoft.Network/virtualNetworks@2022-11-01' = {
 output name string = virtualNetworkSpoke.name
 output addressSpace object = virtualNetworkSpoke.properties.addressSpace
 output id string = virtualNetworkSpoke.id
+output subnets array = virtualNetworkSpoke.properties.subnets

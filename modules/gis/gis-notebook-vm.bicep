@@ -162,7 +162,7 @@ resource availabilitySet 'Microsoft.Compute/availabilitySets@2019-07-01' existin
   name: availabilitySetName
 }
 
-module microsoft_linux_aadsshlogin '?' /*TODO: replace with correct path to https://catalogartifact.azureedge.net/publicartifacts/microsoft.linux-aadsshlogin-arm-1.0.0/MainTemplate.json*/ = {
+module microsoft_linux_aadsshlogin '../../extensions/microsoft/linux-aadsshlogin-arm.bicep' = {
   name: 'microsoft.linux-aadsshlogin'
   params: {
     vmName: 'cosm-gis-test-notebook'
@@ -175,7 +175,7 @@ module microsoft_linux_aadsshlogin '?' /*TODO: replace with correct path to http
 
 resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = {
   parent: virtualMachine
-  name: '${aadLoginExtensionName}'
+  name: 'microsoft.linux-aadsshlogin'
   location: location
   properties: {
     publisher: 'Microsoft.Azure.ActiveDirectory'

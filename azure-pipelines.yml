@@ -30,7 +30,7 @@ variables:
   ResourceGroupName: 'rg-cosm-gis-devtest'
 
 stages:
-  - stage: Vnet
+  - stage: NonProd
     jobs:
       - job: DeployVnet
         steps:
@@ -47,8 +47,7 @@ stages:
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -networkConnectionSharedKey '$(networkConnectionSharedKey)'
-  - stage: Nsg
-    jobs:
+              deploymentOutputs: spokeVnetName, spokeVnetSubnets
       - job: DeployNsg
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
@@ -63,3 +62,5 @@ stages:
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
+                -spokeVnetName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
+                -spokeVnetSubnets $[dependencies.DeployVnet.outputs['psJob.spokeVnetSubnets']]
