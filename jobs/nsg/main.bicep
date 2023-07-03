@@ -27,7 +27,8 @@ param location string = resourceGroup().location
 
 param environmentType string
 param spokeVnetName string
-param spokeVnetSubnets array
+param spokeVnetSubnets string
+param spokeVnetSubnetArray array = array(spokeVnetSubnets)
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
@@ -44,7 +45,7 @@ module nsg '../../modules/cosm/cosm-ssh-rdp-in-nsg.bicep' = {
 }
 
 @batchSize(1)
-module attachSshNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index) in spokeVnetSubnets: {
+module attachSshNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index) in spokeVnetSubnetArray: {
   name: 'update-vnet-subnet-${sn})}'
   params: {
     vnetName: spokeVnetName

@@ -4,10 +4,9 @@ param resourceType string = 'con'
 param resourceScope string
 param resourceEnv string
 param resourceLocation string
-param resourceNumber string = '001'
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
-param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param nameSuffix string = uniqueString(resourceGroup().id)
 
 param localNetworkGatewayName string
 param virtualNetworkGatewayName string
@@ -23,7 +22,7 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2022-11
 }
 
 resource connections_cosm_connection_on_prem 'Microsoft.Network/connections@2022-11-01' = {
-  name: '${namePrefix}${resourceScope}${nameSuffix}'
+  name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   dependsOn: [
     localNetworkGateway

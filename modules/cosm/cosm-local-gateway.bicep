@@ -3,16 +3,15 @@ param resourceType string = 'lgw'
 param resourceScope string
 param resourceEnv string
 param resourceLocation string
-param resourceNumber string = '001'
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
-param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param nameSuffix string = uniqueString(resourceGroup().id)
 
 param localNetworkGatewayAddressPrefixes array
 param localNetworkGatewayIpAddress string
 
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' = {
-  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
+  name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   properties: {
     localNetworkAddressSpace: {

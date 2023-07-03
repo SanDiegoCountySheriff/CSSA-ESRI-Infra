@@ -3,15 +3,14 @@ param resourceAgency string = 'cosm'
 param resourceType string = 'nsg'
 param resourceScope string
 param resourceEnv string
-param resourceNumber string = '001'
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
-param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param nameSuffix string = uniqueString(resourceGroup().id)
 
 param resourceLocation string = resourceGroup().location
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-05-01' = {
-  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
+  name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   properties: {
     securityRules: [

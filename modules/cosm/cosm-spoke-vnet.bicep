@@ -4,16 +4,15 @@ param resourceType string = 'vnet'
 param resourceScope string
 param resourceEnv string
 param resourceLocation string
-param resourceNumber string = '001'
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
-param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param nameSuffix string = uniqueString(resourceGroup().id)
 
 param subnets array = []
 param virtualNetworkAddressPrefixes array
 
 resource virtualNetworkSpoke 'Microsoft.Network/virtualNetworks@2022-11-01' = {
-  name: '${namePrefix}-${resourceScope}-${nameSuffix}'
+  name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   properties: {
     addressSpace: {
