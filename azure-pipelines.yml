@@ -41,7 +41,7 @@ stages:
               connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
-              csmFile: ./stages/vnet/main.bicep
+              csmFile: ./jobs/vnet/main.bicep
               #deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
@@ -57,7 +57,7 @@ stages:
               connectedServiceName: $(ServiceConnectionName)
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
-              csmFile: ./stages/nsg/main.bicep
+              csmFile: ./jobs/nsg/main.bicep
               #deploymentMode: 'Complete'
               overrideParameters: >
                 -location "$(DeploymentDefaultLocation)" 
