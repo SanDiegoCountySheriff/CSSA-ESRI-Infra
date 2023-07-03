@@ -20,6 +20,27 @@ resource virtualNetworkSpoke 'Microsoft.Network/virtualNetworks@2022-11-01' exis
   name: virtualNetworkSpokeName
 }
 
+resource applicationSecurityGroup_Workstation 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
+  name: 'asg-gis-ws-${environmentType}-${resourceNameSuffix}'
+}
+
+resource applicationSecurityGroups_ArcGIS_Server_Host 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
+  name: 'asg-gis-agsh-${environmentType}-${resourceNameSuffix}'
+}
+
+
+resource applicationSecurityGroups_ArcGIS_Server_Notebook 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
+  name: 'asg-gis-agsn-${environmentType}-${resourceNameSuffix}'
+}
+
+resource applicationSecurityGroups_ArcGIS_Portal 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
+  name: 'asg-gis-agsp-${environmentType}-${resourceNameSuffix}'
+}
+
+resource applicationSecurityGroups_ArcGIS_Datastore 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
+  name: 'asg-gis-agsd-${environmentType}-${resourceNameSuffix}'
+}
+
 @description('Deploy Proximity Placement Group')
 module gisProximityPlacementGroup_resource '../../modules/gis/gis-ppg.bicep' = {
   name: 'deploy_gis-ppg'
@@ -35,6 +56,8 @@ module gisProximityPlacementGroup_resource '../../modules/gis/gis-ppg.bicep' = {
 module gisNotebookVm_resource '../../modules/gis/gis-notebook-vm.bicep' = {
   name: 'deploy_gisNotebookVM'
   dependsOn: [
+    gisProximityPlacementGroup_resource
+    applicationSecurityGroups_ArcGIS_Server_Notebook
     virtualNetworkSpoke
   ]
   params: {
@@ -43,9 +66,9 @@ module gisNotebookVm_resource '../../modules/gis/gis-notebook-vm.bicep' = {
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: ''
-    virtualMachineComputerName: ''
-    proximityPlacementGroupId: gisProximityPlacementGroup_resource.outputs.id
+    proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
+    appSecurityGroupName: applicationSecurityGroups_ArcGIS_Server_Notebook.name
     virtualMachineSize: ''
     secureBoot: true
     availabilitySetName: ''

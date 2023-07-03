@@ -7,12 +7,10 @@ param namePrefix string = '${resourceAgency}-${resourceScope}-${resourceEnv}'
 param nameSuffix string = uniqueString(resourceGroup().id)
 
 param enableAcceleratedNetworking bool = true
-param networkSecurityGroupName string
-param networkSecurityGroupRules array
+param appSecurityGroupName string
 param subnetName string
 param virtualNetworkName string
 param virtualMachineName string
-param virtualMachineComputerName string
 param osDiskType string
 param osDiskDeleteOption string
 param dataDisks array
@@ -26,15 +24,25 @@ param adminPassword string
 param securityType string
 param secureBoot bool = true
 param vTPM bool
-param proximityPlacementGroupId string
 param availabilitySetName string
+param proximityPlacementGroupName string;
 
-var nsgId = resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', networkSecurityGroupName)
 var vnetName = virtualNetworkName
 var vnetId = resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', virtualNetworkName)
 var subnetRef = '${vnetId}/subnets/${subnetName}'
 var aadLoginExtensionName = 'AADSSHLoginForLinux'
 
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
+  name: vnetName
+}
+
+resource availabilitySet 'Microsoft.Compute/availabilitySets@2019-07-01' existing = {
+  name: availabilitySetName
+}
+
+resource proximityPlacementGroup  'Microsoft.Compute/proximityPlacementGroups@2022-11-01' existing = {
+  name: proximityPlacementGroupName
+}
 
 resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
   name: 'nic-${namePrefix}-${nameSuffix}'
@@ -45,33 +53,22 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
         name: 'ipconfig1'
         properties: {
           subnet: {
-            id: subnetRef
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', subnetRef)
           }
           privateIPAllocationMethod: 'Dynamic'
+          applicationSecurityGroups: [
+            {
+                id: resourceId('Microsoft.Network/applicationSecurityGroups', appSecurityGroupName)
+            }
+          ]
         }
       }
     ]
     enableAcceleratedNetworking: enableAcceleratedNetworking
-    networkSecurityGroup: {
-      id: nsgId
-    }
   }
   dependsOn: [
-    networkSecurityGroup
     virtualNetwork
   ]
-}
-
-resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2019-02-01' = {
-  name: 'nsg-${namePrefix}-${nameSuffix}'
-  location: resourceLocation
-  properties: {
-    securityRules: networkSecurityGroupRules
-  }
-}
-
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-01-01' existing = {
-  name: vnetName
 }
 
 resource dataDiskResources_name 'Microsoft.Compute/disks@2022-03-02' = [for item in dataDiskResources: {
@@ -113,7 +110,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
         caching: item.caching
         diskSizeGB: item.diskSizeGB
         managedDisk: {
-          id: (item.id ?? ((item.name == json('null')) ? json('null') : resourceId('Microsoft.Compute/disks', item.name)))
+          id: (item.id ?? ((item.name == null) ? null : resourceId('Microsoft.Compute/disks', item.name)))
           storageAccountType: item.storageAccountType
         }
         deleteOption: item.deleteOption
@@ -131,7 +128,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
       ]
     }
     osProfile: {
-      computerName: virtualMachineComputerName
+      computerName: virtualMachineName
       adminUsername: adminUsername
       adminPassword: adminPassword
       linuxConfiguration: {
@@ -148,7 +145,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
       }
     }
     proximityPlacementGroup: {
-      id: proximityPlacementGroupId
+      id: proximityPlacementGroup.id
     }
     diagnosticsProfile: {
       bootDiagnostics: {
@@ -160,13 +157,10 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
     }
   }
   dependsOn: [
+    proximityPlacementGroup
+    availabilitySet
     dataDiskResources_name
-
   ]
-}
-
-resource availabilitySet 'Microsoft.Compute/availabilitySets@2019-07-01' existing = {
-  name: availabilitySetName
 }
 
 module microsoft_linux_aadsshlogin '../../extensions/microsoft/linux-aadsshlogin-arm.bicep' = {

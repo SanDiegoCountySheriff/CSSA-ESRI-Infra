@@ -34,9 +34,9 @@ param localNetworkGatewayIpAddress string = '209.76.14.250'
 @secure()
 param networkConnectionSharedKey string
 
-@description('Deploy vnet-cosm-shared-test-001')
+@description('Deploy cosmHubVirtualNetwork')
 module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
-  name: 'deploy_vnet-cosm-shared-test-001'
+  name: 'deploy_cosmHubVirtualNetwork'
   params: {
     resourceScope: 'shared'
     resourceLocation: location
@@ -54,7 +54,6 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
       }
-
       {
         name: 'AzureFirewallManagementSubnet'
         properties: {
@@ -75,9 +74,9 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
   }
 }
 
-@description('Deploy vnet-cosm-gis-test-001')
+@description('Deploy gisVirtualNetwork')
 module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
-  name: 'deploy_vnet-cosm-gis-test-001'
+  name: 'deploy_gisVirtualNetwork'
   params: {
     resourceScope: 'gis'
     resourceLocation: location
@@ -107,9 +106,9 @@ module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
   }
 }
 
-@description('Deploy lgw-cosm-shared-test-001')
+@description('Deploy localNetworkGateway')
 module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
-  name: 'deploy_lgw-cosm-shared-test-001'
+  name: 'deploy_localNetworkGateway'
   params: {
     resourceScope: 'shared'
     resourceLocation: location
@@ -123,9 +122,9 @@ module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
   }
 }
 
-@description('Deploy pip-cosm-shared-test-001')
+@description('Deploy virtualGatewayPublicIp')
 module virtualGatewayPublicIp '../../modules/cosm/cosm-public-ip.bicep' = {
-  name: 'deploy_pip-cosm-shared-test-001'
+  name: 'deploy_virtualGatewayPublicIp'
   params: {
     resourceScope: 'shared'
     resourceLocation: location
@@ -135,9 +134,9 @@ module virtualGatewayPublicIp '../../modules/cosm/cosm-public-ip.bicep' = {
   }
 }
 
-@description('Deploy vgw-cosm-gis-test-001')
+@description('Deploy virtualNetworkGateway')
 module virtualNetworkGateway '../../modules/cosm/cosm-virtual-gateway.bicep' = {
-  name: 'deploy_vgw-cosm-gis-test-001'
+  name: 'deploy_virtualNetworkGateway'
   dependsOn: [
     virtualGatewayPublicIp
     localNetworkGateway
@@ -157,7 +156,7 @@ module virtualNetworkGateway '../../modules/cosm/cosm-virtual-gateway.bicep' = {
     allowVirtualWanTraffic: true
   }
 }
-/*
+
 @description('Deploy con-cosm-shared-test-001')
 module connection '../../modules/cosm/cosm-connection.bicep' = {
   name: 'deploy_con-cosm-shared-test-001'
@@ -199,6 +198,6 @@ module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
     hubAllowGatewayTransit: true
   }
 }
-*/
+
 output spokeVnetName string = gisVirtualNetwork.name
 output spokeVnetSubnets array = gisVirtualNetwork.outputs.subnets
