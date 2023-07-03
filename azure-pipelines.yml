@@ -49,6 +49,7 @@ stages:
                 -networkConnectionSharedKey '$(networkConnectionSharedKey)'
               deploymentOutputs: spokeVnetName, spokeVnetSubnets
       - job: DeployNsg
+        dependsOn: DeployVnet
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
