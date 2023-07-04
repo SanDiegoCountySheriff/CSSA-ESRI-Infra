@@ -98,7 +98,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
@@ -120,7 +120,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
@@ -142,7 +142,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
@@ -159,12 +159,12 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           destinationPortRange: '6443'
           sourceApplicationSecurityGroups: [ 
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
@@ -181,12 +181,12 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           destinationPortRange: '7443'
           sourceApplicationSecurityGroups: [ 
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
@@ -203,12 +203,12 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           destinationPortRange: '7443'
           sourceApplicationSecurityGroups: [ 
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
@@ -225,12 +225,12 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           destinationPortRange: '2443'
           sourceApplicationSecurityGroups: [ 
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           destinationApplicationSecurityGroups: [
             {
-              id: applicationSecurityGroups_ArcGIS
+              id: applicationSecurityGroups_ArcGIS.id
             }
           ]
           access: 'Allow'
