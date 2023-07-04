@@ -39,13 +39,14 @@ var localNetworkGatewayAddressPrefixes = [
   '172.31.253.0/24'
 ]
 
-var cosmHubVirtualNetworkAddressPrefix = '172.16.0.0/23'
-var cosmHubVirtualNetworkGatewaySubnetPrefix = '172.16.0.0/25'
-var cosmHubVirtualNetworkFwSubnetPrefix = '172.16.0.128/25'
+var cosmHubVirtualNetworkAddressPrefix = '172.18.0.0/23'
+var cosmHubVirtualNetworkGatewaySubnetPrefix = '172.18.0.0/25'
+var cosmHubVirtualNetworkFwSubnetPrefix = '172.18.0.128/25'
+var cosmHubVirtualNetworkAppGwSubnetPrefix = '172.18.0.0/25'
 
-var gisVirtualNetworkAddressPrefix = '172.16.2.0/24'
-var gisVirtualNetworkIzSubnetPrefix = '172.16.2.0/25'
-var gisVirtualNetworkDataSubnetPrefix = '172.16.2.128/25'
+var gisVirtualNetworkAddressPrefix = '172.18.2.0/24'
+var gisVirtualNetworkIzSubnetPrefix = '172.18.2.0/25'
+var gisVirtualNetworkDataSubnetPrefix = '172.18.2.128/25'
 
 
 @description('Deploy cosmHubVirtualNetwork')
@@ -79,7 +80,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
       {
         name: 'sn-cosm-appgw'
         properties: {
-          addressPrefix: '172.18.1.0/25'
+          addressPrefix: cosmHubVirtualNetworkAppGwSubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
