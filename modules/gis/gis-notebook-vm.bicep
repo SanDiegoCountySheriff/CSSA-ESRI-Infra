@@ -7,7 +7,7 @@ param namePrefix string = '${resourceAgency}-${resourceScope}-${resourceEnv}'
 param nameSuffix string = uniqueString(resourceGroup().id)
 
 param enableAcceleratedNetworking bool = true
-param appSecurityGroupName string
+param appSecurityGroups array
 param subnetName string
 param virtualNetworkName string
 param virtualMachineName string
@@ -57,11 +57,7 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets', subnetRef)
           }
           privateIPAllocationMethod: 'Dynamic'
-          applicationSecurityGroups: [
-            {
-                id: resourceId('Microsoft.Network/applicationSecurityGroups', appSecurityGroupName)
-            }
-          ]
+          applicationSecurityGroups: appSecurityGroups
         }
       }
     ]

@@ -159,7 +159,7 @@ module virtualNetworkGateway '../../modules/cosm/cosm-virtual-gateway.bicep' = {
 
 @description('Deploy con-cosm-shared-test-001')
 module connection '../../modules/cosm/cosm-connection.bicep' = {
-  name: 'deploy_con-cosm-shared-test-001'
+  name: 'deploy_connection'
   dependsOn: [
     localNetworkGateway
     virtualNetworkGateway
@@ -169,8 +169,8 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    localNetworkGatewayName: 'lgw-cosm-shared-nonprod-001'
-    virtualNetworkGatewayName: 'vgw-cosm-gis-nonprod-001'
+    localNetworkGatewayName: localNetworkGateway.outputs.name
+    virtualNetworkGatewayName: virtualNetworkGateway.outputs.name
     sharedKey: networkConnectionSharedKey
   }
 }

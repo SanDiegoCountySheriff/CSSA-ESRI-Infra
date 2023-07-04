@@ -3,13 +3,12 @@ param resourceType string = 'asg'
 param resourceScope string
 param resourceEnv string
 param resourceLocation string
-param resourceNumber string = '001'
 
-param namePrefix string = '${resourceType}-${resourceAgency}'
-param nameSuffix string = '${resourceEnv}-${resourceNumber}'
+param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param nameSuffix string = uniqueString(resourceGroup().id)
 
 resource applicationSecurityGroup_ws 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
-  name: '${namePrefix}-${resourceScope}-${nameSuffix}-001'
+  name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   tags: {
     app: resourceScope

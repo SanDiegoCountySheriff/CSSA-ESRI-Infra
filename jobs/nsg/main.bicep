@@ -45,41 +45,8 @@ resource applicationSecurityGroup_Workstation 'Microsoft.Network/applicationSecu
   properties: {}
 }
 
-resource applicationSecurityGroups_ArcGIS_Server_Host 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
-  name: 'asg-gis-agsh-${environmentType}-${resourceNameSuffix}'
-  location: resourceLocation
-  tags: {
-    app: 'gis'
-    tier: 'workstation'
-    env: environmentType
-  }
-  properties: {}
-}
-
-resource applicationSecurityGroups_ArcGIS_Server_Notebook 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
-  name: 'asg-gis-agsn-${environmentType}-${resourceNameSuffix}'
-  location: resourceLocation
-  tags: {
-    app: 'gis'
-    tier: 'workstation'
-    env: environmentType
-  }
-  properties: {}
-}
-
-resource applicationSecurityGroups_ArcGIS_Portal 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
-  name: 'asg-gis-agsp-${environmentType}-${resourceNameSuffix}'
-  location: resourceLocation
-  tags: {
-    app: 'gis'
-    tier: 'workstation'
-    env: environmentType
-  }
-  properties: {}
-}
-
-resource applicationSecurityGroups_ArcGIS_Datastore 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
-  name: 'asg-gis-agsd-${environmentType}-${resourceNameSuffix}'
+resource applicationSecurityGroups_ArcGIS 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
+  name: 'asg-gis-arcgis-${environmentType}-${resourceNameSuffix}'
   location: resourceLocation
   tags: {
     app: 'gis'
@@ -126,9 +93,7 @@ module networkSecurityGroup_gis '../../modules/cosm/cosm-nsg.bicep' = {
             applicationSecurityGroup_Workstation
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS_Server_Host
-            applicationSecurityGroups_ArcGIS_Portal
-            applicationSecurityGroups_ArcGIS_Datastore
+            applicationSecurityGroups_ArcGIS
           ]
           access: 'Allow'
           priority: 600
@@ -146,9 +111,7 @@ module networkSecurityGroup_gis '../../modules/cosm/cosm-nsg.bicep' = {
             applicationSecurityGroup_Workstation
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS_Server_Host
-            applicationSecurityGroups_ArcGIS_Portal
-            applicationSecurityGroups_ArcGIS_Datastore
+            applicationSecurityGroups_ArcGIS
           ]
           access: 'Allow'
           priority: 700
@@ -166,7 +129,7 @@ module networkSecurityGroup_gis '../../modules/cosm/cosm-nsg.bicep' = {
             applicationSecurityGroup_Workstation
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS_Server_Notebook
+            applicationSecurityGroups_ArcGIS
           ]
           access: 'Allow'
           priority: 800
@@ -174,21 +137,74 @@ module networkSecurityGroup_gis '../../modules/cosm/cosm-nsg.bicep' = {
         }
       }
       {
-        name: 'arcgis-server-6443-rule'
+        name: 'arcgis-6443-rule'
         properties: {
           description: 'allow arcgis server https'
           protocol: 'Tcp'
           sourcePortRange: '*'
           destinationPortRange: '6443'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroups_ArcGIS_Portal
+            applicationSecurityGroups_ArcGIS
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS_Server_Host
-            applicationSecurityGroups_ArcGIS_Datastore
+            applicationSecurityGroups_ArcGIS
           ]
           access: 'Allow'
           priority: 900
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'arcgis-7443-rule'
+        properties: {
+          description: 'allow arcgis portal https'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '7443'
+          sourceApplicationSecurityGroups: [ 
+            applicationSecurityGroups_ArcGIS
+          ]
+          destinationApplicationSecurityGroups: [
+            applicationSecurityGroups_ArcGIS
+          ]
+          access: 'Allow'
+          priority: 910
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'arcgis-11443-rule'
+        properties: {
+          description: 'allow arcgis notebook https'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '7443'
+          sourceApplicationSecurityGroups: [ 
+            applicationSecurityGroups_ArcGIS
+          ]
+          destinationApplicationSecurityGroups: [
+            applicationSecurityGroups_ArcGIS
+          ]
+          access: 'Allow'
+          priority: 920
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'arcgis-2443-rule'
+        properties: {
+          description: 'allow arcgis datastore https'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '2443'
+          sourceApplicationSecurityGroups: [ 
+            applicationSecurityGroups_ArcGIS
+          ]
+          destinationApplicationSecurityGroups: [
+            applicationSecurityGroups_ArcGIS
+          ]
+          access: 'Allow'
+          priority: 920
           direction: 'Inbound'
         }
       }
