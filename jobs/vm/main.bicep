@@ -40,7 +40,7 @@ module gisProximityPlacementGroup_resource '../../modules/gis/gis-ppg.bicep' = {
 }
 
 @description('Deploy gisNotebookVM')
-module gisNotebookVm_resource '../../modules/gis/gis-linux-vm.bicep' = {
+module gisNotebookVm_resource '../../modules/gis/gis-vm-linux.bicep' = {
   name: 'deploy_gisNotebookVM'
   dependsOn: [
     gisProximityPlacementGroup_resource
@@ -68,7 +68,7 @@ module gisNotebookVm_resource '../../modules/gis/gis-linux-vm.bicep' = {
 }
 
 @description('Deploy gisPortalVM')
-module gisPortalVm_resource '../../modules/gis/gis-windows-vm.bicep' = {
+module gisPortalVm_resource '../../modules/gis/gis-vm-windows.bicep' = {
   name: 'deploy_gisPortalkVM'
   dependsOn: [
     gisProximityPlacementGroup_resource

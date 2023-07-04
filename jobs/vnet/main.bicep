@@ -50,7 +50,7 @@ var gisVirtualNetworkDataSubnetPrefix = '172.18.2.128/25'
 
 
 @description('Deploy cosmHubVirtualNetwork')
-module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
+module cosmHubVirtualNetwork '../../modules/cosm/cosm-vnet-hub.bicep' = {
   name: 'deploy_cosmHubVirtualNetwork'
   params: {
     resourceScope: 'shared'
@@ -90,7 +90,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
 }
 
 @description('Deploy localNetworkGateway')
-module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
+module localNetworkGateway '../../modules/cosm/cosm-lgw.bicep' = {
   name: 'deploy_localNetworkGateway'
   params: {
     resourceScope: 'shared'
@@ -103,7 +103,7 @@ module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
 }
 
 @description('Deploy virtualGatewayPublicIp')
-module virtualGatewayPublicIp '../../modules/cosm/cosm-public-ip.bicep' = {
+module virtualGatewayPublicIp '../../modules/cosm/cosm-pip.bicep' = {
   name: 'deploy_virtualGatewayPublicIp'
   params: {
     resourceScope: 'shared'
@@ -115,7 +115,7 @@ module virtualGatewayPublicIp '../../modules/cosm/cosm-public-ip.bicep' = {
 }
 
 @description('Deploy virtualNetworkGateway')
-module virtualNetworkGateway '../../modules/cosm/cosm-virtual-gateway.bicep' = {
+module virtualNetworkGateway '../../modules/cosm/cosm-vgw.bicep' = {
   name: 'deploy_virtualNetworkGateway'
   dependsOn: [
     virtualGatewayPublicIp
@@ -156,7 +156,7 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
 }
 
 @description('Deploy gisVirtualNetwork')
-module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
+module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
   name: 'deploy_gisVirtualNetwork'
   params: {
     resourceScope: 'gis'
