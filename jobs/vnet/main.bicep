@@ -42,7 +42,7 @@ var localNetworkGatewayAddressPrefixes = [
 var cosmHubVirtualNetworkAddressPrefix = '172.18.0.0/23'
 var cosmHubVirtualNetworkGatewaySubnetPrefix = '172.18.0.0/25'
 var cosmHubVirtualNetworkFwSubnetPrefix = '172.18.0.128/25'
-var cosmHubVirtualNetworkAppGwSubnetPrefix = '172.18.0.0/25'
+var cosmHubVirtualNetworkAppGwSubnetPrefix = '172.18.1.0/25'
 
 var gisVirtualNetworkAddressPrefix = '172.18.2.0/24'
 var gisVirtualNetworkIzSubnetPrefix = '172.18.2.0/25'
