@@ -90,8 +90,8 @@ module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
         name: 'cosm-gis-iz-sn'
         properties: {
           addressPrefix: '172.18.2.0/25'
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Disabled'
+          privateEndpointNetworkPolicies: 'Enabled'
+          privateLinkServiceNetworkPolicies: 'Enabled'
         }
       }
       {
