@@ -67,7 +67,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
     nsgScopeName: 'gisws'
     securityRules:  [
       {
-        name: 'virtualnet-RDP-rule'
+        name: 'workstation-RDP-rule'
         properties: {
           description: 'allow RDP from virtual network'
           protocol: 'Tcp'
@@ -75,7 +75,9 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           destinationPortRange: '3389'
           sourceAddressPrefix: 'VirtualNetwork'
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroup_Workstation
+            {
+              id: applicationSecurityGroup_Workstation.id
+            }
           ]
           access: 'Allow'
           priority: 500
@@ -83,17 +85,21 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
         }
       }
       {
-        name: 'workstation-RDP-rule'
+        name: 'arcgis-RDP-rule'
         properties: {
           description: 'allow RDP from workstation'
           protocol: 'Tcp'
           sourcePortRange: '*'
           destinationPortRange: '3389'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroup_Workstation
+            {
+              id: applicationSecurityGroup_Workstation.id
+            }
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           access: 'Allow'
           priority: 600
@@ -101,38 +107,46 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
         }
       }
       {
-        name: 'workstation-SMB-rule'
-        properties: {
-          description: 'Allow RDP from workstation to ArcGIS'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          destinationPortRange: '445'
-          sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroup_Workstation
-          ]
-          destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
-          ]
-          access: 'Allow'
-          priority: 700
-          direction: 'Inbound'
-        }
-      }
-      {
-        name: 'workstation-SSH-rule'
+        name: 'arcgis-SSH-rule'
         properties: {
           description: 'Allow SSH from workstation to ArcGIS Server Notebook'
           protocol: 'Tcp'
           sourcePortRange: '*'
           destinationPortRange: '22'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroup_Workstation
+            {
+              id: applicationSecurityGroup_Workstation.id
+            }
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           access: 'Allow'
-          priority: 800
+          priority: 610
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'arcgis-SMB-rule'
+        properties: {
+          description: 'Allow RDP from workstation to ArcGIS'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '445'
+          sourceApplicationSecurityGroups: [ 
+            {
+              id: applicationSecurityGroup_Workstation.id
+            }
+          ]
+          destinationApplicationSecurityGroups: [
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
+          ]
+          access: 'Allow'
+          priority: 620
           direction: 'Inbound'
         }
       }
@@ -144,13 +158,17 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           sourcePortRange: '*'
           destinationPortRange: '6443'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           access: 'Allow'
-          priority: 900
+          priority: 630
           direction: 'Inbound'
         }
       }
@@ -162,13 +180,17 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           sourcePortRange: '*'
           destinationPortRange: '7443'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           access: 'Allow'
-          priority: 910
+          priority: 640
           direction: 'Inbound'
         }
       }
@@ -180,13 +202,17 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           sourcePortRange: '*'
           destinationPortRange: '7443'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           access: 'Allow'
-          priority: 920
+          priority: 650
           direction: 'Inbound'
         }
       }
@@ -198,13 +224,17 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
           sourcePortRange: '*'
           destinationPortRange: '2443'
           sourceApplicationSecurityGroups: [ 
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           destinationApplicationSecurityGroups: [
-            applicationSecurityGroups_ArcGIS
+            {
+              id: applicationSecurityGroups_ArcGIS
+            }
           ]
           access: 'Allow'
-          priority: 930
+          priority: 660
           direction: 'Inbound'
         }
       }
@@ -213,7 +243,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
 }
 
 @batchSize(1)
-module attachSshNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index) in spokeVnetSubnetArray: {
+module attachNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index) in spokeVnetSubnetArray: {
   name: 'update-vnet-subnet-${sn})}'
   params: {
     vnetName: spokeVnetName
