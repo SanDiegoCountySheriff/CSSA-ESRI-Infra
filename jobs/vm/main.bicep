@@ -55,7 +55,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
-      applicationSecurityGroups_ArcGIS
+      applicationSecurityGroup_Workstation
     ]
     //virtualMachineSize: ''
     availabilitySetName: ''
