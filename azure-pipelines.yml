@@ -44,7 +44,7 @@ stages:
               csmFile: ./jobs/vnet/main.bicep
               deploymentMode: 'Complete'
               overrideParameters: >
-                -location "$(DeploymentDefaultLocation)" 
+                -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -networkConnectionSharedKey '$(networkConnectionSharedKey)'
               deploymentOutputs: spokeVnetName, spokeVnetSubnets
@@ -62,7 +62,7 @@ stages:
               csmFile: ./jobs/nsg/main.bicep
               #deploymentMode: 'Complete'
               overrideParameters: >
-                -location "$(DeploymentDefaultLocation)" 
+                -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -spokeVnetName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
                 -spokeVnetSubnets $[dependencies.DeployVnet.outputs['psJob.spokeVnetSubnets']]

@@ -56,8 +56,8 @@ resource applicationSecurityGroups_ArcGIS 'Microsoft.Network/applicationSecurity
   properties: {}
 }
 
-@description('Deploy cosm-ssh-rdp-in-nsg')
-module networkSecurityGroup_gis '../../modules/cosm/cosm-nsg.bicep' = {
+@description('Deploy networkSecurityGroup_gis-iz')
+module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
   name: 'deploy_networkSecurityGroup_gis_ws'
   params: {
     nameSuffix: resourceNameSuffix
@@ -204,7 +204,7 @@ module networkSecurityGroup_gis '../../modules/cosm/cosm-nsg.bicep' = {
             applicationSecurityGroups_ArcGIS
           ]
           access: 'Allow'
-          priority: 920
+          priority: 930
           direction: 'Inbound'
         }
       }
@@ -220,7 +220,7 @@ module attachSshNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index)
     subnetName: sn.name
     properties: union(sn.properties, {
       networkSecurityGroups: [{
-        id: networkSecurityGroup_gis.outputs.id
+        id: networkSecurityGroup_gis_iz.outputs.id
       }]
     })
   }

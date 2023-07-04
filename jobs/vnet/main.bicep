@@ -16,7 +16,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @description('Location for all resources.')
-param location string = resourceGroup().location
+param resourceLocation string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
@@ -39,7 +39,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
   name: 'deploy_cosmHubVirtualNetwork'
   params: {
     resourceScope: 'shared'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualNetworkAddressPrefixes: [
@@ -79,7 +79,7 @@ module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
   name: 'deploy_gisVirtualNetwork'
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualNetworkAddressPrefixes: [
@@ -111,7 +111,7 @@ module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
   name: 'deploy_localNetworkGateway'
   params: {
     resourceScope: 'shared'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     localNetworkGatewayAddressPrefixes: [
@@ -127,7 +127,7 @@ module virtualGatewayPublicIp '../../modules/cosm/cosm-public-ip.bicep' = {
   name: 'deploy_virtualGatewayPublicIp'
   params: {
     resourceScope: 'shared'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     publicIpAddress: '20.237.174.76'
@@ -143,7 +143,7 @@ module virtualNetworkGateway '../../modules/cosm/cosm-virtual-gateway.bicep' = {
   ]
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualNetworkGatewayType: 'Vpn'
@@ -166,7 +166,7 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
   ]
   params: {
     resourceScope: 'shared'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     localNetworkGatewayName: localNetworkGateway.outputs.name
