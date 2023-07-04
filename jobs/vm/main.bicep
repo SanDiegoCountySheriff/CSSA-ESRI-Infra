@@ -39,8 +39,34 @@ module gisProximityPlacementGroup_resource '../../modules/gis/gis-ppg.bicep' = {
   }
 }
 
+module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
+  name: 'deploy_gisWorkstationVm'
+  dependsOn: [
+    gisProximityPlacementGroup_resource
+    applicationSecurityGroups_ArcGIS
+    virtualNetworkSpoke
+  ]
+  params: {
+    resourceScope: 'gis'
+    resourceLocation: location
+    resourceEnv: environmentType
+    nameSuffix: resourceNameSuffix
+    virtualMachineName: 'cosm-gis-${environmentType}-ws'
+    proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
+    virtualNetworkName: virtualNetworkSpoke.name
+    appSecurityGroups: [
+      applicationSecurityGroups_ArcGIS
+    ]
+    //virtualMachineSize: ''
+    availabilitySetName: ''
+    adminUsername: ''
+    adminPassword: ''   
+    subnetName: virtualNetworkSpoke.properties.subnets[0].name
+  }
+}
+
 @description('Deploy gisNotebookVM')
-module gisNotebookVm_resource '../../modules/gis/gis-vm-linux.bicep' = {
+module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
   name: 'deploy_gisNotebookVM'
   dependsOn: [
     gisProximityPlacementGroup_resource
@@ -68,8 +94,8 @@ module gisNotebookVm_resource '../../modules/gis/gis-vm-linux.bicep' = {
 }
 
 @description('Deploy gisPortalVM')
-module gisPortalVm_resource '../../modules/gis/gis-vm-windows.bicep' = {
-  name: 'deploy_gisPortalkVM'
+module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
+  name: 'deploy_gisPortalVM'
   dependsOn: [
     gisProximityPlacementGroup_resource
     applicationSecurityGroups_ArcGIS
@@ -81,6 +107,60 @@ module gisPortalVm_resource '../../modules/gis/gis-vm-windows.bicep' = {
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: 'cosm-gis-${environmentType}-portal'
+    proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
+    virtualNetworkName: virtualNetworkSpoke.name
+    appSecurityGroups: [
+      applicationSecurityGroups_ArcGIS
+    ]
+    //virtualMachineSize: ''
+    availabilitySetName: ''
+    adminUsername: ''
+    adminPassword: ''   
+    subnetName: virtualNetworkSpoke.properties.subnets[0].name
+  }
+}
+
+@description('Deploy gisHostingServerVM')
+module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
+  name: 'deploy_gisHostingServerVM'
+  dependsOn: [
+    gisProximityPlacementGroup_resource
+    applicationSecurityGroups_ArcGIS
+    virtualNetworkSpoke
+  ]
+  params: {
+    resourceScope: 'gis'
+    resourceLocation: location
+    resourceEnv: environmentType
+    nameSuffix: resourceNameSuffix
+    virtualMachineName: 'cosm-gis-${environmentType}-hosting'
+    proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
+    virtualNetworkName: virtualNetworkSpoke.name
+    appSecurityGroups: [
+      applicationSecurityGroups_ArcGIS
+    ]
+    //virtualMachineSize: ''
+    availabilitySetName: ''
+    adminUsername: ''
+    adminPassword: ''   
+    subnetName: virtualNetworkSpoke.properties.subnets[0].name
+  }
+}
+
+@description('Deploy gisDatastoreServerVM')
+module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
+  name: 'deploy_gisDatastoreServerVM'
+  dependsOn: [
+    gisProximityPlacementGroup_resource
+    applicationSecurityGroups_ArcGIS
+    virtualNetworkSpoke
+  ]
+  params: {
+    resourceScope: 'gis'
+    resourceLocation: location
+    resourceEnv: environmentType
+    nameSuffix: resourceNameSuffix
+    virtualMachineName: 'cosm-gis-${environmentType}-datastore'
     proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
