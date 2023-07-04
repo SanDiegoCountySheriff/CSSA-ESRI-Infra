@@ -110,7 +110,7 @@ module virtualGatewayPublicIp '../../modules/cosm/cosm-public-ip.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    publicIpAddress: '20.237.174.76'
+    publicIpAddress: '20.237.174.77'
   }
 }
 
@@ -168,7 +168,7 @@ module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
     ]
     subnets: [
       {
-        name: 'cosm-gis-iz-sn'
+        name: 'sn-cosm-gis-iz'
         properties: {
           addressPrefix: gisVirtualNetworkIzSubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
@@ -176,7 +176,7 @@ module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
         }
       }
       {
-        name: 'cosm-gis-data-sn'
+        name: 'sn-cosm-gis-data'
         properties: {
           addressPrefix: gisVirtualNetworkDataSubnetPrefix
           privateEndpointNetworkPolicies: 'Disabled'
