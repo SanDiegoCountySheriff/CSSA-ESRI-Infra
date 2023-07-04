@@ -11,30 +11,67 @@ param appSecurityGroups array
 param subnetName string
 param virtualNetworkName string
 param virtualMachineName string
-param osDiskType string
-param osDiskDeleteOption string = 'Detach'
-param dataDisks array
-param dataDiskResources array
-param virtualMachineSize string
+param osDiskType string = 'Premium_LRS'
+param osDiskDeleteOption string = 'Delete'
+param virtualMachineSize string = 'Standard_D4s_v3'
 param nicDeleteOption string = 'Detach'
-param adminUsername string
 
+param adminUsername string
 @secure()
 param adminPassword string
-param securityType string
+
+param patchMode string = 'AutomaticByOS'
+param enableHotpatching bool = false
+param securityType string = 'TrustedLaunch'
 param secureBoot bool = true
 param vTPM bool = true
 
 param availabilitySetName string
 param proximityPlacementGroupName string
 
-var vnetName = virtualNetworkName
-var vnetId = resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', virtualNetworkName)
-var subnetRef = '${vnetId}/subnets/${subnetName}'
-var aadLoginExtensionName = 'AADSSHLoginForLinux'
+/*
+param backupVaultName string
+param backupFabricName string
+param backupVaultRGName string
+param backupVaultRGIsNew bool
+param backupPolicyName string
+param backupPolicySchedule object
+param backupPolicyRetention object
+param backupPolicyTimeZone string
+param backupInstantRpRetentionRangeInDays int
+param backupInstantRPDetails object
+param backupItemName string
+*/
+
+var aadLoginExtensionName = 'AADLoginForWindows'
+var subnetRef = '${virtualNetwork.id}/subnets/${subnetName}'
+var dataDisks = [
+  {
+    id: null
+    lun: 0
+    createOption: 'attach'
+    deleteOption: 'Detach'
+    caching: 'ReadOnly'
+    writeAcceleratorEnabled: false
+    name: '${virtualMachineName}_DataDisk_0'
+    storageAccountType: null
+    diskSizeGB: null
+    diskEncryptionSet: null
+  }
+]
+
+var dataDiskResources = [
+  {
+    name: '${virtualMachineName}_DataDisk_0'
+    sku: 'Premium_LRS'
+    properties: {
+      diskSizeGB: 512
+    }
+  }
+]
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
-  name: vnetName
+  name: virtualNetworkName
 }
 
 resource availabilitySet 'Microsoft.Compute/availabilitySets@2019-07-01' existing = {
@@ -62,6 +99,7 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
       }
     ]
     enableAcceleratedNetworking: enableAcceleratedNetworking
+    
   }
   dependsOn: [
     virtualNetwork
@@ -80,6 +118,11 @@ resource dataDiskResources_name 'Microsoft.Compute/disks@2022-03-02' = [for item
 resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
   name: virtualMachineName
   location: resourceLocation
+  dependsOn: [
+    proximityPlacementGroup
+    availabilitySet
+    dataDiskResources_name
+  ]
   identity: {
     type: 'SystemAssigned'
   }
@@ -96,9 +139,9 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
         deleteOption: osDiskDeleteOption
       }
       imageReference: {
-        publisher: 'canonical'
-        offer: '0001-com-ubuntu-server-focal'
-        sku: '20_04-lts-gen2'
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2019-datacenter-gensecond'
         version: 'latest'
       }
       dataDisks: [for item in dataDisks: {
@@ -128,9 +171,12 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
       computerName: virtualMachineName
       adminUsername: adminUsername
       adminPassword: adminPassword
-      linuxConfiguration: {
+      windowsConfiguration: {
+        enableAutomaticUpdates: true
+        provisionVMAgent: true
         patchSettings: {
-          patchMode: 'ImageDefault'
+          enableHotpatching: enableHotpatching
+          patchMode: patchMode
         }
       }
     }
@@ -153,37 +199,57 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
       id: availabilitySet.id
     }
   }
-  dependsOn: [
-    proximityPlacementGroup
-    availabilitySet
-    dataDiskResources_name
-  ]
 }
 
-module microsoft_linux_aadsshlogin '../../extensions/microsoft/linux-aadsshlogin-arm.bicep' = {
-  name: 'microsoft.linux-aadsshlogin'
+/*
+
+module BackupVaultAndOrPolicy_defaultVault724_EnhancedPolicy_ljnodtu7 './nested_BackupVaultAndOrPolicy_defaultVault724_EnhancedPolicy_ljnodtu7.bicep' = {
+  name: 'BackupVaultAndOrPolicy-defaultVault724-EnhancedPolicy-ljnodtu7'
+  scope: resourceGroup(backupVaultRGName)
   params: {
-    vmName: 'cosm-gis-test-notebook'
-    location: 'westus3'
+    resourceId_parameters_backupVaultRGName_Microsoft_RecoveryServices_vaults_parameters_backupVaultName: resourceId(backupVaultRGName, 'Microsoft.RecoveryServices/vaults', backupVaultName)
+    backupVaultName: backupVaultName
+    location: location
+    backupPolicyName: backupPolicyName
+    backupPolicySchedule: backupPolicySchedule
+    backupPolicyRetention: backupPolicyRetention
+    backupPolicyTimeZone: backupPolicyTimeZone
+    backupInstantRpRetentionRangeInDays: backupInstantRpRetentionRangeInDays
+    backupInstantRPDetails: backupInstantRPDetails
+  }
+}
+
+module virtualMachineName_BackupIntent './nested_virtualMachineName_BackupIntent.bicep' = {
+  name: '${virtualMachineName}-BackupIntent'
+  scope: resourceGroup(backupVaultRGName)
+  params: {
+    resourceId_parameters_backupVaultRGName_Microsoft_RecoveryServices_vaults_backupPolicies_parameters_backupVaultName_parameters_backupPolicyName: resourceId(backupVaultRGName, 'Microsoft.RecoveryServices/vaults/backupPolicies', backupVaultName, backupPolicyName)
+    resourceId_parameters_virtualMachineRG_Microsoft_Compute_virtualMachines_parameters_virtualMachineName: resourceId(virtualMachineRG, 'Microsoft.Compute/virtualMachines', virtualMachineName)
+    backupVaultName: backupVaultName
+    backupFabricName: backupFabricName
+    backupItemName: backupItemName
+    virtualMachineName: virtualMachineName
   }
   dependsOn: [
-    virtualMachine
+    resourceId(virtualMachineRG, 'Microsoft.Compute/virtualMachines', virtualMachineName)
+    BackupVaultAndOrPolicy_defaultVault724_EnhancedPolicy_ljnodtu7
   ]
 }
+*/
 
 resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = {
   parent: virtualMachine
-  name: 'microsoft.linux-aadsshlogin'
+  name:  aadLoginExtensionName
   location: resourceLocation
   properties: {
     publisher: 'Microsoft.Azure.ActiveDirectory'
     type: aadLoginExtensionName
     typeHandlerVersion: '1.0'
     autoUpgradeMinorVersion: true
+    settings: {
+      mdmId: ''
+    }
   }
-  dependsOn: [
-    microsoft_linux_aadsshlogin
-  ]
 }
 
 output adminUsername string = adminUsername

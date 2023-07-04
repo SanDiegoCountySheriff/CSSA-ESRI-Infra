@@ -40,7 +40,7 @@ module gisProximityPlacementGroup_resource '../../modules/gis/gis-ppg.bicep' = {
 }
 
 @description('Deploy gisNotebookVM')
-module gisNotebookVm_resource '../../modules/gis/gis-notebook-vm.bicep' = {
+module gisNotebookVm_resource '../../modules/gis/gis-linux-vm.bicep' = {
   name: 'deploy_gisNotebookVM'
   dependsOn: [
     gisProximityPlacementGroup_resource
@@ -52,7 +52,7 @@ module gisNotebookVm_resource '../../modules/gis/gis-notebook-vm.bicep' = {
     resourceLocation: location
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: ''
+    virtualMachineName: 'cosm-gis-${environmentType}-notebook'
     proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -63,5 +63,33 @@ module gisNotebookVm_resource '../../modules/gis/gis-notebook-vm.bicep' = {
     availabilitySetName: ''
     adminUsername: ''
     adminPassword: ''   
+    subnetName: virtualNetworkSpoke.properties.subnets[0].name
+  }
+}
+
+@description('Deploy gisPortalVM')
+module gisPortalVm_resource '../../modules/gis/gis-windows-vm.bicep' = {
+  name: 'deploy_gisPortalkVM'
+  dependsOn: [
+    gisProximityPlacementGroup_resource
+    applicationSecurityGroups_ArcGIS
+    virtualNetworkSpoke
+  ]
+  params: {
+    resourceScope: 'gis'
+    resourceLocation: location
+    resourceEnv: environmentType
+    nameSuffix: resourceNameSuffix
+    virtualMachineName: 'cosm-gis-${environmentType}-portal'
+    proximityPlacementGroupName: gisProximityPlacementGroup_resource.outputs.name
+    virtualNetworkName: virtualNetworkSpoke.name
+    appSecurityGroups: [
+      applicationSecurityGroups_ArcGIS
+    ]
+    //virtualMachineSize: ''
+    availabilitySetName: ''
+    adminUsername: ''
+    adminPassword: ''   
+    subnetName: virtualNetworkSpoke.properties.subnets[0].name
   }
 }
