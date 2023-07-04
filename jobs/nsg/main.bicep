@@ -242,16 +242,15 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
   }
 }
 
-@batchSize(1)
-module attachNsg '../../modules/cosm/cosm-update-sn.bicep' = [for (sn, index) in spokeVnetSubnetArray: {
-  name: 'update-vnet-subnet-${sn})}'
+module attachNsg '../../modules/cosm/cosm-update-sn.bicep' = {
+  name: 'update-${spokeVnetSubnetArray[0].name})}'
   params: {
     vnetName: spokeVnetName
-    subnetName: sn.name
-    properties: union(sn.properties, {
+    subnetName: spokeVnetSubnetArray[0].name
+    properties: union(spokeVnetSubnetArray[0].properties, {
       networkSecurityGroups: [{
         id: networkSecurityGroup_gis_iz.outputs.id
       }]
     })
   }
-}]
+}

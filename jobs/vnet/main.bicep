@@ -34,6 +34,20 @@ param localNetworkGatewayIpAddress string = '209.76.14.250'
 @secure()
 param networkConnectionSharedKey string
 
+var localNetworkGatewayAddressPrefixes = [
+  '10.0.0.0/8'
+  '172.31.253.0/24'
+]
+
+var cosmHubVirtualNetworkAddressPrefix = '172.16.0.0/23'
+var cosmHubVirtualNetworkGatewaySubnetPrefix = '172.16.0.0/25'
+var cosmHubVirtualNetworkFwSubnetPrefix = '172.16.0.128/25'
+
+var gisVirtualNetworkAddressPrefix = '172.16.2.0/24'
+var gisVirtualNetworkIzSubnetPrefix = '172.16.2.0/25'
+var gisVirtualNetworkDataSubnetPrefix = '172.16.2.128/25'
+
+
 @description('Deploy cosmHubVirtualNetwork')
 module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
   name: 'deploy_cosmHubVirtualNetwork'
@@ -43,13 +57,13 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualNetworkAddressPrefixes: [
-      '172.18.0.0/23'
+      cosmHubVirtualNetworkAddressPrefix
     ]
     subnets: [
       {
         name: 'GatewaySubnet'
         properties: {
-          addressPrefix: '172.18.0.0/25'
+          addressPrefix: cosmHubVirtualNetworkGatewaySubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
@@ -57,7 +71,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
       {
         name: 'AzureFirewallManagementSubnet'
         properties: {
-          addressPrefix: '172.18.0.128/25'
+          addressPrefix: cosmHubVirtualNetworkFwSubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
@@ -74,38 +88,6 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-hub-vnet.bicep' = {
   }
 }
 
-@description('Deploy gisVirtualNetwork')
-module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
-  name: 'deploy_gisVirtualNetwork'
-  params: {
-    resourceScope: 'gis'
-    resourceLocation: resourceLocation
-    resourceEnv: environmentType
-    nameSuffix: resourceNameSuffix
-    virtualNetworkAddressPrefixes: [
-      '172.18.2.0/24'
-    ]
-    subnets: [
-      {
-        name: 'cosm-gis-iz-sn'
-        properties: {
-          addressPrefix: '172.18.2.0/25'
-          privateEndpointNetworkPolicies: 'Enabled'
-          privateLinkServiceNetworkPolicies: 'Enabled'
-        }
-      }
-      {
-        name: 'cosm-gis-data-sn'
-        properties: {
-          addressPrefix: '172.18.2.128/25'
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Disabled'
-        }
-      }
-    ]
-  }
-}
-
 @description('Deploy localNetworkGateway')
 module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
   name: 'deploy_localNetworkGateway'
@@ -114,10 +96,7 @@ module localNetworkGateway '../../modules/cosm/cosm-local-gateway.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    localNetworkGatewayAddressPrefixes: [
-      '10.0.0.0/8'
-      '172.31.253.0/24'
-    ]
+    localNetworkGatewayAddressPrefixes: localNetworkGatewayAddressPrefixes
     localNetworkGatewayIpAddress: localNetworkGatewayIpAddress
   }
 }
@@ -142,7 +121,7 @@ module virtualNetworkGateway '../../modules/cosm/cosm-virtual-gateway.bicep' = {
     localNetworkGateway
   ]
   params: {
-    resourceScope: 'gis'
+    resourceScope: 'shared'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
@@ -175,9 +154,41 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
   }
 }
 
+@description('Deploy gisVirtualNetwork')
+module gisVirtualNetwork '../../modules/cosm/cosm-spoke-vnet.bicep' = {
+  name: 'deploy_gisVirtualNetwork'
+  params: {
+    resourceScope: 'gis'
+    resourceLocation: resourceLocation
+    resourceEnv: environmentType
+    nameSuffix: resourceNameSuffix
+    virtualNetworkAddressPrefixes: [
+      gisVirtualNetworkAddressPrefix     
+    ]
+    subnets: [
+      {
+        name: 'cosm-gis-iz-sn'
+        properties: {
+          addressPrefix: gisVirtualNetworkIzSubnetPrefix
+          privateEndpointNetworkPolicies: 'Enabled'
+          privateLinkServiceNetworkPolicies: 'Enabled'
+        }
+      }
+      {
+        name: 'cosm-gis-data-sn'
+        properties: {
+          addressPrefix: gisVirtualNetworkDataSubnetPrefix
+          privateEndpointNetworkPolicies: 'Disabled'
+          privateLinkServiceNetworkPolicies: 'Disabled'
+        }
+      }
+    ]
+  }
+}
+
 @description('Enable Vnet Peering between Hub and Spoke') 
 module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
-  name: 'deploy_vnp-cosm-gis-test-001'
+  name: 'deploy_virtualNetworkPeering'
   dependsOn: [
     gisVirtualNetwork
     cosmHubVirtualNetwork
@@ -188,10 +199,12 @@ module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
   params: {
     virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
     virtualNetworkSpokeName: gisVirtualNetwork.outputs.name
+
     spokeAllowForwardedTraffic: true
     spokeAllowVirtualNetworkAccess: true
     spokeUseRemoteGateways: true
     spokeAllowGatewayTransit: false
+
     hubAllowForwardedTraffic: false
     hubAllowVirtualNetworkAccess: true
     hubUseRemoteGateways: false
