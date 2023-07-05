@@ -1,4 +1,4 @@
-// main.bicep | San Marcos GIS on Azure
+// jobs\vnet\main.bicep | San Marcos GIS on Azure
 //
 // Copyright (C) 2023 City of San Marcos CA
 //

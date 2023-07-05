@@ -48,8 +48,23 @@ stages:
                 -environmentType "$(EnvironmentType)" 
                 -networkConnectionSharedKey '$(networkConnectionSharedKey)'
               deploymentOutputs: spokeVnetName, spokeVnetSubnets
-                  
       - job: DeployNsg
+        steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              #deploymentScope: 'Subscription'
+              subscriptionId: $(SubscriptionId)
+              connectedServiceName: $(ServiceConnectionName)
+              location: $(DeploymentDefaultLocation)
+              resourceGroupName: $(ResourceGroupName)
+              csmFile: ./jobs/vnet/main.bicep
+              deploymentMode: 'Complete'
+              overrideParameters: >
+                -resourceLocation "$(DeploymentDefaultLocation)" 
+                -environmentType "$(EnvironmentType)" 
+                -networkConnectionSharedKey '$(networkConnectionSharedKey)'
+              deploymentOutputs: spokeVnetName, spokeVnetSubnets
+      - job: DeployVm
         dependsOn: DeployVnet
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
@@ -66,3 +81,20 @@ stages:
                 -environmentType "$(EnvironmentType)" 
                 -spokeVnetName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
                 -spokeVnetSubnets $[dependencies.DeployVnet.outputs['psJob.spokeVnetSubnets']]
+                - job: DeployNsg
+                dependsOn: DeployVnet
+                steps:
+                  - task: AzureResourceManagerTemplateDeployment@3
+                    inputs:
+                      #deploymentScope: 'Subscription'
+                      subscriptionId: $(SubscriptionId)
+                      connectedServiceName: $(ServiceConnectionName)
+                      location: $(DeploymentDefaultLocation)
+                      resourceGroupName: $(ResourceGroupName)
+                      csmFile: ./jobs/nsg/main.bicep
+                      #deploymentMode: 'Complete'
+                      overrideParameters: >
+                        -resourceLocation "$(DeploymentDefaultLocation)" 
+                        -environmentType "$(EnvironmentType)" 
+                        -spokeVnetName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
+                        -spokeVnetSubnets $[dependencies.DeployVnet.outputs['psJob.spokeVnetSubnets']]
