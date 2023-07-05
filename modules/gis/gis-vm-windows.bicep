@@ -253,3 +253,4 @@ resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines
 }
 
 output adminUsername string = adminUsername
+//output driveletter string = virtualMachine.properties.storageProfile.dataDisks.

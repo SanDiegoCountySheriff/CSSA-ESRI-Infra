@@ -1,5 +1,6 @@
 
 
+param driveLetter = $args[0]
 var computerName = $env:computername
 
 New-Item -ItemType Directory -Path "D:\\inetpub\\wwwroot"

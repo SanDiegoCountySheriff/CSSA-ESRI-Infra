@@ -110,7 +110,7 @@ module virtualGatewayPublicIp '../../modules/cosm/cosm-pip.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    publicIpAddress: ''//'20.237.174.77'
+    publicIpAddress: '20.237.174.77'
   }
 }
 
