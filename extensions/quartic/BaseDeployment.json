@@ -84,7 +84,8 @@
                 "UserName": "siteadmin",
                 "Password": "bq_WbGX7Nu9"
             },
-            "ExternalLoadBalancer": "webmaps-NonProd.san-marcos.net"
+            "ExternalLoadBalancer": "webmaps-NonProd.san-marcos.net",
+            "InternalLoadBalancer": "webmaps-NonProd.san-marcos.net"
         },
         "Portal": {
             "LicenseFilePath": "[License File Path - Portal ]",
@@ -105,7 +106,8 @@
             },
             "DefaultRoleForUser":"iAAAAAAAAAAAAAAA",
             "DefaultUserLicenseTypeIdForUser":"viewerUT",
-            "ExternalLoadBalancer": "webmaps-NonProd.san-marcos.net"
+            "ExternalLoadBalancer": "webmaps-NonProd.san-marcos.net",
+            "InternalLoadBalancer": "webmaps-NonProd.san-marcos.net"
         },
         "DataStore": {
             "ContentDirectoryLocation": "D:\\arcgisdatastore",
