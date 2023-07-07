@@ -1,4 +1,4 @@
-Set-ExecutionPolicy RemoteSigned
+Set-ExecutionPolicy RemoteSigned -Force
 
 #Configure the Credential variable
 $User = "Domain01\User01"   #Use domain\account (NOT acc@domain)
