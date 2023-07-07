@@ -1,0 +1,1 @@
+Set-DscLocalConfigurationManager -ConfigurationMode ApplyOnly -RebootNodeIfNeeded $false

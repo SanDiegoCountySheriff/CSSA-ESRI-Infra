@@ -1,38 +1,63 @@
 {
     "AllNodes": [
         {
-            "NodeName": "[Machine 1 Name]",
+            "NodeName": "csm-gis-NonProd-datastore",
             "DataStoreTypes": [
                 "Relational",
                 "SpatioTemporal"
             ],
             "Role": [
                 "DataStore"
+            ],
+            "SslCertificates": [
+                {
+                    "Path": "[DataStore SSL Certificate Path]",
+                    "Password": "[DataStore SSL Password]",
+                    "CNameFQDN": "[DataStore CName Alias]",
+                    "Target": [
+                        "DataStore"
+                    ]
+                }
             ]
         },
         {
-            "NodeName": "[Machine 2 Name]",
+            "NodeName": "cosm-gis-NonProd-portal",
             "Role": [
                 "Portal",
-                "PortalWebAdaptor"
-            ]
-        },
-        {
-            "NodeName": "[Machine 3 Name]",
-            "Role": [
-                "Server",
-                "ServerWebAdaptor"
-            ]
-        },
-        {
-            "NodeName": "[localhost -- Server where License Manager will be installed]",
-            "Role": [
+                "PortalWebAdaptor",
+                "ServerWebAdaptor",
                 "LicenseManager"
+            ],
+            "SslCertificates": [
+                {
+                    "Path": "[Portal SSL Certificate Path]",
+                    "Password": "[Portal SSL Password]",
+                    "CNameFQDN": "[Portal CName Alias]",
+                    "Target": [
+                        "Portal"
+                    ]
+                }
+            ]
+        },
+        {
+            "NodeName": "csm-gis-NonProd-hosting",
+            "Role": [
+                "Server"
+            ],
+            "SslCertificates": [
+                {
+                    "Path": "[Server SSL Certificate Path]",
+                    "Password": "[Server SSL Password]",
+                    "CNameFQDN": "[Server CName Alias]",
+                    "Target": [
+                        "Server"
+                    ]
+                }
             ]
         }
     ],
     "ConfigData": {
-        "Version": "[Version of ArcGIS Deployment]",
+        "Version": "10.9.1",
         "ServerContext": "server",
         "PortalContext": "portal",
         "ServerRole": "GeneralPurposeServer",
@@ -40,7 +65,7 @@
             "ServiceAccount": {
                 "Password": "[ServiceAccount Password]",
                 "UserName": "[ServiceAccount Username - Can be a Domain Account]",
-                "IsDomainAccount": false,
+                "IsDomainAccount": true,
                 "IsMSAAccount": false
             }
         },
@@ -48,42 +73,47 @@
             "LicenseFilePath": "[License File Path - Server ]",
             "Installer": {
                 "Path": "[Server Installer Path]",
-                "InstallDir": "[Server Install Dir - Ex. C:\\ArcGIS\\Server]",
-                "InstallDirPython": "[Python Install Dir - Ex. C:\\Python27] ",
-                "EnableArcMapRuntime": "[ Optional - True (Default) | False - Enables ArcMapRuntime. Available starting 10.9.1]",
-                "EnableDotnetSupport": "[ Optional - True | False (Default)  - Enables .Net Extension Support. Available starting 10.9.1]"
+                "InstallDir": "D:\\ArcGIS\\Server",
+                "InstallDirPython": "D:\\Python27",
+                "EnableArcMapRuntime": true,
+                "EnableDotnetSupport": true
             },
-            "ServerDirectoriesRootLocation": "C:\\arcgisserver\\directories",
-            "ConfigStoreLocation": "C:\\arcgisserver\\config-store",
+            "ServerDirectoriesRootLocation": "D:\\arcgisserver\\directories",
+            "ConfigStoreLocation": "D:\\arcgisserver\\config-store",
             "PrimarySiteAdmin": {
-                "UserName": "[PrimarySiteAdmin Username]",
-                "Password": "[PrimarySiteAdmin Password]"
-            }
+                "UserName": "siteadmin",
+                "Password": "bq_WbGX7Nu9"
+            },
+            "ExternalLoadBalancer": "webmaps-NonProd.san-marcos.net"
         },
         "Portal": {
             "LicenseFilePath": "[License File Path - Portal ]",
-            "PortalLicenseUserTypeId": "[Portal License User Type Id- Required for 10.7 and above]",
+            "PortalLicenseUserTypeId": "creatorUT",
             "Installer": {
                 "Path": "[Portal Installer Path]",
                 "WebStylesPath": "[Optional Parameter starting ArcGIS Enterprise 10.7.1 - Portal Web Styles Installer Path]",
-                "InstallDir": "[Portal Install Dir - Ex. C:\\ArcGIS\\Portal]",
-                "ContentDir": "[Portal Content Dir for Install- Ex. C:\\arcgisportal"
+                "InstallDir": "D:\\ArcGIS\\Portal",
+                "ContentDir": "D:\\arcgisportal"
             },
-            "ContentDirectoryLocation":"C:\\arcgisportal\\content",
+            "ContentDirectoryLocation":"D:\\arcgisportal\\content",
             "PortalAdministrator": {
-                "UserName": "[PortalAdministrator Username]",
+                "UserName": "portaladmin",
                 "Email": "[PortalAdministrator Email]",
-                "Password": "[PortalAdministrator Password]",
+                "Password": "tUsAzz_Y9c0D",
                 "SecurityQuestionIndex": 1,
-                "SecurityAnswer": "vanilla"
-            }
+                "SecurityAnswer": "San Marcos"
+            },
+            "DefaultRoleForUser":"iAAAAAAAAAAAAAAA",
+            "DefaultUserLicenseTypeIdForUser":"viewerUT",
+            "ExternalLoadBalancer": "webmaps-NonProd.san-marcos.net"
         },
         "DataStore": {
-            "ContentDirectoryLocation": "[Content Dir DataStore - C:\\arcgisdatastore]",
+            "ContentDirectoryLocation": "D:\\arcgisdatastore",
             "EnableFailoverOnPrimaryStop": false,
+            "EnablePointInTimeRecovery":true,
             "Installer": {
                 "Path": "[DataStore Installer Path]",
-                "InstallDir": "[DataStore Install Dir - Ex. C:\\ArcGIS\\DataStore]"
+                "InstallDir": "D:\\ArcGIS\\DataStore"
             }
         },
         "WebAdaptor": {
@@ -92,13 +122,13 @@
                 "Path": "[WebAdaptor Installer Path]"
             }
         },
-        "LicenseManagerVersion": "[Version of License Manager -- 2019.2, 2020.0, etc.]",
+        "LicenseManagerVersion": "2022.1",
         "LicenseManager": {
             "LicenseFilePath": "[License File Path (*.prvs) - License Manager ]",
             "Installer": {
                 "Path": "[License Manager Installer Path]",
-                "IsSelfExtracting": "[ Optional - True (Default) | False ]",
-                "InstallDir": "[License Install Dir - Ex. C:\\ArcGIS\\LM]"
+                "IsSelfExtracting": true,
+                "InstallDir": "D:\\ArcGIS\\LM"
             }
         }
     }
