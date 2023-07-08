@@ -82,3 +82,19 @@ stages:
               overrideParameters: >
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
+                
+      - job: DeployApp
+        dependsOn: DeployVM
+        steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              #deploymentScope: 'Subscription'
+              subscriptionId: $(SubscriptionId)
+              connectedServiceName: $(ServiceConnectionName)
+              location: $(DeploymentDefaultLocation)
+              resourceGroupName: $(ResourceGroupName)
+              csmFile: ./jobs/vm/main.bicep
+              deploymentMode: 'Complete'
+              overrideParameters: >
+                  -resourceLocation "$(DeploymentDefaultLocation)" 
+                  -environmentType "$(EnvironmentType)" 
