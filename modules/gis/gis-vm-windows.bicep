@@ -86,7 +86,7 @@ resource proximityPlacementGroup  'Microsoft.Compute/proximityPlacementGroups@20
 }
 
 resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
-  name: 'nic-${namePrefix}-${nameSuffix}'
+  name: 'nic-${virtualMachineName}-${nameSuffix}'
   location: resourceLocation
   properties: {
     ipConfigurations: [
