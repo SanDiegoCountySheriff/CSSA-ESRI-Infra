@@ -43,7 +43,7 @@ param backupInstantRPDetails object
 param backupItemName string
 */
 
-var aadLoginExtensionName = 'AADLoginForWindows'
+//var aadLoginExtensionName = 'AADLoginForWindows'
 
 var dataDisks = [
   {
@@ -51,7 +51,7 @@ var dataDisks = [
     lun: 0
     createOption: 'Empty'
     deleteOption: 'Detach'
-    caching: 'ReadOnly'
+    caching: 'None'
     writeAcceleratorEnabled: false
     name: '${virtualMachineName}_DataDisk_0'
     storageAccountType: null

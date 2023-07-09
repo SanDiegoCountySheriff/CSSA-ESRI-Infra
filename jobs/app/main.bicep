@@ -3,8 +3,10 @@ param location string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
-  'tst'
   'prd'
+  'stg'
+  'ist'
+  'uat'
   'dev'
 ])
 param environmentType string

@@ -3,7 +3,7 @@ param resourceScope string
 param resourceEnv string
 param resourceLocation string
 
-param namePrefix string = '${resourceAgency}-${resourceScope}-${resourceEnv}'
+//param namePrefix string = '${resourceType}-${resourceScope}-${resourceEnv}'
 param nameSuffix string = uniqueString(resourceGroup().id)
 
 param enableAcceleratedNetworking bool = true
@@ -37,7 +37,7 @@ var dataDisks = [
     lun: 0
     createOption: 'Empty'
     deleteOption: 'Detach'
-    caching: 'ReadOnly'
+    caching: 'None'
     writeAcceleratorEnabled: false
     name: '${virtualMachineName}_DataDisk_0'
     storageAccountType: null
@@ -52,6 +52,9 @@ var dataDiskResources = [
     sku: 'Premium_LRS'
     properties: {
       diskSizeGB: 512
+      creationData: {
+        createOption: 'Empty'
+      }
     }
   }
 ]

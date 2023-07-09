@@ -21,11 +21,14 @@ param resourceLocation string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
-  'tst'
   'prd'
+  'ist'
+  'uat'
   'dev'
 ])
 param environmentType string
+
+param resourceAgency string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
@@ -64,10 +67,10 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
   name: 'deploy_networkSecurityGroup_gis_ws'
   params: {
     nameSuffix: resourceNameSuffix
-    resourceScope: 'shared'
+    resourceScope: 'gis-iz'
+    resourceAgency: resourceAgency
     resourceLocation: resourceLocation
     resourceEnv: environmentType
-    nsgScopeName: 'gisws'
     securityRules:  [
       {
         name: 'workstation-RDP-rule'

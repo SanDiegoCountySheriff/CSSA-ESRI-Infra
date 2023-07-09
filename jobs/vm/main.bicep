@@ -3,11 +3,15 @@ param resourceLocation string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
-  'tst'
   'prd'
+  'stg'
+  'ist'
+  'uat'
   'dev'
 ])
 param environmentType string
+
+param resourceAgency string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
@@ -33,16 +37,17 @@ resource applicationSecurityGroups_arcgis 'Microsoft.Network/applicationSecurity
   name: 'asg-gis-arcgis-${environmentType}-${resourceNameSuffix}'
 }
 
-var workstationVirtualMachineName   = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-01'
-var portalVirtualMachineName        = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-02'
-var hostingVirtualMachineName       = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-03'
-var notebookVirtualMachineName      = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-04'
-var datastoreVirtualMachineName     = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-05'
+var workstationVirtualMachineName   = 'vm-gis-${environmentType}-01'
+var portalVirtualMachineName        = 'vm-gis-${environmentType}-02'
+var hostingVirtualMachineName       = 'vm-gis-${environmentType}-03'
+var notebookVirtualMachineName      = 'vm-gis-${environmentType}-04'
+var datastoreVirtualMachineName     = 'vm-gis-${environmentType}-05'
 
 @description('Deploy Proximity Placement Group')
 module gisProximityPlacementGroup '../../modules/gis/gis-ppg.bicep' = {
   name: 'deploy_gis-ppg'
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
@@ -53,6 +58,7 @@ module gisProximityPlacementGroup '../../modules/gis/gis-ppg.bicep' = {
 module gisAvailabilitySet '../../modules/gis/gis-avail.bicep' = {
   name: 'deploy_gis-avail'
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
@@ -71,6 +77,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     virtualNetworkSpoke
   ]
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
@@ -100,6 +107,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
     virtualNetworkSpoke
   ]
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
@@ -130,6 +138,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
     virtualNetworkSpoke
   ]
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
@@ -159,6 +168,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     virtualNetworkSpoke
   ]
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
@@ -188,6 +198,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     virtualNetworkSpoke
   ]
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType

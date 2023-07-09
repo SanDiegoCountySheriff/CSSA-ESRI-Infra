@@ -5,7 +5,7 @@ param resourceScope string
 param resourceEnv string
 param resourceLocation string
 
-param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param namePrefix string = '${resourceType}-${resourceScope}-${resourceEnv}'
 param nameSuffix string = uniqueString(resourceGroup().id)
 
 resource proximityPlacementGroup 'Microsoft.Compute/proximityPlacementGroups@2022-11-01' = {

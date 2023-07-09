@@ -6,7 +6,7 @@ param resourceScope string
 param resourceEnv string
 param resourceLocation string
 
-param namePrefix string = '${resourceType}-${resourceAgency}-${resourceScope}-${resourceEnv}'
+param namePrefix string = '${resourceType}-${resourceScope}-${resourceEnv}'
 param nameSuffix string = uniqueString(resourceGroup().id)
 
 param availabilitySetPlatformFaultDomainCount int = 2

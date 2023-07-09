@@ -20,8 +20,10 @@ param resourceLocation string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
-  'tst'
   'prd'
+  'stg'
+  'ist'
+  'uat'
   'dev'
 ])
 param environmentType string
@@ -29,6 +31,8 @@ param environmentType string
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
+
+param resourceAgency string = 'cosm'
 
 param localNetworkGatewayIpAddress string = '209.76.14.250'
 
@@ -161,6 +165,7 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
 module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
   name: 'deploy_gisVirtualNetwork'
   params: {
+    resourceAgency: resourceAgency
     resourceScope: 'gis'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
