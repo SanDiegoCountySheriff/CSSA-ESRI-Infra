@@ -49,7 +49,7 @@ var dataDisks = [
   {
     id: null
     lun: 0
-    createOption: 'attach'
+    createOption: 'Empty'
     deleteOption: 'Detach'
     caching: 'ReadOnly'
     writeAcceleratorEnabled: false
