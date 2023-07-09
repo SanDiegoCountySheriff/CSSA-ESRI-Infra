@@ -25,11 +25,11 @@ pool:
   name: 'selfhostpool001'
 
 variables:
-  DeploymentDefaultLocation: 'westus'
+  #DeploymentDefaultLocation: 'westus'
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
   networkConnectionSharedKey: ''
-  VirtualMachineSize: 'Standard_D2s_v4'
+  #VirtualMachineSize: 'Standard_D2s_v4'
 
 stages:
   - stage: NonProd
@@ -44,7 +44,7 @@ stages:
               location: $(DeploymentDefaultLocation)
               resourceGroupName: $(ResourceGroupName)
               csmFile: ./jobs/vnet/main.bicep
-              deploymentMode: 'Complete'
+              #deploymentMode: 'Complete'
               overrideParameters: >
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
