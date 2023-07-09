@@ -251,9 +251,9 @@ module attachNsg '../../modules/cosm/cosm-sn-update.bicep' = {
     vnetName: virtualNetworkSpoke.name
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
     properties: union(virtualNetworkSpoke.properties.subnets[0].properties, {
-      networkSecurityGroups: [{
+      networkSecurityGroup: {
         id: networkSecurityGroup_gis_iz.outputs.id
-      }]
+      }
     })
   }
 }
