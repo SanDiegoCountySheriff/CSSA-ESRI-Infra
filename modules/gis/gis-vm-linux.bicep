@@ -61,7 +61,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-11-01' existing 
   name: vnetName
 }
 
-resource availabilitySet 'Microsoft.Compute/availabilitySets@2019-07-01' existing = {
+resource availabilitySet 'Microsoft.Compute/availabilitySets@2022-11-01' existing = {
   name: availabilitySetName
 }
 
@@ -195,7 +195,7 @@ module microsoft_linux_aadsshlogin '../../extensions/microsoft/linux-aadsshlogin
   ]
 }
 
-resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = {
+resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' = {
   parent: virtualMachine
   name: 'microsoft.linux-aadsshlogin'
   location: resourceLocation

@@ -28,7 +28,7 @@ resource applicationSecurityGroup_Workstation 'Microsoft.Network/applicationSecu
   name: 'asg-gis-ws-${environmentType}-${resourceNameSuffix}'
 }
 
-resource applicationSecurityGroups_ArcGIS 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
+resource applicationSecurityGroups_arcgis 'Microsoft.Network/applicationSecurityGroups@2022-07-01' existing = {
   name: 'asg-gis-arcgis-${environmentType}-${resourceNameSuffix}'
 }
 
@@ -61,7 +61,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
   name: 'deploy_gisWorkstationVm'
   dependsOn: [
     gisProximityPlacementGroup
-    applicationSecurityGroups_ArcGIS
+    applicationSecurityGroups_arcgis
     virtualNetworkSpoke
   ]
   params: {
@@ -88,7 +88,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
   name: 'deploy_gisNotebookVM'
   dependsOn: [
     gisProximityPlacementGroup
-    applicationSecurityGroups_ArcGIS
+    applicationSecurityGroups_arcgis
     virtualNetworkSpoke
   ]
   params: {
@@ -100,7 +100,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
-      applicationSecurityGroups_ArcGIS
+      applicationSecurityGroups_arcgis
     ]
     virtualMachineSize: virtualMachineSize
     secureBoot: true
@@ -116,7 +116,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
   name: 'deploy_gisPortalVM'
   dependsOn: [
     gisProximityPlacementGroup
-    applicationSecurityGroups_ArcGIS
+    applicationSecurityGroups_arcgis
     virtualNetworkSpoke
   ]
   params: {
@@ -128,7 +128,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
-      applicationSecurityGroups_ArcGIS
+      applicationSecurityGroups_arcgis
     ]
     virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name
@@ -143,7 +143,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
   name: 'deploy_gisHostingServerVM'
   dependsOn: [
     gisProximityPlacementGroup
-    applicationSecurityGroups_ArcGIS
+    applicationSecurityGroups_arcgis
     virtualNetworkSpoke
   ]
   params: {
@@ -155,7 +155,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
-      applicationSecurityGroups_ArcGIS
+      applicationSecurityGroups_arcgis
     ]
     virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name
@@ -170,7 +170,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
   name: 'deploy_gisDatastoreServerVM'
   dependsOn: [
     gisProximityPlacementGroup
-    applicationSecurityGroups_ArcGIS
+    applicationSecurityGroups_arcgis
     virtualNetworkSpoke
   ]
   params: {
@@ -182,7 +182,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
-      applicationSecurityGroups_ArcGIS
+      applicationSecurityGroups_arcgis
     ]
     virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name

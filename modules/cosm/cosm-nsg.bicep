@@ -1,5 +1,4 @@
 
-param resourceAgency string = 'cosm'
 param resourceType string = 'nsg'
 param resourceScope string
 param resourceEnv string

@@ -13,7 +13,7 @@ param availabilitySetPlatformFaultDomainCount int = 2
 param availabilitySetPlatformUpdateDomainCount int = 5
 param proximityPlacementGroupId string
 
-resource availabilitySet 'Microsoft.Compute/availabilitySets@2019-07-01' = {
+resource availabilitySet 'Microsoft.Compute/availabilitySets@2022-11-01' = {
   name: '${namePrefix}-${nameSuffix}'
   location: resourceLocation
   sku: {
