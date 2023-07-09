@@ -50,12 +50,13 @@ stages:
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -networkConnectionSharedKey '$(networkConnectionSharedKey)'
-              deploymentOutputs: spokeVnetName, spokeVnetSubnets
+              deploymentOutputs: outputSpokeVnetName
                   
       - job: DeployNsg
         dependsOn: DeployVnet
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
+
             inputs:
               #deploymentScope: 'Subscription'
               subscriptionId: $(SubscriptionId)
@@ -67,7 +68,7 @@ stages:
               overrideParameters: >
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
-                -spokeVnetName $[dependencies.DeployVnet.outputs['spokeVnetName']]
+                -spokeVnetName $[dependencies.DeployVnet.outputs['outputSpokeVnetName.spokeVnetName']]
 
       - job: DeployVM
         dependsOn: DeployNsg
@@ -85,7 +86,7 @@ stages:
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -virtualMachineSize "$(VirtualMachineSize)"
-                -virtualNetworkSpokeName $[dependencies.DeployVnet.outputs['spokeVnetName']]
+                -virtualNetworkSpokeName $[dependencies.DeployVnet.outputs['outputSpokeVnetName.spokeVnetName']]
                 -adminPassword "$(VirtualMachineAdminPassword)"
          
       # - job: DeployApp
