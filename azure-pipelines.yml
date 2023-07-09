@@ -82,7 +82,7 @@ jobs:
           location: $(DeploymentDefaultLocation)
           resourceGroupName: $(ResourceGroupName)
           csmFile: ./jobs/vm/main.bicep
-          deploymentMode: 'Complete'
+          #deploymentMode: 'Complete'
           overrideParameters: >
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
