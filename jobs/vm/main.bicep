@@ -11,7 +11,7 @@ param resourceLocation string = resourceGroup().location
 ])
 param environmentType string
 
-param resourceAgency string
+param resourceAgency string = 'cosm'
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)

@@ -29,7 +29,7 @@ variables:
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
   networkConnectionSharedKey: ''
-  ResourceAgency: 'cosm'
+  #ResourceAgency: 'cosm'
   #spokeVnetName: ''
   #VirtualMachineAdminPassword: ''
   #VirtualMachineSize: 'Standard_D2s_v4'
@@ -49,11 +49,9 @@ jobs:
           #deploymentMode: 'Complete'
           deploymentOutputs: vnetOutput
           overrideParameters: >
-            -resourceAgency: $(ResourceAgency)
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -networkConnectionSharedKey '$(networkConnectionSharedKey)'
-            -resourceAgency: $(ResourceAgency)
       - powershell: |
             Write-Host "##vso[task.setvariable variable=SpokeVnetName;isOutput=true]$(vnetOutput.SpokeVnetName.value)"
         name: vnetVars
@@ -73,7 +71,6 @@ jobs:
           csmFile: ./jobs/nsg/main.bicep
           #deploymentMode: 'Complete'
           overrideParameters: >
-            -resourceAgency: $(ResourceAgency)
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -spokeVnetName $(spokeVnetName)
@@ -95,7 +92,6 @@ jobs:
           csmFile: ./jobs/vm/main.bicep
           #deploymentMode: 'Complete'
           overrideParameters: >
-            -resourceAgency: $(ResourceAgency)
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -virtualMachineSize "$(VirtualMachineSize)"
