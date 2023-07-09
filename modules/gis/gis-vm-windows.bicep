@@ -44,7 +44,7 @@ param backupItemName string
 */
 
 var aadLoginExtensionName = 'AADLoginForWindows'
-var subnetRef = '${virtualNetwork.id}/subnets/${subnetName}'
+
 var dataDisks = [
   {
     id: null
@@ -91,7 +91,7 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-08-01' = {
         name: 'ipconfig1'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', subnetRef)
+            id: resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
           }
           privateIPAllocationMethod: 'Dynamic'
           applicationSecurityGroups: appSecurityGroups
@@ -150,7 +150,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
         caching: item.caching
         diskSizeGB: item.diskSizeGB
         managedDisk: {
-          id: (item.id ?? ((item.name == null) ? null : resourceId('Microsoft.Compute/disks', item.name)))
+          id: (item.id ?? ((item.name == null) ? null : resourceId(resourceGroup().name, 'Microsoft.Compute/disks', item.name)))
           storageAccountType: item.storageAccountType
         }
         deleteOption: item.deleteOption
