@@ -41,7 +41,7 @@ var dataDisks = [
     writeAcceleratorEnabled: false
     name: '${virtualMachineName}_DataDisk_0'
     storageAccountType: null
-    diskSizeGB: null
+    diskSizeGB: 512
     diskEncryptionSet: null
   }
 ]
