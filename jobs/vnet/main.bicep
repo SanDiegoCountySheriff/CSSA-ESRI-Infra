@@ -215,4 +215,4 @@ module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
   }
 }
 */
-output _ string = gisVirtualNetwork.outputs.name
+output outVnetName string = gisVirtualNetwork.outputs.name
