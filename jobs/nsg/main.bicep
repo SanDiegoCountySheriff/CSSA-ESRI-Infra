@@ -32,7 +32,10 @@ param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
 param spokeVnetName string
 param spokeVnetSubnets string
-param spokeVnetSubnetArray array = array(spokeVnetSubnets)
+
+resource virtualNetworkSpoke 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
+  name: spokeVnetSubnets
+}
 
 resource applicationSecurityGroup_Workstation 'Microsoft.Network/applicationSecurityGroups@2022-07-01' = {
   name: 'asg-gis-ws-${environmentType}-${resourceNameSuffix}'
@@ -243,11 +246,11 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
 }
 
 module attachNsg '../../modules/cosm/cosm-sn-update.bicep' = {
-  name: 'update-${spokeVnetSubnetArray[0].name})}'
+  name: 'update-spoke-sn-001'
   params: {
     vnetName: spokeVnetName
-    subnetName: spokeVnetSubnetArray[0].name
-    properties: union(spokeVnetSubnetArray[0].properties, {
+    subnetName: virtualNetworkSpoke.properties.subnets[0].name
+    properties: union(virtualNetworkSpoke.properties, {
       networkSecurityGroups: [{
         id: networkSecurityGroup_gis_iz.outputs.id
       }]

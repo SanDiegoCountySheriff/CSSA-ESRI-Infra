@@ -67,7 +67,6 @@ stages:
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -spokeVnetName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
-                -spokeVnetSubnets $[dependencies.DeployVnet.outputs['psJob.spokeVnetSubnets']]
 
       - job: DeployVM
         dependsOn: DeployNsg
