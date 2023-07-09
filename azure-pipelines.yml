@@ -51,7 +51,7 @@ jobs:
             -networkConnectionSharedKey '$(networkConnectionSharedKey)'
           deploymentOutputs: output
       - powershell: |
-          echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(output.spokeVnetName.value)"
+          echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(output.spokeVnetName)"
         name: setVar
               
   - job: DeployNsg
@@ -71,7 +71,7 @@ jobs:
           overrideParameters: >
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
-            -spokeVnetName "$(spokeVnetName)"
+            -spokeVnetName $(spokeVnetName)
 
   - job: DeployVM
     dependsOn: 
@@ -93,7 +93,7 @@ jobs:
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -virtualMachineSize "$(VirtualMachineSize)"
-            -virtualNetworkSpokeName "$(spokeVnetName)"
+            -virtualNetworkSpokeName $(spokeVnetName)
             -adminPassword "$(VirtualMachineAdminPassword)"
       
   # - job: DeployApp
