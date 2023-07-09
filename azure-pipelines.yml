@@ -69,7 +69,7 @@ jobs:
           overrideParameters: >
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
-            -spokeVnetName "$(spokeVnetName)"
+            -spokeVnetName $(spokeVnetName)
 
   - job: DeployVM
     dependsOn: DeployNsg
@@ -87,7 +87,7 @@ jobs:
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -virtualMachineSize "$(VirtualMachineSize)"
-            -virtualNetworkSpokeName "$(spokeVnetName)"
+            -virtualNetworkSpokeName $(spokeVnetName)
             -adminPassword "$(VirtualMachineAdminPassword)"
       
   # - job: DeployApp
