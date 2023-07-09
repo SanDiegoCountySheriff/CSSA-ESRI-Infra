@@ -49,15 +49,15 @@ jobs:
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -networkConnectionSharedKey '$(networkConnectionSharedKey)'
-          deploymentOutputs: spokeVnetName
+          deploymentOutputs: output
       - powershell: |
-          echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(spokeVnetName)"
+          echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(output)"
         name: setVar
               
   - job: DeployNsg
     dependsOn: DeployVnet
     variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName'] ]  
+      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.output.spokeVnetName'] ]  
     steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
@@ -71,12 +71,14 @@ jobs:
           overrideParameters: >
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
-            -spokeVnetName $(spokeVnetName)
+            -spokeVnetName "$(spokeVnetName)"
 
   - job: DeployVM
-    dependsOn: DeployNsg
+    dependsOn: 
+      - DeployVnet
+      - DeployNsg
     variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName'] ]  
+      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.output.spokeVnetName'] ]  
     steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
@@ -91,7 +93,7 @@ jobs:
             -resourceLocation "$(DeploymentDefaultLocation)" 
             -environmentType "$(EnvironmentType)" 
             -virtualMachineSize "$(VirtualMachineSize)"
-            -virtualNetworkSpokeName $(spokeVnetName)
+            -virtualNetworkSpokeName "$(spokeVnetName)"
             -adminPassword "$(VirtualMachineAdminPassword)"
       
   # - job: DeployApp
