@@ -134,10 +134,12 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
         createOption: item.createOption
         caching: item.caching
         diskSizeGB: item.diskSizeGB
+        /*
         managedDisk: {
           id: (item.id ?? ((item.name == null) ? null : resourceId(resourceGroup().name, 'Microsoft.Compute/disks', item.name)))
           storageAccountType: item.storageAccountType
         }
+        */
         deleteOption: item.deleteOption
         writeAcceleratorEnabled: item.writeAcceleratorEnabled
       }]
