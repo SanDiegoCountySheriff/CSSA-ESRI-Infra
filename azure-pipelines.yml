@@ -29,7 +29,7 @@ variables:
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
   networkConnectionSharedKey: ''
-  spokeVnetName: '999'
+  spokeVnetName: ''
   #VirtualMachineAdminPassword: ''
   #VirtualMachineSize: 'Standard_D2s_v4'
 
@@ -58,11 +58,8 @@ stages:
                   
       - job: DeployNsg
         dependsOn: DeployVnet
-        variables:
-          spokeVnetName: $[ dependencies.DeployVnet.outputs['spokeVnetName'] ]
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
-
             inputs:
               #deploymentScope: 'Subscription'
               subscriptionId: $(SubscriptionId)
@@ -78,8 +75,6 @@ stages:
 
       - job: DeployVM
         dependsOn: DeployNsg
-        variables:
-          spokeVnetName: $[ dependencies.DeployVnet.outputs['spokeVnetName'] ]
         steps:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
