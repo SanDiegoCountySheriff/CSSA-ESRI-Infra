@@ -246,6 +246,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
 
 module attachNsg '../../modules/cosm/cosm-sn-update.bicep' = {
   name: 'update-spoke-sn-001'
+  scope: resourceGroup()
   params: {
     vnetName: spokeVnetName
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
