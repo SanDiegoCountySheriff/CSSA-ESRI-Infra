@@ -25,7 +25,7 @@ pool:
   name: 'selfhostpool001'
 
 variables:
-  DeploymentDefaultLocation: 'centralus'
+  DeploymentDefaultLocation: 'westus'
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
   networkConnectionSharedKey: ''
