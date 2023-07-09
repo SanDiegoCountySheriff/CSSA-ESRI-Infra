@@ -3,8 +3,9 @@ param resourceLocation string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
-  'nonprod'
-  'prod'
+  'tst'
+  'prd'
+  'dev'
 ])
 param environmentType string
 
@@ -32,6 +33,11 @@ resource applicationSecurityGroups_arcgis 'Microsoft.Network/applicationSecurity
   name: 'asg-gis-arcgis-${environmentType}-${resourceNameSuffix}'
 }
 
+var workstationVirtualMachineName   = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-01'
+var portalVirtualMachineName        = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-02'
+var hostingVirtualMachineName       = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-03'
+var notebookVirtualMachineName      = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-04'
+var datastoreVirtualMachineName     = 'vm-gis-${environmentType =~ 'nonprod' ? 'np' : 'p'}-05'
 
 @description('Deploy Proximity Placement Group')
 module gisProximityPlacementGroup '../../modules/gis/gis-ppg.bicep' = {
@@ -69,7 +75,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: 'cosm-gis-${environmentType}-ws'
+    virtualMachineName: workstationVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -98,7 +104,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: 'cosm-gis-${environmentType}-notebook'
+    virtualMachineName: notebookVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -128,7 +134,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: 'cosm-gis-${environmentType}-portal'
+    virtualMachineName: portalVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -157,7 +163,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: 'cosm-gis-${environmentType}-hosting'
+    virtualMachineName: hostingVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -186,7 +192,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: 'cosm-gis-${environmentType}-datastore'
+    virtualMachineName: datastoreVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
