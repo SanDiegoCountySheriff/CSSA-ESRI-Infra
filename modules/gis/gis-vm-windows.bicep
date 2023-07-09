@@ -66,6 +66,9 @@ var dataDiskResources = [
     sku: 'Premium_LRS'
     properties: {
       diskSizeGB: 512
+      creationData: {
+        createOption: 'Empty'
+      }
     }
   }
 ]
