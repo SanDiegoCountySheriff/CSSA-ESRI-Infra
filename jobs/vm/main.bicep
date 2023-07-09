@@ -1,5 +1,5 @@
 @description('Location for all resources.')
-param location string = resourceGroup().location
+param resourceLocation string = resourceGroup().location
 
 @description('The type of environment. This must be nonprod or prod.')
 @allowed([
@@ -14,7 +14,7 @@ param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
 param virtualNetworkSpokeName string
 
-param vmSize string = 'Standard_D2s_v4'
+param virtualMachineSize string = 'Standard_D2s_v4'
 
 param adminUsername string = 'gisadmin'
 @secure()
@@ -38,7 +38,7 @@ module gisProximityPlacementGroup '../../modules/gis/gis-ppg.bicep' = {
   name: 'deploy_gis-ppg'
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
   }
@@ -48,7 +48,7 @@ module gisAvailabilityGroup '../../modules/gis/gis-avail.bicep' = {
   name: 'deploy_gis-avail'
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     availabilitySetPlatformFaultDomainCount: 2
@@ -66,7 +66,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
   ]
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: 'cosm-gis-${environmentType}-ws'
@@ -93,7 +93,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
   ]
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: 'cosm-gis-${environmentType}-notebook'
@@ -121,7 +121,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
   ]
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: 'cosm-gis-${environmentType}-portal'
@@ -148,7 +148,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
   ]
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: 'cosm-gis-${environmentType}-hosting'
@@ -175,7 +175,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
   ]
   params: {
     resourceScope: 'gis'
-    resourceLocation: location
+    resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualMachineName: 'cosm-gis-${environmentType}-datastore'
