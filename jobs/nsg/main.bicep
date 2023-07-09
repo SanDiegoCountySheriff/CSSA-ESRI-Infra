@@ -248,7 +248,7 @@ module attachNsg '../../modules/cosm/cosm-sn-update.bicep' = {
   name: 'update-spoke-sn-001'
   scope: resourceGroup()
   params: {
-    vnetName: spokeVnetName
+    vnetName: virtualNetworkSpoke.name
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
     properties: union(virtualNetworkSpoke.properties.subnets[0].properties, {
       networkSecurityGroups: [{
