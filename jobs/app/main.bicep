@@ -1,6 +1,3 @@
-
-
-
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
@@ -17,172 +14,122 @@ param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
 param virtualMachineName string
 
-
 resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' existing = {
   name: virtualMachineName
 }
 
-resource virtualMachineArcGISExtension 'Microsoft.Compute/virtualMachines/extensions@2018-06-01' = {
-  name: 'virtualMachineName/config-app'
-  location: resourceGroup().location
-  tags: {
-    displayName: 'config-app'
+var serverConfig = {
+  AllNodes: [
+      {
+        NodeName: virtualMachine.properties.osProfile.computerName
+        Role: ['Server']
+      }
+  ]
+  ConfigData: {
+    Version: '10.9.1'
+    ServerRole: 'GeneralPurposeServer'
+    Credentials: {
+        ServiceAccount: {
+          Password: '[ServiceAccount Password]'
+          UserName: '[ServiceAccount Username - Can be a Domain Account]'
+          IsDomainAccount: true
+          IsMSAAccount: false
+        }
+      }
+      Server: {
+        LicenseFilePath: '[License File Path - Server ]'
+        Installer: {
+          Path: '[Server Installer Path]'
+          InstallDir: 'D:\\ArcGIS\\Server'
+          InstallDirPython: 'D:\\Python27'
+          EnableArcMapRuntime: true
+          EnableDotnetSupport: true
+          }
+          ServerDirectoriesRootLocation: 'D:\\arcgisserver\\directories'
+          ConfigStoreLocation: 'D:\\arcgisserver\\config-store'
+          PrimarySiteAdmin: {
+            UserName: 'siteadmin'
+            Password: 'bq_WbGX7Nu9'
+          }
+          ExternalLoadBalancer: 'webmaps-NonProd.san-marcos.net'
+          InternalLoadBalancer: 'webmaps-NonProd.san-marcos.net'
+      }
   }
+}
+
+/*
+resource virtualMachineArcGISPowerShellExtension 'Microsoft.Compute/virtualMachines/extensions@2019-12-01' = {
+  parent: virtualMachine
+  name: 'DSCConfiguration'
+  location: location
   properties: {
-    publisher: 'Quartic Solutions'
-    type: 'CustomScriptExtension'
-    typeHandlerVersion: '1.10'
+    publisher: 'Microsoft.Powershell'
+    type: 'DSC'
+    typeHandlerVersion: '2.77'
     autoUpgradeMinorVersion: true
     settings: {
-        AllNodes: [
-            {
-                NodeName: 'csm-gis-NonProd-datastore'
-                DataStoreTypes: [
-                    'Relational'
-                    'SpatioTemporal'
-                ]
-                Role: [
-                    'DataStore'
-                ]
-                SslCertificates: [
-                    {
-                        Path: 'DataStore SSL Certificate Path]'
-                        Password: '[DataStore SSL Password]'
-                        CNameFQDN: '[DataStore CName Alias]'
-                        Target: [
-                            'DataStore'
-                        ]
-                    }
-                ]
-            }
-            {
-              NodeName: 'cosm-gis-NonProd-portal'
-                Role: [
-                  'Portal'
-                  'PortalWebAdaptor'
-                  'ServerWebAdaptor'
-                  'LicenseManager'
-                ]
-                SslCertificates: [
-                    {
-                        Path: '[Portal SSL Certificate Path]'
-                        Password: '[Portal SSL Password]'
-                        CNameFQDN: '[Portal CName Alias]'
-                        Target: [
-                            'Portal'
-                        ]
-                    }
-                ]
-            }
-            {
-              NodeName: 'csm-gis-NonProd-hosting'
-              Role: [
-                    'Server'
-                ]
-                SslCertificates: [
-                    {
-                      Path: '[Server SSL Certificate Path]'
-                      Password: '[Server SSL Password]'
-                      CNameFQDN: '[Server CName Alias]'
-                      Target: [
-                            'Server'
-                        ]
-                    }
-                ]
-            }
-        ]
-        ConfigData: {
-          Version: '10.9.1'
-          ServerContext: 'server'
-          PortalContext: 'portal'
-            ServerRole: 'GeneralPurposeServer'
-            Credentials: {
-              ServiceAccount: {
-                Password: '[ServiceAccount Password]'
-                UserName: '[ServiceAccount Username - Can be a Domain Account]'
-                IsDomainAccount: true
-                IsMSAAccount: false
-                }
-            }
-            Server: {
-              LicenseFilePath: '[License File Path - Server ]'
-              Installer: {
-                Path: "[Server Installer Path]'
-                InstallDir: 'D:\\ArcGIS\\Server'
-                InstallDirPython: 'D:\\Python27'
-                EnableArcMapRuntime: true
-                EnableDotnetSupport: true
-                }
-                ServerDirectoriesRootLocation: "D:\\arcgisserver\\directories'
-                ConfigStoreLocation: "D:\\arcgisserver\\config-store'
-                PrimarySiteAdmin: {
-                  UserName: 'siteadmin'
-                  Password: 'bq_WbGX7Nu9'
-                }
-                ExternalLoadBalancer: 'webmaps-NonProd.san-marcos.net'
-                InternalLoadBalancer: 'webmaps-NonProd.san-marcos.net'
-            }
-            Portal: {
-              LicenseFilePath: '[License File Path - Portal ]'
-              PortalLicenseUserTypeId: 'creatorUT'
-              Installer: {
-                Path: '[Portal Installer Path]'
-                WebStylesPath: '[Optional Parameter starting ArcGIS Enterprise 10.7.1 - Portal Web Styles Installer Path]'
-                InstallDir: 'D:\\ArcGIS\\Portal'
-                ContentDir: 'D:\\arcgisportal'
-                }
-                ContentDirectoryLocation:'D:\\arcgisportal\\content'
-                PortalAdministrator: {
-                  UserName: 'portaladmin'
-                  Email: '[PortalAdministrator Email]'
-                  Password: 'tUsAzz_Y9c0D'
-                  SecurityQuestionIndex: 1
-                  SecurityAnswer: 'San Marcos'
-                }
-                DefaultRoleForUser:'iAAAAAAAAAAAAAAA'
-                DefaultUserLicenseTypeIdForUser: 'viewerUT'
-                ExternalLoadBalancer: 'webmaps-NonProd.san-marcos.net'
-                InternalLoadBalancer: 'webmaps-NonProd.san-marcos.net'
-            }
-            DataStore: {
-              ContentDirectoryLocation: 'D:\\arcgisdatastore'
-              EnableFailoverOnPrimaryStop: false
-              EnablePointInTimeRecovery:true
-              Installer: {
-                Path: '[DataStore Installer Path]'
-                InstallDir: 'D:\\ArcGIS\\DataStore'
-              }
-            }
-            WebAdaptor: {
-              AdminAccessEnabled: true
-              Installer: {
-                  Path: '[WebAdaptor Installer Path]''
-                }
-            }
-            LicenseManagerVersion: '2022.1'
-            LicenseManager: {
-              LicenseFilePath: '[License File Path (*.prvs) - License Manager ]'
-              Installer: {
-                Path: '[License Manager Installer Path]'
-                IsSelfExtracting: true
-                InstallDir: 'D:\\ArcGIS\\LM'
-              }
-            }
-        }
+      wmfVersion: 'latest'
+      configuration: {
+        url: 'https://github.com/Esri/arcgis-powershell-dsc/archive/refs/heads/main.zip'
+        function: 'BaseDeploymentSingleTierConfiguration'
+        script: 'BaseDeploymentSingleTierConfiguration.ps1'
+      }
+      advancedOptions: {
+        forcePullAndApply: false
+      }
+      configurationArguments: {
+        ServiceCredentialIsDomainAccount: arcgisServiceAccountIsDomainAccount
+        PublicKeySSLCertificateFileUrl: (empty(publicKeySSLCertificateFileName) ? '' : '${_artifactsLocation}/${publicKeySSLCertificateFileName}${_artifactsLocationSasToken}')
+        ServerLicenseFileUrl: (empty(serverLicenseFileName) ? '' : '${_artifactsLocation}/${serverLicenseFileName}${_artifactsLocationSasToken}')
+        PortalLicenseFileUrl: (empty(portalLicenseFileName) ? '' : '${_artifactsLocation}/${portalLicenseFileName}${_artifactsLocationSasToken}')
+        PortalLicenseUserTypeId: (empty(portalLicenseUserTypeId) ? '' : portalLicenseUserTypeId)
+        MachineName: first(virtualMachineNames)
+        PeerMachineName: last(virtualMachineNames)
+        ExternalDNSHostName: externalDnsHostName
+        PrivateDNSHostName: secondaryDnsHostName
+        DataStoreTypes: dataStoreTypesForBaseDeploymentServers
+        IsTileCacheDataStoreClustered: isTileCacheDataStoreClustered
+        FileShareName: fileShareName
+        UseCloudStorage: useCloudStorage
+        UseAzureFiles: useAzureFiles
+        OSDiskSize: virtualMachineOSDiskSize
+        EnableDataDisk: string(enableVirtualMachineDataDisk)
+        EnableLogHarvesterPlugin: string(enableServerLogHarvesterPlugin)
+        DebugMode: string(debugMode)
+        ServerContext: serverContext
+        PortalContext: portalContext
+        IsUpdatingCertificates: isUpdatingCertificates
+      }
     }
     protectedSettings: {
-      commandToExecute: 'myExecutionCommand'
-      storageAccountName: 'myStorageAccountName'
-      storageAccountKey: 'myStorageAccountKey'
-      managedIdentity: {}
-      fileUris: [
-        '../../extensions/quartic/1_Install_Esri_PS_Module.ps1'
-        '../../extensions/quartic/2_Install_Esri_PS_Module.ps1'
-        '../../extensions/quartic/3_Install_Esri_PS_Module.ps1'
-      ]
+      configurationUrlSasToken: _artifactsLocationSasToken
+      configurationArguments: {
+        ServiceCredential: {
+          userName: (empty(arcgisServiceAccountUserName) ? 'PlaceHolder' : arcgisServiceAccountUserName)
+          password: (empty(arcgisServiceAccountPassword) ? 'PlaceHolder' : arcgisServiceAccountPassword)
+        }
+        MachineAdministratorCredential: {
+          userName: (empty(adminUsername) ? 'PlaceHolder' : adminUsername)
+          password: (empty(adminPassword) ? 'PlaceHolder' : adminPassword)
+        }
+        ServerInternalCertificatePassword: {
+          userName: 'Placeholder'
+          password: ((string(useSelfSignedInternalSSLCertificate) == 'True') ? selfSignedSSLCertificatePassword : serverInternalCertificatePassword)
+        }
+        PortalInternalCertificatePassword: {
+          userName: 'Placeholder'
+          password: ((string(useSelfSignedInternalSSLCertificate) == 'True') ? selfSignedSSLCertificatePassword : portalInternalCertificatePassword)
+        }
+        SiteAdministratorCredential: {
+          userName: primarySiteAdministratorAccountUserName
+          password: primarySiteAdministratorAccountPassword
+        }
+        StorageAccountCredential: {
+          userName: cloudStorageAccountCredentialsUserName[string(useCloudStorage)]
+          password: cloudStorageAccountCredentialsPassword[string(useCloudStorage)]
+        }
+      }
     }
   }
-  dependsOn: [
-    virtualMachine
-  ]
 }
+*/

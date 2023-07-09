@@ -88,7 +88,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-vnet-hub.bicep' = {
     ]
   }
 }
-
+/*
 @description('Deploy localNetworkGateway')
 module localNetworkGateway '../../modules/cosm/cosm-lgw.bicep' = {
   name: 'deploy_localNetworkGateway'
@@ -154,7 +154,7 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
     sharedKey: networkConnectionSharedKey
   }
 }
-
+*/
 @description('Deploy gisVirtualNetwork')
 module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
   name: 'deploy_gisVirtualNetwork'
@@ -193,9 +193,9 @@ module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
   dependsOn: [
     gisVirtualNetwork
     cosmHubVirtualNetwork
-    localNetworkGateway
-    virtualNetworkGateway
-    connection
+    //localNetworkGateway
+    //virtualNetworkGateway
+    //connection
   ]
   params: {
     virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name

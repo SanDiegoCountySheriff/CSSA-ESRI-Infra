@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 trigger:
-  - development/nsg-refactor-steps
+  - app-dsc-bicep-integration
   
 pool:
     vmImage: ubuntu-latest
@@ -28,6 +28,7 @@ variables:
   DeploymentDefaultLocation: 'westus'
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
+  networkConnectionSharedKey: ''
 
 stages:
   - stage: NonProd
@@ -82,19 +83,19 @@ stages:
               overrideParameters: >
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
-                
-      - job: DeployApp
-        dependsOn: DeployVM
-        steps:
-          - task: AzureResourceManagerTemplateDeployment@3
-            inputs:
-              #deploymentScope: 'Subscription'
-              subscriptionId: $(SubscriptionId)
-              connectedServiceName: $(ServiceConnectionName)
-              location: $(DeploymentDefaultLocation)
-              resourceGroupName: $(ResourceGroupName)
-              csmFile: ./jobs/vm/main.bicep
-              deploymentMode: 'Complete'
-              overrideParameters: >
-                  -resourceLocation "$(DeploymentDefaultLocation)" 
-                  -environmentType "$(EnvironmentType)" 
+         
+      # - job: DeployApp
+      #   dependsOn: DeployVM
+      #   steps:
+      #     - task: AzureResourceManagerTemplateDeployment@3
+      #       inputs:
+      #         #deploymentScope: 'Subscription'
+      #         subscriptionId: $(SubscriptionId)
+      #         connectedServiceName: $(ServiceConnectionName)
+      #         location: $(DeploymentDefaultLocation)
+      #         resourceGroupName: $(ResourceGroupName)
+      #         csmFile: ./jobs/vm/main.bicep
+      #         deploymentMode: 'Complete'
+      #         overrideParameters: >
+      #             -resourceLocation "$(DeploymentDefaultLocation)" 
+      #             -environmentType "$(EnvironmentType)" 
