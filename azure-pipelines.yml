@@ -18,11 +18,11 @@
 trigger:
   - development/app-dsc-bicep-integration
   
-pool:
-    vmImage: ubuntu-latest
+#pool:
+#    vmImage: ubuntu-latest
   
-  #pool:
-  #  name: 'On-Premises'
+pool:
+  name: 'selfhostpool001'
 
 variables:
   DeploymentDefaultLocation: 'westus'
