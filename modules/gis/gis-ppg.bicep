@@ -16,6 +16,9 @@ resource proximityPlacementGroup 'Microsoft.Compute/proximityPlacementGroups@202
     app: resourceScope
     env: resourceEnv
   }
+  properties: {
+    proximityPlacementGroupType: 'Standard'
+  }
 }
 
 output id string = proximityPlacementGroup.id

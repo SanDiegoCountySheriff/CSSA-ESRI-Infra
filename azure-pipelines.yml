@@ -29,6 +29,7 @@ variables:
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
   networkConnectionSharedKey: ''
+  #VirtualMachineAdminPassword: ''
   #VirtualMachineSize: 'Standard_D2s_v4'
 
 stages:
@@ -84,6 +85,8 @@ stages:
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -virtualMachineSize "$(VirtualMachineSize)"
+                -virtualNetworkSpokeName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
+                -adminPassword "$(VirtualMachineAdminPassword)"
          
       # - job: DeployApp
       #   dependsOn: DeployVM
