@@ -240,7 +240,7 @@ module virtualMachineName_BackupIntent './nested_virtualMachineName_BackupIntent
     BackupVaultAndOrPolicy_defaultVault724_EnhancedPolicy_ljnodtu7
   ]
 }
-*/
+
 
 resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' = {
   parent: virtualMachine
@@ -256,6 +256,6 @@ resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines
     }
   }
 }
-
+*/
 output adminUsername string = adminUsername
 //output driveletter string = virtualMachine.properties.storageProfile.dataDisks.

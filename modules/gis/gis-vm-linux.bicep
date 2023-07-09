@@ -184,7 +184,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-03-01' = {
     }
   }
 }
-
+/*
 module microsoft_linux_aadsshlogin '../../extensions/microsoft/linux-aadsshlogin-arm.bicep' = {
   name: 'microsoft.linux-aadsshlogin'
   params: {
@@ -210,5 +210,5 @@ resource virtualMachineName_aadLoginExtension 'Microsoft.Compute/virtualMachines
     microsoft_linux_aadsshlogin
   ]
 }
-
+*/
 output adminUsername string = adminUsername
