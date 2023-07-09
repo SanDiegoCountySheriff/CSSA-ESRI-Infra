@@ -29,6 +29,7 @@ variables:
   System.Debug: true
   ResourceGroupName: 'rg-cosm-gis-devtest'
   networkConnectionSharedKey: ''
+  VirtualMachineSize: 'Standard_D2s_v4'
 
 stages:
   - stage: NonProd
@@ -83,6 +84,7 @@ stages:
               overrideParameters: >
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
+                -virtualMachineSize "$(VirtualMachineSize)"
          
       # - job: DeployApp
       #   dependsOn: DeployVM

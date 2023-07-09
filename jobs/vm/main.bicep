@@ -16,6 +16,8 @@ param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
 param virtualNetworkSpokeName string
 
+param vmSize string = 'Standard_D2s_v4'
+
 resource virtualNetworkSpoke 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
   name: virtualNetworkSpokeName
 }
@@ -57,7 +59,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroup_Workstation
     ]
-    //virtualMachineSize: ''
+    virtualMachineSize: vmSize
     availabilitySetName: ''
     adminUsername: ''
     adminPassword: ''   
@@ -84,7 +86,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    virtualMachineSize: ''
+    virtualMachineSize: vmSize
     secureBoot: true
     availabilitySetName: ''
     adminUsername: ''
@@ -112,7 +114,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    //virtualMachineSize: ''
+    virtualMachineSize: vmSize
     availabilitySetName: ''
     adminUsername: ''
     adminPassword: ''   
@@ -139,7 +141,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    //virtualMachineSize: ''
+    virtualMachineSize: vmSize
     availabilitySetName: ''
     adminUsername: ''
     adminPassword: ''   
@@ -166,7 +168,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    //virtualMachineSize: ''
+    virtualMachineSize: vmSize
     availabilitySetName: ''
     adminUsername: ''
     adminPassword: ''   

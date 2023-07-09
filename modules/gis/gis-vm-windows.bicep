@@ -13,7 +13,7 @@ param virtualNetworkName string
 param virtualMachineName string
 param osDiskType string = 'Premium_LRS'
 param osDiskDeleteOption string = 'Delete'
-param virtualMachineSize string = 'Standard_B2ms'
+param virtualMachineSize string = 'Standard_D2s_v4'//'Standard_D4s_v3'
 param nicDeleteOption string = 'Detach'
 
 param adminUsername string
