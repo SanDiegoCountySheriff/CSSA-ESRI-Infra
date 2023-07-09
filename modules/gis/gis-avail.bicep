@@ -27,3 +27,5 @@ resource availabilitySet 'Microsoft.Compute/availabilitySets@2022-11-01' = {
     }
   }
 }
+
+output name string = availabilitySet.name

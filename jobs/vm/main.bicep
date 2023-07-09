@@ -44,7 +44,7 @@ module gisProximityPlacementGroup '../../modules/gis/gis-ppg.bicep' = {
   }
 }
 
-module gisAvailabilityGroup '../../modules/gis/gis-avail.bicep' = {
+module gisAvailabilitySet '../../modules/gis/gis-avail.bicep' = {
   name: 'deploy_gis-avail'
   params: {
     resourceScope: 'gis'
@@ -78,7 +78,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
       }  
     ]
     virtualMachineSize: virtualMachineSize
-    availabilitySetName: gisAvailabilityGroup.name
+    availabilitySetName: gisAvailabilitySet.outputs.name
     adminUsername: adminUsername
     adminPassword: adminPassword  
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
@@ -108,7 +108,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
     ]
     virtualMachineSize: virtualMachineSize
     secureBoot: true
-    availabilitySetName: gisAvailabilityGroup.name
+    availabilitySetName: gisAvailabilitySet.outputs.name
     adminUsername: adminUsername
     adminPassword: adminPassword   
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
@@ -137,7 +137,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
       } 
     ]
     virtualMachineSize: virtualMachineSize
-    availabilitySetName: gisAvailabilityGroup.name
+    availabilitySetName: gisAvailabilitySet.outputs.name
     adminUsername: adminUsername
     adminPassword: adminPassword 
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
@@ -166,7 +166,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
       } 
     ]
     virtualMachineSize: virtualMachineSize
-    availabilitySetName: gisAvailabilityGroup.name
+    availabilitySetName: gisAvailabilitySet.outputs.name
     adminUsername: adminUsername
     adminPassword: adminPassword  
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
@@ -195,7 +195,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
       } 
     ]
     virtualMachineSize: virtualMachineSize
-    availabilitySetName: gisAvailabilityGroup.name
+    availabilitySetName: gisAvailabilitySet.outputs.name
     adminUsername: adminUsername
     adminPassword: adminPassword   
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
