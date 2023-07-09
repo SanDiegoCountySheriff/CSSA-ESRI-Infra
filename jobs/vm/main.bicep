@@ -75,7 +75,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroup_Workstation
     ]
-    virtualMachineSize: vmSize
+    virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name
     adminUsername: adminUsername
     adminPassword: adminPassword  
@@ -102,7 +102,7 @@ module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    virtualMachineSize: vmSize
+    virtualMachineSize: virtualMachineSize
     secureBoot: true
     availabilitySetName: gisAvailabilityGroup.name
     adminUsername: adminUsername
@@ -130,7 +130,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    virtualMachineSize: vmSize
+    virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name
     adminUsername: adminUsername
     adminPassword: adminPassword 
@@ -157,7 +157,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    virtualMachineSize: vmSize
+    virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name
     adminUsername: adminUsername
     adminPassword: adminPassword  
@@ -184,7 +184,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     appSecurityGroups: [
       applicationSecurityGroups_ArcGIS
     ]
-    virtualMachineSize: vmSize
+    virtualMachineSize: virtualMachineSize
     availabilitySetName: gisAvailabilityGroup.name
     adminUsername: adminUsername
     adminPassword: adminPassword   
