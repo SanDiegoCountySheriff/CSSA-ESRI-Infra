@@ -31,7 +31,6 @@ param environmentType string
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
 param spokeVnetName string
-param spokeVnetSubnets string
 
 resource virtualNetworkSpoke 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
   name: spokeVnetSubnets
