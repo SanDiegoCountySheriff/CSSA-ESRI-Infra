@@ -57,7 +57,7 @@ jobs:
   - job: DeployNsg
     dependsOn: DeployVnet
     variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName.outVnetName'] ]  
+      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName'].outVnetName ]  
     steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
@@ -78,7 +78,7 @@ jobs:
       - DeployVnet
       - DeployNsg
     variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName.outVnetName'] ]  
+      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName'].outVnetName ]  
     steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
