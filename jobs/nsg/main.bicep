@@ -242,7 +242,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
   }
 }
 
-module attachNsg '../../modules/cosm/cosm-update-sn.bicep' = {
+module attachNsg '../../modules/cosm/cosm-sn-update.bicep' = {
   name: 'update-${spokeVnetSubnetArray[0].name})}'
   params: {
     vnetName: spokeVnetName
