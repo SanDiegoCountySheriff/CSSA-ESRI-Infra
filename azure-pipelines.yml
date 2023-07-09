@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 trigger:
-  - app-dsc-bicep-integration
+  - development/app-dsc-bicep-integration
   
 pool:
     vmImage: ubuntu-latest
