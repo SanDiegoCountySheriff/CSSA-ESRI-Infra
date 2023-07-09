@@ -51,13 +51,13 @@ jobs:
             -networkConnectionSharedKey '$(networkConnectionSharedKey)'
           deploymentOutputs: output
       - powershell: |
-          echo "##vso[task.setvariable variable=output;isOutput=true]$(output)"
+          echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(output)"
         name: setVar
               
   - job: DeployNsg
     dependsOn: DeployVnet
     variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.output.spokeVnetName'] ]  
+      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName'] ]  
     steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
@@ -78,7 +78,7 @@ jobs:
       - DeployVnet
       - DeployNsg
     variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.output.spokeVnetName'] ]  
+      spokeVnetName: $[ dependencies.DeployVnet.outputs['setVar.spokeVnetName'] ]  
     steps:
       - task: AzureResourceManagerTemplateDeployment@3
         inputs:
