@@ -67,7 +67,7 @@ stages:
               overrideParameters: >
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
-                -spokeVnetName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
+                -spokeVnetName $[dependencies.DeployVnet.outputs['spokeVnetName']]
 
       - job: DeployVM
         dependsOn: DeployNsg
@@ -85,7 +85,7 @@ stages:
                 -resourceLocation "$(DeploymentDefaultLocation)" 
                 -environmentType "$(EnvironmentType)" 
                 -virtualMachineSize "$(VirtualMachineSize)"
-                -virtualNetworkSpokeName $[dependencies.DeployVnet.outputs['psJob.spokeVnetName']]
+                -virtualNetworkSpokeName $[dependencies.DeployVnet.outputs['spokeVnetName']]
                 -adminPassword "$(VirtualMachineAdminPassword)"
          
       # - job: DeployApp
