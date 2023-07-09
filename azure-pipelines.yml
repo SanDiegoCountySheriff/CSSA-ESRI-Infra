@@ -33,77 +33,75 @@ variables:
   #VirtualMachineAdminPassword: ''
   #VirtualMachineSize: 'Standard_D2s_v4'
 
-stages:
-  - stage: NonProd
-    jobs:
-      - job: DeployVnet
-        steps:
-          - task: AzureResourceManagerTemplateDeployment@3
-            inputs:
-              #deploymentScope: 'Subscription'
-              subscriptionId: $(SubscriptionId)
-              connectedServiceName: $(ServiceConnectionName)
-              location: $(DeploymentDefaultLocation)
-              resourceGroupName: $(ResourceGroupName)
-              csmFile: ./jobs/vnet/main.bicep
-              #deploymentMode: 'Complete'
-              overrideParameters: >
-                -resourceLocation "$(DeploymentDefaultLocation)" 
-                -environmentType "$(EnvironmentType)" 
-                -networkConnectionSharedKey '$(networkConnectionSharedKey)'
-              deploymentOutputs: spokeVnetName
-          - powershell: |
-              echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(spokeVnetName)"
-            name: setVar
-                  
-      - job: DeployNsg
-        dependsOn: DeployVnet
-        steps:
-          - task: AzureResourceManagerTemplateDeployment@3
-            inputs:
-              #deploymentScope: 'Subscription'
-              subscriptionId: $(SubscriptionId)
-              connectedServiceName: $(ServiceConnectionName)
-              location: $(DeploymentDefaultLocation)
-              resourceGroupName: $(ResourceGroupName)
-              csmFile: ./jobs/nsg/main.bicep
-              #deploymentMode: 'Complete'
-              overrideParameters: >
-                -resourceLocation "$(DeploymentDefaultLocation)" 
-                -environmentType "$(EnvironmentType)" 
-                -spokeVnetName "$(spokeVnetName)"
+jobs:
+  - job: DeployVnet
+    steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        inputs:
+          #deploymentScope: 'Subscription'
+          subscriptionId: $(SubscriptionId)
+          connectedServiceName: $(ServiceConnectionName)
+          location: $(DeploymentDefaultLocation)
+          resourceGroupName: $(ResourceGroupName)
+          csmFile: ./jobs/vnet/main.bicep
+          #deploymentMode: 'Complete'
+          overrideParameters: >
+            -resourceLocation "$(DeploymentDefaultLocation)" 
+            -environmentType "$(EnvironmentType)" 
+            -networkConnectionSharedKey '$(networkConnectionSharedKey)'
+          deploymentOutputs: spokeVnetName
+      - powershell: |
+          echo "##vso[task.setvariable variable=spokeVnetName;isOutput=true]$(spokeVnetName)"
+        name: setVar
+              
+  - job: DeployNsg
+    dependsOn: DeployVnet
+    steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        inputs:
+          #deploymentScope: 'Subscription'
+          subscriptionId: $(SubscriptionId)
+          connectedServiceName: $(ServiceConnectionName)
+          location: $(DeploymentDefaultLocation)
+          resourceGroupName: $(ResourceGroupName)
+          csmFile: ./jobs/nsg/main.bicep
+          #deploymentMode: 'Complete'
+          overrideParameters: >
+            -resourceLocation "$(DeploymentDefaultLocation)" 
+            -environmentType "$(EnvironmentType)" 
+            -spokeVnetName "$(spokeVnetName)"
 
-      - job: DeployVM
-        dependsOn: DeployNsg
-        steps:
-          - task: AzureResourceManagerTemplateDeployment@3
-            inputs:
-              #deploymentScope: 'Subscription'
-              subscriptionId: $(SubscriptionId)
-              connectedServiceName: $(ServiceConnectionName)
-              location: $(DeploymentDefaultLocation)
-              resourceGroupName: $(ResourceGroupName)
-              csmFile: ./jobs/vm/main.bicep
-              deploymentMode: 'Complete'
-              overrideParameters: >
-                -resourceLocation "$(DeploymentDefaultLocation)" 
-                -environmentType "$(EnvironmentType)" 
-                -virtualMachineSize "$(VirtualMachineSize)"
-                -virtualNetworkSpokeName "$(spokeVnetName)"
-                -adminPassword "$(VirtualMachineAdminPassword)"
-         
-      # - job: DeployApp
-      #   dependsOn: DeployVM
-      #   steps:
-      #     - task: AzureResourceManagerTemplateDeployment@3
-      #       inputs:
-      #         #deploymentScope: 'Subscription'
-      #         subscriptionId: $(SubscriptionId)
-      #         connectedServiceName: $(ServiceConnectionName)
-      #         location: $(DeploymentDefaultLocation)
-      #         resourceGroupName: $(ResourceGroupName)
-      #         csmFile: ./jobs/vm/main.bicep
-      #         deploymentMode: 'Complete'
-      #         overrideParameters: >
-      #             -resourceLocation "$(DeploymentDefaultLocation)" 
-      #             -environmentType "$(EnvironmentType)" 
+  - job: DeployVM
+    dependsOn: DeployNsg
+    steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        inputs:
+          #deploymentScope: 'Subscription'
+          subscriptionId: $(SubscriptionId)
+          connectedServiceName: $(ServiceConnectionName)
+          location: $(DeploymentDefaultLocation)
+          resourceGroupName: $(ResourceGroupName)
+          csmFile: ./jobs/vm/main.bicep
+          deploymentMode: 'Complete'
+          overrideParameters: >
+            -resourceLocation "$(DeploymentDefaultLocation)" 
+            -environmentType "$(EnvironmentType)" 
+            -virtualMachineSize "$(VirtualMachineSize)"
+            -virtualNetworkSpokeName "$(spokeVnetName)"
+            -adminPassword "$(VirtualMachineAdminPassword)"
+      
+  # - job: DeployApp
+  #   dependsOn: DeployVM
+  #   steps:
+  #     - task: AzureResourceManagerTemplateDeployment@3
+  #       inputs:
+  #         #deploymentScope: 'Subscription'
+  #         subscriptionId: $(SubscriptionId)
+  #         connectedServiceName: $(ServiceConnectionName)
+  #         location: $(DeploymentDefaultLocation)
+  #         resourceGroupName: $(ResourceGroupName)
+  #         csmFile: ./jobs/vm/main.bicep
+  #         deploymentMode: 'Complete'
+  #         overrideParameters: >
+  #             -resourceLocation "$(DeploymentDefaultLocation)" 
+  #             -environmentType "$(EnvironmentType)" 
