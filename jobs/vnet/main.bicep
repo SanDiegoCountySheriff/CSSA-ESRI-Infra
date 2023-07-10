@@ -53,7 +53,6 @@ var gisVirtualNetworkAddressPrefix = '172.18.2.0/24'
 var gisVirtualNetworkIzSubnetPrefix = '172.18.2.0/25'
 var gisVirtualNetworkDataSubnetPrefix = '172.18.2.128/25'
 
-/*
 @description('Deploy cosmHubVirtualNetwork')
 module cosmHubVirtualNetwork '../../modules/cosm/cosm-vnet-hub.bicep' = {
   name: 'deploy_cosmHubVirtualNetwork'
@@ -93,8 +92,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-vnet-hub.bicep' = {
     ]
   }
 }
-*/
-/*
+
 @description('Deploy localNetworkGateway')
 module localNetworkGateway '../../modules/cosm/cosm-lgw.bicep' = {
   name: 'deploy_localNetworkGateway'
@@ -160,7 +158,7 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
     sharedKey: networkConnectionSharedKey
   }
 }
-*/
+
 @description('Deploy gisVirtualNetwork')
 module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
   name: 'deploy_gisVirtualNetwork'
@@ -194,7 +192,6 @@ module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
   }
 }
 
-/*
 @description('Enable Vnet Peering between Hub and Spoke') 
 module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
   name: 'deploy_virtualNetworkPeering'
@@ -220,5 +217,5 @@ module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
     hubAllowGatewayTransit: true
   }
 }
-*/
+
 output SpokeVnetName string = gisVirtualNetwork.outputs.name
