@@ -54,7 +54,7 @@ var gisVirtualNetworkIzSubnetPrefix = '172.18.2.0/25'
 var gisVirtualNetworkDataSubnetPrefix = '172.18.2.128/25'
 
 @description('Deploy cosmHubVirtualNetwork')
-module cosmHubVirtualNetwork '../../modules/cosm/cosm-vnet-hub.bicep' = {
+module cosmHubVirtualNetwork '../../modules/shared/shared-vnet-hub.bicep' = {
   name: 'deploy_cosmHubVirtualNetwork'
   params: {
     resourceScope: 'shared'
@@ -94,7 +94,7 @@ module cosmHubVirtualNetwork '../../modules/cosm/cosm-vnet-hub.bicep' = {
 }
 
 @description('Deploy localNetworkGateway')
-module localNetworkGateway '../../modules/cosm/cosm-lgw.bicep' = {
+module localNetworkGateway '../../modules/shared/shared-lgw.bicep' = {
   name: 'deploy_localNetworkGateway'
   params: {
     resourceScope: 'shared'
@@ -107,7 +107,7 @@ module localNetworkGateway '../../modules/cosm/cosm-lgw.bicep' = {
 }
 
 @description('Deploy virtualGatewayPublicIp')
-module virtualGatewayPublicIp '../../modules/cosm/cosm-pip.bicep' = {
+module virtualGatewayPublicIp '../../modules/shared/shared-pip.bicep' = {
   name: 'deploy_virtualGatewayPublicIp'
   params: {
     resourceScope: 'shared'
@@ -119,7 +119,7 @@ module virtualGatewayPublicIp '../../modules/cosm/cosm-pip.bicep' = {
 }
 
 @description('Deploy virtualNetworkGateway')
-module virtualNetworkGateway '../../modules/cosm/cosm-vgw.bicep' = {
+module virtualNetworkGateway '../../modules/shared/shared-vgw.bicep' = {
   name: 'deploy_virtualNetworkGateway'
   dependsOn: [
     virtualGatewayPublicIp
@@ -142,7 +142,7 @@ module virtualNetworkGateway '../../modules/cosm/cosm-vgw.bicep' = {
 }
 
 @description('Deploy con-cosm-shared-test-001')
-module connection '../../modules/cosm/cosm-connection.bicep' = {
+module connection '../../modules/shared/shared-connection.bicep' = {
   name: 'deploy_connection'
   dependsOn: [
     localNetworkGateway
@@ -160,7 +160,7 @@ module connection '../../modules/cosm/cosm-connection.bicep' = {
 }
 
 @description('Deploy gisVirtualNetwork')
-module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
+module gisVirtualNetwork '../../modules/shared/shared-vnet-spoke.bicep' = {
   name: 'deploy_gisVirtualNetwork'
   params: {
     resourceAgency: resourceAgency
@@ -193,7 +193,7 @@ module gisVirtualNetwork '../../modules/cosm/cosm-vnet-spoke.bicep' = {
 }
 
 @description('Enable Vnet Peering between Hub and Spoke') 
-module virtualNetworkPeering '../../modules/cosm/cosm-peering.bicep' = {
+module virtualNetworkPeering '../../modules/shared/shared-peering.bicep' = {
   name: 'deploy_virtualNetworkPeering'
   dependsOn: [
     gisVirtualNetwork
