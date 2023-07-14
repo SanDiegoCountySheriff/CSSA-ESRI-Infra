@@ -1,4 +1,4 @@
-# San Marcos GIS in Azure
+# CSSA GIS in Azure
 
 ## To contribute to this repo:
 
@@ -6,7 +6,7 @@ Pipeline is organized as a multistaged deployment with nested folder structure m
 ```
 root
 ├─ modules/
-│  ├─ cosm/
+│  ├─ shared/
 │  ├─ gis/
 ├─ stages/
 │  ├─ db/
