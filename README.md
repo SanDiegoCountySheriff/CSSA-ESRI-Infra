@@ -27,7 +27,7 @@ root
 ```
 ### Clone the repo
 
-1. Browse to: https://dev.azure.com/sanmarcosgov/GIS/_git/cosm-gis-azure
+1. Browse to git repository
 1. Click the Clone button
 1. Copy clone URL to clipboard
 1. In your repos folder, create a "gis" folder
