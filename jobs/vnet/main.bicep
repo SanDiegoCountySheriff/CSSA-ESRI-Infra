@@ -16,9 +16,11 @@ param environmentType string
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
-param resourceAgency string = 'cosm'
+@description('name for resource agency')
+param resourceAgency string
 
 param localNetworkGatewayIpAddress string = '209.76.14.250'
+param virtualGatewayPublicIpAddress string = '20.237.174.77'
 
 @secure()
 param networkConnectionSharedKey string
@@ -28,31 +30,36 @@ var localNetworkGatewayAddressPrefixes = [
   '172.31.253.0/24'
 ]
 
-var cosmHubVirtualNetworkAddressPrefix = '172.18.0.0/23'
-var cosmHubVirtualNetworkGatewaySubnetPrefix = '172.18.0.0/25'
-var cosmHubVirtualNetworkFwSubnetPrefix = '172.18.0.128/25'
-var cosmHubVirtualNetworkAppGwSubnetPrefix = '172.18.1.0/25'
+var sharedHubVirtualNetworkAddressPrefix = '172.18.0.0/23'
+var sharedHubVirtualNetworkGatewaySubnetPrefix = '172.18.0.0/25'
+var sharedHubVirtualNetworkFwSubnetPrefix = '172.18.0.128/25'
+var sharedHubVirtualNetworkAppGwSubnetPrefix = '172.18.1.0/25'
 
 var gisVirtualNetworkAddressPrefix = '172.18.2.0/24'
 var gisVirtualNetworkIzSubnetPrefix = '172.18.2.0/25'
 var gisVirtualNetworkDataSubnetPrefix = '172.18.2.128/25'
 
-@description('Deploy cosmHubVirtualNetwork')
-module cosmHubVirtualNetwork '../../modules/shared/shared-vnet-hub.bicep' = {
-  name: 'deploy_cosmHubVirtualNetwork'
+param deploySTSVpn bool = true
+param deployConn bool = true
+param deployHub bool = true
+param peerHubSpoke bool = true
+
+@description('Deploy sharedHubVirtualNetwork')
+module sharedHubVirtualNetwork '../../modules/shared/shared-vnet-hub.bicep' = if (deployHub) {
+  name: 'deploy_sharedHubVirtualNetwork'
   params: {
     resourceScope: 'shared'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
     virtualNetworkAddressPrefixes: [
-      cosmHubVirtualNetworkAddressPrefix
+      sharedHubVirtualNetworkAddressPrefix
     ]
     subnets: [
       {
         name: 'GatewaySubnet'
         properties: {
-          addressPrefix: cosmHubVirtualNetworkGatewaySubnetPrefix
+          addressPrefix: sharedHubVirtualNetworkGatewaySubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
@@ -60,7 +67,7 @@ module cosmHubVirtualNetwork '../../modules/shared/shared-vnet-hub.bicep' = {
       {
         name: 'AzureFirewallManagementSubnet'
         properties: {
-          addressPrefix: cosmHubVirtualNetworkFwSubnetPrefix
+          addressPrefix: sharedHubVirtualNetworkFwSubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
@@ -68,7 +75,7 @@ module cosmHubVirtualNetwork '../../modules/shared/shared-vnet-hub.bicep' = {
       {
         name: 'sn-cosm-appgw'
         properties: {
-          addressPrefix: cosmHubVirtualNetworkAppGwSubnetPrefix
+          addressPrefix: sharedHubVirtualNetworkAppGwSubnetPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
@@ -78,7 +85,7 @@ module cosmHubVirtualNetwork '../../modules/shared/shared-vnet-hub.bicep' = {
 }
 
 @description('Deploy localNetworkGateway')
-module localNetworkGateway '../../modules/shared/shared-lgw.bicep' = {
+module localNetworkGateway '../../modules/shared/shared-lgw.bicep' = if (deploySTSVpn) {
   name: 'deploy_localNetworkGateway'
   params: {
     resourceScope: 'shared'
@@ -91,19 +98,19 @@ module localNetworkGateway '../../modules/shared/shared-lgw.bicep' = {
 }
 
 @description('Deploy virtualGatewayPublicIp')
-module virtualGatewayPublicIp '../../modules/shared/shared-pip.bicep' = {
+module virtualGatewayPublicIp '../../modules/shared/shared-pip.bicep' = if (deploySTSVpn) {
   name: 'deploy_virtualGatewayPublicIp'
   params: {
     resourceScope: 'shared'
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    publicIpAddress: '20.237.174.77'
+    publicIpAddress: virtualGatewayPublicIpAddress
   }
 }
 
 @description('Deploy virtualNetworkGateway')
-module virtualNetworkGateway '../../modules/shared/shared-vgw.bicep' = {
+module virtualNetworkGateway '../../modules/shared/shared-vgw.bicep' = if (deploySTSVpn) {
   name: 'deploy_virtualNetworkGateway'
   dependsOn: [
     virtualGatewayPublicIp
@@ -116,7 +123,7 @@ module virtualNetworkGateway '../../modules/shared/shared-vgw.bicep' = {
     nameSuffix: resourceNameSuffix
     virtualNetworkGatewayType: 'Vpn'
     virtualNetworkGatewayIpAddressName: virtualGatewayPublicIp.outputs.name
-    virtualNetworkName: cosmHubVirtualNetwork.outputs.name
+    virtualNetworkName: sharedHubVirtualNetwork.outputs.name
     localNetworkGatewayName: localNetworkGateway.outputs.name
     vpnType: 'RouteBased'
     sku: 'VpnGw2'
@@ -126,7 +133,7 @@ module virtualNetworkGateway '../../modules/shared/shared-vgw.bicep' = {
 }
 
 @description('Deploy con-cosm-shared-test-001')
-module connection '../../modules/shared/shared-connection.bicep' = {
+module connection '../../modules/shared/shared-connection.bicep' = if (deploySTSVpn && deployConn) {
   name: 'deploy_connection'
   dependsOn: [
     localNetworkGateway
@@ -177,17 +184,17 @@ module gisVirtualNetwork '../../modules/shared/shared-vnet-spoke.bicep' = {
 }
 
 @description('Enable Vnet Peering between Hub and Spoke') 
-module virtualNetworkPeering '../../modules/shared/shared-peering.bicep' = {
+module virtualNetworkPeering '../../modules/shared/shared-peering.bicep' = if (peerHubSpoke == true) {
   name: 'deploy_virtualNetworkPeering'
   dependsOn: [
     gisVirtualNetwork
-    cosmHubVirtualNetwork
+    sharedHubVirtualNetwork
     localNetworkGateway
     virtualNetworkGateway
     connection
   ]
   params: {
-    virtualNetworkHubName: cosmHubVirtualNetwork.outputs.name
+    virtualNetworkHubName: sharedHubVirtualNetwork.outputs.name
     virtualNetworkSpokeName: gisVirtualNetwork.outputs.name
 
     spokeAllowForwardedTraffic: true

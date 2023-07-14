@@ -11,7 +11,8 @@ param resourceLocation string = resourceGroup().location
 ])
 param environmentType string
 
-param resourceAgency string = 'cosm'
+@description('name for resource agency')
+param resourceAgency string
 
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
@@ -37,11 +38,13 @@ resource applicationSecurityGroups_arcgis 'Microsoft.Network/applicationSecurity
   name: 'asg-gis-arcgis-${environmentType}-${resourceNameSuffix}'
 }
 
-var workstationVirtualMachineName   = 'vm-gis-${environmentType}-01'
-var portalVirtualMachineName        = 'vm-gis-${environmentType}-02'
-var hostingVirtualMachineName       = 'vm-gis-${environmentType}-03'
-var notebookVirtualMachineName      = 'vm-gis-${environmentType}-04'
-var datastoreVirtualMachineName     = 'vm-gis-${environmentType}-05'
+param vmNames object = {
+  workstationVirtualMachineName:  'vm-gis-${environmentType}-01'
+  portalVirtualMachineName:       'vm-gis-${environmentType}-02'
+  hostingVirtualMachineName:      'vm-gis-${environmentType}-03'
+  datastoreVirtualMachineName:    'vm-gis-${environmentType}-04'
+}
+
 
 @description('Deploy Proximity Placement Group')
 module gisProximityPlacementGroup '../../modules/gis/gis-ppg.bicep' = {
@@ -82,7 +85,7 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: workstationVirtualMachineName
+    virtualMachineName: vmNames.workstationVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -94,37 +97,6 @@ module gisWorkstationVm '../../modules/gis/gis-vm-windows.bicep' = {
     availabilitySetName: gisAvailabilitySet.outputs.name
     adminUsername: adminUsername
     adminPassword: adminPassword  
-    subnetName: virtualNetworkSpoke.properties.subnets[0].name
-  }
-}
-
-@description('Deploy gisNotebookVM')
-module gisNotebookVm '../../modules/gis/gis-vm-linux.bicep' = {
-  name: 'deploy_gisNotebookVM'
-  dependsOn: [
-    gisProximityPlacementGroup
-    applicationSecurityGroups_arcgis
-    virtualNetworkSpoke
-  ]
-  params: {
-    resourceAgency: resourceAgency
-    resourceScope: 'gis'
-    resourceLocation: resourceLocation
-    resourceEnv: environmentType
-    nameSuffix: resourceNameSuffix
-    virtualMachineName: notebookVirtualMachineName
-    proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
-    virtualNetworkName: virtualNetworkSpoke.name
-    appSecurityGroups: [
-      {
-        id: applicationSecurityGroups_arcgis.id
-      } 
-    ]
-    virtualMachineSize: virtualMachineSize
-    secureBoot: true
-    availabilitySetName: gisAvailabilitySet.outputs.name
-    adminUsername: adminUsername
-    adminPassword: adminPassword   
     subnetName: virtualNetworkSpoke.properties.subnets[0].name
   }
 }
@@ -143,7 +115,7 @@ module gisPortalVm '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: portalVirtualMachineName
+    virtualMachineName: vmNames.portalVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -173,7 +145,7 @@ module gisHostingServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: hostingVirtualMachineName
+    virtualMachineName: vmNames.hostingVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
@@ -203,7 +175,7 @@ module gisDatastoreServerVM '../../modules/gis/gis-vm-windows.bicep' = {
     resourceLocation: resourceLocation
     resourceEnv: environmentType
     nameSuffix: resourceNameSuffix
-    virtualMachineName: datastoreVirtualMachineName
+    virtualMachineName: vmNames.datastoreVirtualMachineName
     proximityPlacementGroupName: gisProximityPlacementGroup.outputs.name
     virtualNetworkName: virtualNetworkSpoke.name
     appSecurityGroups: [
