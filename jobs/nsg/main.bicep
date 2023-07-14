@@ -63,7 +63,7 @@ resource applicationSecurityGroups_ArcGIS 'Microsoft.Network/applicationSecurity
 }
 
 @description('Deploy networkSecurityGroup_gis-iz')
-module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
+module networkSecurityGroup_gis_iz '../../modules/shared/shared-nsg.bicep' = {
   name: 'deploy_networkSecurityGroup_gis_ws'
   params: {
     nameSuffix: resourceNameSuffix
@@ -248,7 +248,7 @@ module networkSecurityGroup_gis_iz '../../modules/cosm/cosm-nsg.bicep' = {
   }
 }
 
-module attachNsg '../../modules/cosm/cosm-sn-update.bicep' = {
+module attachNsg '../../modules/shared/shared-sn-update.bicep' = {
   name: 'update-spoke-sn-001'
   scope: resourceGroup()
   params: {
