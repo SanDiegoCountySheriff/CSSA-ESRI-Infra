@@ -1,20 +1,3 @@
-# azure-pipelines.yml | San Marcos GIS on Azure
-#
-# Copyright (C) 2023 City of San Marcos CA
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 trigger:
   - main
   
@@ -25,91 +8,114 @@ pool:
   name: 'selfhostpool001'
 
 variables:
-  #DeploymentDefaultLocation: 'westus'
+  DeploymentDefaultLocation: 'westus'
   System.Debug: true
-  ResourceGroupName: 'rg-cosm-gis-devtest'
-  networkConnectionSharedKey: ''
-  #ResourceAgency: 'cosm'
-  #spokeVnetName: ''
-  #VirtualMachineAdminPassword: ''
-  #VirtualMachineSize: 'Standard_D2s_v4'
+  ResourceGroupName: 'rg-gis-devtest'
+  NetworkConnectionSharedKey: ''
+  ResourceAgency: ''
+  VirtualMachineAdminPassword: ''
+  VirtualMachineSize: 'Standard_D2s_v4'
 
+  # deploy optional site-to-site VPN
+  DeploySTSVpn: true
+
+  # deploy optional VPN connection 
+  DeployConn: true
+
+  # deploy network hub (optional)
+  DeployHub: true
+
+  # peer hub to spoke (optional)
+  PeerHubSpoke: true
+
+  # define shared network hub addressing (optional hub)
+  SharedHubVirtualNetworkAddressPrefix: '172.18.0.0/23'
+  SharedHubVirtualNetworkGatewaySubnetPrefix: '172.18.0.0/25'
+  SharedHubVirtualNetworkFwSubnetPrefix: '172.18.0.128/25'
+  SharedHubVirtualNetworkAppGwSubnetPrefix: '172.18.1.0/25'
+
+  # define gis network hub addressing (required of spoke)
+  GisVirtualNetworkAddressPrefix: '172.18.2.0/24'
+  GisVirtualNetworkIzSubnetPrefix: '172.18.2.0/25'
+  GisVirtualNetworkDataSubnetPrefix: '172.18.2.128/25'
+  
 jobs:
-  - job: DeployVnet
-    steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        name: VnetTask
-        inputs:
-          #deploymentScope: 'Subscription'
-          subscriptionId: $(SubscriptionId)
-          connectedServiceName: $(ServiceConnectionName)
-          location: $(DeploymentDefaultLocation)
-          resourceGroupName: $(ResourceGroupName)
-          csmFile: ./jobs/vnet/main.bicep
-          #deploymentMode: 'Complete'
-          deploymentOutputs: vnetOutput
-          overrideParameters: >
-            -resourceLocation "$(DeploymentDefaultLocation)" 
-            -environmentType "$(EnvironmentType)" 
-            -networkConnectionSharedKey '$(networkConnectionSharedKey)'
-      - powershell: |
-            Write-Host "##vso[task.setvariable variable=SpokeVnetName;isOutput=true]$(vnetOutput.SpokeVnetName.value)"
-        name: vnetVars
-              
-  - job: DeployNsg
-    dependsOn: DeployVnet
-    variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['vnetVars.SpokeVnetName'] ]  
-    steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        inputs:
-          #deploymentScope: 'Subscription'
-          subscriptionId: $(SubscriptionId)
-          connectedServiceName: $(ServiceConnectionName)
-          location: $(DeploymentDefaultLocation)
-          resourceGroupName: $(ResourceGroupName)
-          csmFile: ./jobs/nsg/main.bicep
-          #deploymentMode: 'Complete'
-          overrideParameters: >
-            -resourceLocation "$(DeploymentDefaultLocation)" 
-            -environmentType "$(EnvironmentType)" 
-            -spokeVnetName $(spokeVnetName)
+- job: DeployVnet
+  steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    name: VnetTask
+    inputs:
+      #deploymentScope: 'Subscription'
+      subscriptionId: $(SubscriptionId)
+      connectedServiceName: $(ServiceConnectionName)
+      location: $(DeploymentDefaultLocation)
+      resourceGroupName: $(ResourceGroupName)
+      csmFile: ./jobs/vnet/main.bicep
+      #deploymentMode: 'Complete'
+      deploymentOutputs: vnetOutput
+      overrideParameters: >
+              -resourceAgency "$(ResourceAgency)"
+              -resourceLocation "$(DeploymentDefaultLocation)" 
+              -environmentType "$(EnvironmentType)" 
+              -networkConnectionSharedKey '$(NetworkConnectionSharedKey)'
+              -deploySTSVpn: $(DeploySTSVpn)
+              -deployConn: $(DeployConn)
+              -deployHub: $(DeployHub)
+              -peerHubSpoke: $(PeerHubSpoke)
+              -sharedHubVirtualNetworkAddressPrefix "$(SharedHubVirtualNetworkAddressPrefix)"
+              -sharedHubVirtualNetworkGatewaySubnetPrefix "$(SharedHubVirtualNetworkGatewaySubnetPrefix)"
+              -sharedHubVirtualNetworkFwSubnetPrefix "$(SharedHubVirtualNetworkFwSubnetPrefix)"
+              -sharedHubVirtualNetworkAppGwSubnetPrefix "$(SharedHubVirtualNetworkAppGwSubnetPrefix)"
+              -gisVirtualNetworkAddressPrefix "$(GisVirtualNetworkAddressPrefix)"
+              -gisVirtualNetworkIzSubnetPrefix "$(GisVirtualNetworkIzSubnetPrefix)"
+              -gisVirtualNetworkDataSubnetPrefix "$(GisVirtualNetworkDataSubnetPrefix)"
 
-  - job: DeployVM
-    dependsOn: 
-      - DeployVnet
-      - DeployNsg
-    variables:
-      spokeVnetName: $[ dependencies.DeployVnet.outputs['vnetVars.SpokeVnetName'] ]  
+  - powershell: |
+      Write-Host "##vso[task.setvariable variable=SpokeVnetName;isOutput=true]$(vnetOutput.SpokeVnetName.value)"
+    name: vnetVars
+                
+- job: DeployNsg
+  dependsOn: DeployVnet
+  variables:
+    spokeVnetName: $[ dependencies.DeployVnet.outputs['vnetVars.SpokeVnetName'] ]  
     steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        inputs:
-          #deploymentScope: 'Subscription'
-          subscriptionId: $(SubscriptionId)
-          connectedServiceName: $(ServiceConnectionName)
-          location: $(DeploymentDefaultLocation)
-          resourceGroupName: $(ResourceGroupName)
-          csmFile: ./jobs/vm/main.bicep
-          #deploymentMode: 'Complete'
-          overrideParameters: >
-            -resourceLocation "$(DeploymentDefaultLocation)" 
-            -environmentType "$(EnvironmentType)" 
-            -virtualMachineSize "$(VirtualMachineSize)"
-            -virtualNetworkSpokeName $(spokeVnetName)
-            -adminPassword "$(VirtualMachineAdminPassword)"
-      
-  # - job: DeployApp
-  #   dependsOn: DeployVM
-  #   steps:
-  #     - task: AzureResourceManagerTemplateDeployment@3
-  #       inputs:
-  #         #deploymentScope: 'Subscription'
-  #         subscriptionId: $(SubscriptionId)
-  #         connectedServiceName: $(ServiceConnectionName)
-  #         location: $(DeploymentDefaultLocation)
-  #         resourceGroupName: $(ResourceGroupName)
-  #         csmFile: ./jobs/vm/main.bicep
-  #         deploymentMode: 'Complete'
-  #         overrideParameters: >
-  #             -resourceLocation "$(DeploymentDefaultLocation)" 
-  #             -environmentType "$(EnvironmentType)" 
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        #deploymentScope: 'Subscription'
+        subscriptionId: $(SubscriptionId)
+        connectedServiceName: $(ServiceConnectionName)
+        location: $(DeploymentDefaultLocation)
+        resourceGroupName: $(ResourceGroupName)
+        csmFile: ./jobs/nsg/main.bicep
+        #deploymentMode: 'Complete'
+        overrideParameters: >
+              -resourceAgency "$(ResourceAgency)"
+              -resourceLocation "$(DeploymentDefaultLocation)" 
+              -environmentType "$(EnvironmentType)" 
+              -spokeVnetName $(spokeVnetName)
+  
+- job: DeployVM
+  dependsOn: 
+    - DeployVnet
+    - DeployNsg
+  variables:
+    spokeVnetName: $[ dependencies.DeployVnet.outputs['vnetVars.SpokeVnetName'] ]  
+  steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      name: vmResult
+      inputs:
+        #deploymentScope: 'Subscription'
+        subscriptionId: $(SubscriptionId)
+        connectedServiceName: $(ServiceConnectionName)
+        location: $(DeploymentDefaultLocation)
+        resourceGroupName: $(ResourceGroupName)
+        csmFile: ./jobs/vm/main.bicep
+        #deploymentMode: 'Complete'
+        deploymentOutputs: vmOutput
+        overrideParameters: >
+              -resourceAgency "$(ResourceAgency)"
+              -resourceLocation "$(DeploymentDefaultLocation)" 
+              -environmentType "$(EnvironmentType)" 
+              -virtualMachineSize "$(VirtualMachineSize)"
+              -virtualNetworkSpokeName $(spokeVnetName)
+              -adminPassword "$(VirtualMachineAdminPassword)"
